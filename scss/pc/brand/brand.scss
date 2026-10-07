@@ -1,0 +1,134 @@
+@import '../../variables.scss';
+
+#brand-list-page,
+#brand-detail-page {
+	padding-top: 28px;
+	.pagination-box {
+		align-items: center;
+	}
+}
+.brand-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 14px;
+	.search {
+		display: flex;
+		gap: 8px;
+		flex: 1 1 320px;
+		max-width: 480px;
+		input {
+			flex-grow: 1;
+			min-width: 0;
+			height: 48px;
+			padding: 0 20px;
+			border-radius: 999px;
+			border: 1px solid $line;
+			background: $white;
+			font-size: 15px;
+		}
+	}
+	.sorts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		.chip {
+			cursor: pointer;
+		}
+	}
+}
+.brand-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+	gap: 18px;
+	.brand-card {
+		position: relative;
+		padding: 26px 18px 20px;
+		border-radius: $radius-l;
+		background: $white;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		.open {
+			border: 0;
+			background: none;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			color: $ink;
+			b {
+				font-size: 18px;
+			}
+			span {
+				font-size: 13px;
+				color: $muted;
+			}
+		}
+		.follow {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			min-height: 40px;
+			padding: 0 16px;
+			border-radius: 999px;
+			border: 1px solid $line;
+			background: $white;
+			color: $ink;
+			font-size: 13px;
+			font-weight: 700;
+			&.on {
+				border-color: $accent;
+				color: $accent;
+				background: $lilac-light;
+			}
+		}
+	}
+}
+.brand-hero {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 28px;
+	padding: 36px 40px;
+	border-radius: $radius-xl;
+	background: $white;
+	background-size: cover;
+	background-position: center;
+	.txt {
+		flex: 1 1 320px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		h2 {
+			margin: 0;
+			font-family: $font-display;
+			font-weight: 400;
+			font-size: 44px;
+		}
+		p {
+			margin: 0;
+			color: $muted-2;
+			line-height: 1.6;
+			max-width: 640px;
+			white-space: pre-line;
+		}
+		.stats {
+			display: flex;
+			gap: 20px;
+			font-size: 14px;
+			color: $muted;
+			b {
+				color: $ink;
+				font-size: 18px;
+			}
+		}
+	}
+	.actions {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+}

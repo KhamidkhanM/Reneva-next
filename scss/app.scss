@@ -1,0 +1,74 @@
+/** IMPORTS **/
+@import 'variables.scss';
+@import 'reset.scss';
+
+a {
+	white-space: nowrap;
+	text-decoration: none;
+	color: $ink;
+}
+button {
+	text-transform: none;
+	box-shadow: none;
+	padding: 0;
+	font-family: $font;
+	cursor: pointer;
+}
+input,
+textarea,
+select {
+	font-family: $font;
+}
+span,
+p {
+	line-height: 1.4;
+}
+body {
+	font-family: $font;
+	color: $ink;
+	background: $bg;
+	&::-webkit-scrollbar {
+		width: 9px;
+	}
+	&::-webkit-scrollbar-thumb {
+		height: 30%;
+		background: $lilac-mid;
+		border-radius: 10px;
+	}
+	&::-webkit-scrollbar-track {
+		background: $lilac-light;
+	}
+
+	.MuiPopover-paper {
+		box-shadow: $shadow-pop;
+		border-radius: 18px;
+	}
+}
+hr {
+	border-width: 0;
+	border-bottom-width: thin;
+	border-color: $line;
+	margin: auto;
+}
+:focus-visible {
+	outline: 2px solid $accent;
+	outline-offset: 2px;
+}
+
+/** VERSION: PC **/
+#pc-wrap,
+#mobile-wrap {
+	width: 100%;
+	min-height: 100%;
+	background: $bg;
+
+	.container {
+		position: relative;
+		width: 100%;
+		max-width: $container;
+		padding: 0 24px;
+		box-sizing: border-box;
+		margin: 0 auto;
+		display: flex;
+	}
+}
