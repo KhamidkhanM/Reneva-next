@@ -1,0 +1,131 @@
+import decodeJWT from 'jwt-decode';
+import { initializeApollo } from '../../apollo/client';
+import { emptyUser, userVar } from '../../apollo/store';
+import { CustomJwtPayload } from '../types/customJwtPayload';
+import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+
+export function getJwtToken(): any {
+	if (typeof window !== 'undefined') {
+		return localStorage.getItem('accessToken') ?? '';
+	}
+}
+
+export function setJwtToken(token: string) {
+	localStorage.setItem('accessToken', token);
+}
+
+export const logIn = async (nick: string, password: string): Promise<void> => {
+	try {
+		const { jwtToken } = await requestJwtToken({ nick, password });
+
+		if (jwtToken) {
+			updateStorage({ jwtToken });
+			updateUserInfo(jwtToken);
+		}
+	} catch (err) {
+		console.warn('login err', err);
+		logOut();
+		throw new Error('Login Err');
+	}
+};
+
+const requestJwtToken = async ({ nick, password }: { nick: string; password: string }): Promise<{ jwtToken: string }> => {
+	const apolloClient = await initializeApollo();
+
+	try {
+		const result = await apolloClient.mutate({
+			mutation: LOGIN,
+			variables: { input: { memberNick: nick, memberPassword: password } },
+			fetchPolicy: 'network-only',
+		});
+
+		const { accessToken } = result?.data?.login;
+		return { jwtToken: accessToken };
+	} catch (err: any) {
+		console.log('request token err', err.graphQLErrors);
+		throw new Error('token error');
+	}
+};
+
+export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {
+	try {
+		const { jwtToken } = await requestSignUpJwtToken({ nick, password, phone, type });
+
+		if (jwtToken) {
+			updateStorage({ jwtToken });
+			updateUserInfo(jwtToken);
+		}
+	} catch (err) {
+		console.warn('signup err', err);
+		logOut();
+		throw new Error('Signup Err');
+	}
+};
+
+const requestSignUpJwtToken = async ({
+	nick,
+	password,
+	phone,
+	type,
+}: {
+	nick: string;
+	password: string;
+	phone: string;
+	type: string;
+}): Promise<{ jwtToken: string }> => {
+	const apolloClient = await initializeApollo();
+
+	try {
+		const result = await apolloClient.mutate({
+			mutation: SIGN_UP,
+			variables: {
+				input: { memberNick: nick, memberPassword: password, memberPhone: phone, memberType: type },
+			},
+			fetchPolicy: 'network-only',
+		});
+
+		const { accessToken } = result?.data?.signup;
+		return { jwtToken: accessToken };
+	} catch (err: any) {
+		console.log('request token err', err.graphQLErrors);
+		throw new Error('token error');
+	}
+};
+
+export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {
+	setJwtToken(jwtToken);
+	window.localStorage.setItem('login', Date.now().toString());
+};
+
+export const updateUserInfo = (jwtToken: any) => {
+	if (!jwtToken) return false;
+
+	try {
+		const claims = decodeJWT<CustomJwtPayload>(jwtToken);
+		if (claims.exp && claims.exp * 1000 < Date.now()) {
+			deleteStorage();
+			userVar({ ...emptyUser });
+			return false;
+		}
+		userVar({
+			...emptyUser,
+			...claims,
+			memberImage: claims.memberImage ? `${claims.memberImage}` : '',
+			memberSkinConcerns: claims.memberSkinConcerns ?? [],
+		});
+	} catch (err) {
+		deleteStorage();
+		userVar({ ...emptyUser });
+	}
+};
+
+export const logOut = () => {
+	deleteStorage();
+	userVar({ ...emptyUser });
+	window.location.reload();
+};
+
+const deleteStorage = () => {
+	localStorage.removeItem('accessToken');
+	window.localStorage.setItem('logout', Date.now().toString());
+};
