@@ -3,6 +3,7 @@ import { initializeApollo } from '../../apollo/client';
 import { emptyUser, userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { REACT_APP_API_GRAPHQL_URL } from '../config';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -22,10 +23,10 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
+	} catch (err: any) {
 		console.warn('login err', err);
-		logOut();
-		throw new Error('Login Err');
+		clearUser();
+		throw err;
 	}
 };
 
@@ -43,7 +44,7 @@ const requestJwtToken = async ({ nick, password }: { nick: string; password: str
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		throw new Error('token error');
+		throw new Error(authErrorMessage(err));
 	}
 };
 
@@ -55,10 +56,10 @@ export const signUp = async (nick: string, password: string, phone: string, type
 			updateStorage({ jwtToken });
 			updateUserInfo(jwtToken);
 		}
-	} catch (err) {
+	} catch (err: any) {
 		console.warn('signup err', err);
-		logOut();
-		throw new Error('Signup Err');
+		clearUser();
+		throw err;
 	}
 };
 
@@ -88,7 +89,7 @@ const requestSignUpJwtToken = async ({
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		throw new Error('token error');
+		throw new Error(authErrorMessage(err));
 	}
 };
 
@@ -123,6 +124,21 @@ export const logOut = () => {
 	deleteStorage();
 	userVar({ ...emptyUser });
 	window.location.reload();
+};
+
+// turns an Apollo error into a sentence the login page can show
+const authErrorMessage = (err: any): string => {
+	const serverMessage = err?.graphQLErrors?.[0]?.message;
+	if (serverMessage === 'secretOrPrivateKey must have a value') return 'The server has no SECRET_TOKEN. Add it to the backend .env and restart it.';
+	if (serverMessage) return serverMessage;
+	if (err?.networkError) return `Cannot reach the Reneva API at ${REACT_APP_API_GRAPHQL_URL}. Is the backend running?`;
+	return 'Something went wrong, please try again.';
+};
+
+// forget the current user without reloading the page (logOut reloads)
+const clearUser = () => {
+	deleteStorage();
+	userVar({ ...emptyUser });
 };
 
 const deleteStorage = () => {

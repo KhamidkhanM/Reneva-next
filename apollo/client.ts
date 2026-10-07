@@ -4,6 +4,7 @@ import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
 import { onError } from '@apollo/client/link/error';
 import { getJwtToken } from '../libs/auth';
 import { sweetErrorAlert } from '../libs/sweetAlert';
+import { REACT_APP_API_GRAPHQL_URL } from '../libs/config';
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
 function getHeaders() {
@@ -29,7 +30,7 @@ function createIsomorphicLink() {
 
 		// @ts-ignore
 		const link = new createUploadLink({
-			uri: process.env.REACT_APP_API_GRAPHQL_URL,
+			uri: REACT_APP_API_GRAPHQL_URL,
 			headers: { 'apollo-require-preflight': 'true' },
 		});
 
