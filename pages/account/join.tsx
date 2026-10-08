@@ -5,7 +5,8 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
-import { Messages } from '../../libs/config';
+import { FREE_DELIVERY_FROM, Messages } from '../../libs/config';
+import { formatPrice } from '../../libs/utils';
 import { MemberType } from '../../libs/enums/member.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -65,7 +66,7 @@ const Join: NextPage = () => {
 								: 'Members get skin-matched picks, a WELCOME10 coupon and points on every order.'}
 						</p>
 						<ul>
-							<li>Free delivery from ₩30,000</li>
+							<li>Free delivery from {formatPrice(FREE_DELIVERY_FROM)}</li>
 							<li>1:1 chat with every store</li>
 							<li>AI skin check in 30 seconds</li>
 						</ul>

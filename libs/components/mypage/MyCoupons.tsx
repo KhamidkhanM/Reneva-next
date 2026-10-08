@@ -7,7 +7,7 @@ import { CLAIM_COUPON } from '../../../apollo/user/mutation';
 import { MemberCoupon } from '../../types/order';
 import { MemberCouponStatus } from '../../enums/coupon.enum';
 import { couponValue } from './CouponManager';
-import { formatKRW, labelOf } from '../../utils';
+import { formatPrice, labelOf } from '../../utils';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 const tabs = [MemberCouponStatus.AVAILABLE, MemberCouponStatus.USED, MemberCouponStatus.EXPIRED];
@@ -73,8 +73,8 @@ const MyCoupons = () => {
 								<div className={'txt'}>
 									<b>{coupon.couponTitle}</b>
 									<span>
-										{coupon.couponMinOrder ? `Orders from ${formatKRW(coupon.couponMinOrder)}` : 'No minimum'}
-										{coupon.couponMaxDiscount ? ` · up to ${formatKRW(coupon.couponMaxDiscount)}` : ''}
+										{coupon.couponMinOrder ? `Orders from ${formatPrice(coupon.couponMinOrder)}` : 'No minimum'}
+										{coupon.couponMaxDiscount ? ` · up to ${formatPrice(coupon.couponMaxDiscount)}` : ''}
 									</span>
 									<span>Until {moment(coupon.endAt).format('YYYY.MM.DD')}</span>
 								</div>

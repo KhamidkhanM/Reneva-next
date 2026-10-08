@@ -44,7 +44,7 @@ const ReviewForm = ({ item, onClose, onSaved }: ReviewFormProps) => {
 			setContent('');
 			setImages([]);
 			onSaved();
-			await sweetTopSuccessAlert(images.length ? 'Thanks! You earned 300P' : 'Thanks! You earned 100P');
+			await sweetTopSuccessAlert(images.length ? 'Thanks! You earned 3,000P' : 'Thanks! You earned 1,000P');
 		} catch (err: any) {
 			sweetMixinErrorAlert(err.message).then();
 		}
@@ -84,7 +84,7 @@ const ReviewForm = ({ item, onClose, onSaved }: ReviewFormProps) => {
 							)}
 							<input ref={fileRef} type={'file'} multiple accept={'image/png,image/jpeg'} hidden onChange={uploadHandler} />
 						</div>
-						<p className={'hint'}>Photo reviews earn 300P, text reviews 100P.</p>
+						<p className={'hint'}>Photo reviews earn 3,000P, text reviews 1,000P.</p>
 						<button type={'submit'} className={'primary-btn'} disabled={loading}>
 							Post review
 						</button>

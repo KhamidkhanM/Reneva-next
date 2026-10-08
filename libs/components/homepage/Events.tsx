@@ -1,5 +1,7 @@
 import React from 'react';
 import { Stack } from '@mui/material';
+import { DELIVERY_FEE, FREE_DELIVERY_FROM } from '../../config';
+import { formatPrice } from '../../utils';
 
 const levels = [
 	{ name: 'Baby', rate: '0.5%', tone: 'light' },
@@ -17,13 +19,13 @@ const Events = () => {
 				<div className={'event-grid'}>
 					<div className={'event-card peach'}>
 						<span className={'eyebrow'}>EVERY DAY</span>
-						<b>Free delivery over ₩30,000</b>
-						<span>Below that, delivery is ₩3,000</span>
+						<b>Free delivery over {formatPrice(FREE_DELIVERY_FROM)}</b>
+						<span>Below that, delivery is {formatPrice(DELIVERY_FEE)}</span>
 					</div>
 					<div className={'event-card'}>
 						<span className={'eyebrow'}>REVIEW REWARDS</span>
-						<b>300P per photo review</b>
-						<span>100P for a text review, only for products you bought</span>
+						<b>3,000P per photo review</b>
+						<span>1,000P for a text review, only for products you bought</span>
 					</div>
 					<div className={'event-card membership'}>
 						<span className={'eyebrow'}>MEMBERSHIP</span>

@@ -14,7 +14,7 @@ import { GET_ORDER } from '../../apollo/user/query';
 import { CANCEL_ORDER, CONFIRM_ORDER, PAY_ORDER } from '../../apollo/user/mutation';
 import { Order, OrderItem } from '../../libs/types/order';
 import { OrderStatus, PaymentMethod } from '../../libs/enums/order.enum';
-import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
+import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { openSupportChat } from '../../libs/components/chat/openChat';
 
@@ -111,7 +111,7 @@ const OrderDetail: NextPage = () => {
 									<span className={'txt'}>
 										<b>{item.itemTitle}</b>
 										<span>
-											{item.itemOptionName} · {item.itemQuantity} pcs · {formatKRW(item.itemPrice)}
+											{item.itemOptionName} · {item.itemQuantity} pcs · {formatPrice(item.itemPrice)}
 										</span>
 									</span>
 									{canReview &&
@@ -146,23 +146,23 @@ const OrderDetail: NextPage = () => {
 						<h2>Payment</h2>
 						<div className={'row'}>
 							<span>Products</span>
-							<b>{formatKRW(order.orderSubtotal)}</b>
+							<b>{formatPrice(order.orderSubtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>Coupon</span>
-							<b className={'minus'}>{order.orderDiscount ? `−${formatKRW(order.orderDiscount)}` : '-'}</b>
+							<b className={'minus'}>{order.orderDiscount ? `−${formatPrice(order.orderDiscount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>Points</span>
-							<b className={'minus'}>{order.orderPointsUsed ? `−${formatKRW(order.orderPointsUsed)}` : '-'}</b>
+							<b className={'minus'}>{order.orderPointsUsed ? `−${formatPrice(order.orderPointsUsed)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>Delivery</span>
-							<b>{order.orderDeliveryFee ? formatKRW(order.orderDeliveryFee) : 'Free'}</b>
+							<b>{order.orderDeliveryFee ? formatPrice(order.orderDeliveryFee) : 'Free'}</b>
 						</div>
 						<div className={'row total'}>
 							<span>Total</span>
-							<b>{formatKRW(order.orderTotal)}</b>
+							<b>{formatPrice(order.orderTotal)}</b>
 						</div>
 						{payment && (
 							<p className={'hint'}>

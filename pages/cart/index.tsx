@@ -16,7 +16,7 @@ import { REMOVE_CART_ITEM, UPDATE_CART_ITEM } from '../../apollo/user/mutation';
 import { Cart, MyCart } from '../../libs/types/order';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { FREE_DELIVERY_FROM } from '../../libs/config';
-import { formatKRW, imageUrl } from '../../libs/utils';
+import { formatPrice, imageUrl, isConvertedPrice } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -150,7 +150,7 @@ const CartPage: NextPage = () => {
 													<AddRoundedIcon fontSize={'small'} />
 												</IconButton>
 											</div>
-											<b className={'line-total'}>{formatKRW(price * item.cartQuantity)}</b>
+											<b className={'line-total'}>{formatPrice(price * item.cartQuantity)}</b>
 											<IconButton aria-label={'Remove'} onClick={() => removeHandler(item._id)}>
 												<DeleteOutlineRoundedIcon />
 											</IconButton>
@@ -165,23 +165,24 @@ const CartPage: NextPage = () => {
 						<h2>Summary</h2>
 						<div className={'row'}>
 							<span>Products</span>
-							<b>{formatKRW(subtotal)}</b>
+							<b>{formatPrice(subtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>Delivery</span>
-							<b>{cart?.cartDeliveryFee ? formatKRW(cart.cartDeliveryFee) : 'Free'}</b>
+							<b>{cart?.cartDeliveryFee ? formatPrice(cart.cartDeliveryFee) : 'Free'}</b>
 						</div>
 						{subtotal > 0 && (
 							<div className={'free-bar'}>
 								<LinearProgress variant={'determinate'} value={Math.min(100, (subtotal / FREE_DELIVERY_FROM) * 100)} />
-								<span>{toFree > 0 ? `Add ${formatKRW(toFree)} more for free delivery` : 'You get free delivery'}</span>
+								<span>{toFree > 0 ? `Add ${formatPrice(toFree)} more for free delivery` : 'You get free delivery'}</span>
 							</div>
 						)}
 						<div className={'row total'}>
 							<span>Total</span>
-							<b>{formatKRW(cart?.cartTotal ?? 0)}</b>
+							<b>{formatPrice(cart?.cartTotal ?? 0)}</b>
 						</div>
 						<p className={'hint'}>Coupons and points are applied at checkout.</p>
+						{isConvertedPrice() && <p className={'hint'}>Orders are paid in so'm. Prices in other currencies are approximate.</p>}
 						<button className={'primary-btn'} disabled={selectedCount === 0} onClick={() => router.push('/order')}>
 							Checkout ({selectedCount})
 						</button>

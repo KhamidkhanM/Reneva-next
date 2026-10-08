@@ -7,7 +7,7 @@ import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { Product } from '../../types/product';
 import { ProductStatus } from '../../enums/product.enum';
-import { formatKRW, imageUrl, isLiked, labelOf, salePercent } from '../../utils';
+import { formatPrice, imageUrl, isLiked, labelOf, salePercent } from '../../utils';
 import ProductThumb from './ProductThumb';
 
 interface ProductCardProps {
@@ -58,8 +58,8 @@ const ProductCard = ({ product, likeProductHandler, note, rank }: ProductCardPro
 			<div className={'bottom'}>
 				<span className={'price-row'}>
 					{off > 0 && <span className={'sale'}>{off}%</span>}
-					<span className={'now'}>{formatKRW(product.productSalePrice)}</span>
-					{off > 0 && <s>{formatKRW(product.productPrice)}</s>}
+					<span className={'now'}>{formatPrice(product.productSalePrice)}</span>
+					{off > 0 && <s>{formatPrice(product.productPrice)}</s>}
 				</span>
 				<button className={'soft-btn small'} onClick={pushDetailHandler}>
 					View
