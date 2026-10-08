@@ -19,6 +19,9 @@ export const formatPrice = (value: number | undefined, locale: string = i18n?.la
 	return locale === 'ru' ? `${spaced} сум` : `${spaced} so'm`;
 };
 
+// "8600123456789012" -> "8600 1234 5678 9012", easier to read and type
+export const formatCard = (cardNumber: string): string => cardNumber.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+
 // true when prices on screen are converted from so'm, so the shop says the charge is in so'm
 export const isConvertedPrice = (locale: string = i18n?.language ?? 'uz'): boolean => locale === 'en' || locale === 'kr';
 

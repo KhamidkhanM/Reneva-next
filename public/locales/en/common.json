@@ -836,5 +836,20 @@
   "Practice payment: no card is needed and no money is charged.": "Practice payment: no card is needed and no money is charged.",
   "This payment is already finished.": "This payment is already finished.",
   "This payment was not found.": "This payment was not found.",
-  "Real Payme and Click payments are not connected yet!": "Real Payme and Click payments are not connected yet!"
+  "Real Payme and Click payments are not connected yet!": "Real Payme and Click payments are not connected yet!",
+  "Card to card transfer": "Card to card transfer",
+  "Card transfer": "Card transfer",
+  "Pay by card transfer": "Pay by card transfer",
+  "Open your bank app (or go to a bank) and send exactly this amount:": "Open your bank app (or go to a bank) and send exactly this amount:",
+  "Check that the name matches, then send the money.": "Check that the name matches, then send the money.",
+  "Send a photo of the receipt so the store can find your payment.": "Send a photo of the receipt so the store can find your payment.",
+  "Send receipt in Telegram": "Send receipt in Telegram",
+  "Receipt received. The store is checking your payment…": "Receipt received. The store is checking your payment…",
+  "After the transfer, the store will check your payment and confirm the order.": "After the transfer, the store will check your payment and confirm the order.",
+  "Copy": "Copy",
+  "Copied": "Copied",
+  "Could not copy, please write the number down": "Could not copy, please write the number down",
+  "Card number": "Card number",
+  "Card transfer is available when all items are from one store!": "Card transfer is available when all items are from one store!",
+  "This store does not accept card transfers yet!": "This store does not accept card transfers yet!"
 }

@@ -274,6 +274,7 @@ export const GET_MY_CART = gql`
 					productPrice
 					productSalePrice
 					brandId
+					memberId
 					brandData {
 						_id
 						brandName
@@ -681,6 +682,21 @@ export const GET_MY_PAYMENT = gql`
 			paymentMethod
 			paymentAmount
 			paymentStatus
+		}
+	}
+`;
+
+export const GET_TRANSFER_INFO = gql`
+	query GetTransferInfo($orderId: String!) {
+		getTransferInfo(orderId: $orderId) {
+			paymentId
+			orderNumber
+			amount
+			cardNumber
+			cardOwner
+			paymentStatus
+			receiptUrl
+			receiptSent
 		}
 	}
 `;

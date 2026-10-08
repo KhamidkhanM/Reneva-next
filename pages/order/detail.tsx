@@ -13,7 +13,8 @@ import ReviewForm from '../../libs/components/mypage/ReviewForm';
 import { GET_ORDER } from '../../apollo/user/query';
 import { CANCEL_ORDER, CONFIRM_ORDER, START_PAYMENT } from '../../apollo/user/mutation';
 import { Order, OrderItem } from '../../libs/types/order';
-import { OrderStatus, PaymentMethod } from '../../libs/enums/order.enum';
+import { OrderStatus, PaymentMethod, PaymentStatus } from '../../libs/enums/order.enum';
+import TransferBox from '../../libs/components/order/TransferBox';
 import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { openSupportChat } from '../../libs/components/chat/openChat';
@@ -183,6 +184,9 @@ const OrderDetail: NextPage = () => {
 							</p>
 						)}
 
+						{order.orderStatus === OrderStatus.PAUSE &&
+							payment?.paymentMethod === PaymentMethod.CARD_TRANSFER &&
+							payment?.paymentStatus === PaymentStatus.READY && <TransferBox orderId={orderId} onFinished={() => refetch()} />}
 						{order.orderStatus === OrderStatus.PAUSE && (
 							<div className={'pay-again'}>
 								<button className={'primary-btn'} onClick={() => payWith(PaymentMethod.PAYME)}>
@@ -190,6 +194,9 @@ const OrderDetail: NextPage = () => {
 								</button>
 								<button className={'primary-btn'} onClick={() => payWith(PaymentMethod.CLICK)}>
 									{t('Pay with Click')}
+								</button>
+								<button className={'primary-btn'} onClick={() => payWith(PaymentMethod.CARD_TRANSFER)}>
+									{t('Card to card transfer')}
 								</button>
 								<button className={'ghost-btn'} onClick={() => payWith(PaymentMethod.CASH)}>
 									{t('Cash on delivery')}

@@ -836,5 +836,20 @@
   "Practice payment: no card is needed and no money is charged.": "Mashq to'lovi: karta kerak emas, pul yechilmaydi.",
   "This payment is already finished.": "Bu to'lov allaqachon yakunlangan.",
   "This payment was not found.": "To'lov topilmadi.",
-  "Real Payme and Click payments are not connected yet!": "Haqiqiy Payme va Click to'lovlari hali ulanmagan!"
+  "Real Payme and Click payments are not connected yet!": "Haqiqiy Payme va Click to'lovlari hali ulanmagan!",
+  "Card to card transfer": "Kartadan kartaga o'tkazma",
+  "Card transfer": "Karta o'tkazmasi",
+  "Pay by card transfer": "Karta orqali o'tkazma bilan to'lash",
+  "Open your bank app (or go to a bank) and send exactly this amount:": "Bank ilovangizni oching (yoki bankka boring) va aynan shu summani yuboring:",
+  "Check that the name matches, then send the money.": "Ism mos kelishini tekshiring, so'ng pulni yuboring.",
+  "Send a photo of the receipt so the store can find your payment.": "Do'kon to'lovingizni topishi uchun chek rasmini yuboring.",
+  "Send receipt in Telegram": "Chekni Telegramda yuborish",
+  "Receipt received. The store is checking your payment…": "Chek qabul qilindi. Do'kon to'lovingizni tekshirmoqda…",
+  "After the transfer, the store will check your payment and confirm the order.": "O'tkazmadan so'ng do'kon to'lovni tekshirib, buyurtmani tasdiqlaydi.",
+  "Copy": "Nusxalash",
+  "Copied": "Nusxalandi",
+  "Could not copy, please write the number down": "Nusxalab bo'lmadi, raqamni yozib oling",
+  "Card number": "Karta raqami",
+  "Card transfer is available when all items are from one store!": "Karta o'tkazmasi barcha mahsulotlar bitta do'kondan bo'lganda mavjud!",
+  "This store does not accept card transfers yet!": "Bu do'kon hali karta o'tkazmalarini qabul qilmaydi!"
 }
