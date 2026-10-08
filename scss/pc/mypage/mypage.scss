@@ -121,6 +121,18 @@
 			background: $bg;
 		}
 	}
+	.cell-text {
+		max-width: 520px;
+		white-space: normal;
+		small {
+			display: -webkit-box;
+			-webkit-line-clamp: 3;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+			color: $muted-2;
+			font-size: 13px;
+		}
+	}
 	.row-btns {
 		text-align: right;
 		white-space: nowrap;
