@@ -5,9 +5,9 @@ import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { googleLogIn, logIn, signUp } from '../../libs/auth';
-import GoogleButton from '../../libs/components/common/GoogleButton';
+import { GoogleLogin } from '@react-oauth/google';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
-import { FREE_DELIVERY_FROM, Messages } from '../../libs/config';
+import { FREE_DELIVERY_FROM, Messages, REACT_APP_GOOGLE_CLIENT_ID } from '../../libs/config';
 import { formatPrice } from '../../libs/utils';
 import { MemberType } from '../../libs/enums/member.enum';
 import { useTranslation } from 'next-i18next';
@@ -62,19 +62,17 @@ const Join: NextPage = () => {
 		}
 	}, [input, phoneToken, verifyPhone]);
 
-	const doGoogle = useCallback(
-		async (credential: string) => {
+	const doGoogleLogin = useCallback(
+		async (credential?: string) => {
 			try {
-				// on the sign-up tab the chosen "Shop / Sell" type is used if this Google account is new
-				const { isNew } = await googleLogIn(credential, loginView ? undefined : input.type);
-				if (!isNew) return await router.push(`${router.query.referrer ?? '/'}`);
-				const seller = !loginView && input.type === MemberType.SELLER;
-				await router.push(seller ? '/mypage?category=myBrands' : '/mypage?category=myProfile');
+				if (!credential) throw new Error('Google sign-in failed, please try again!');
+				await googleLogIn(credential);
+				await router.push(`${router.query.referrer ?? '/'}`);
 			} catch (err: any) {
 				await sweetMixinErrorAlert(err.message);
 			}
 		},
-		[input.type, loginView, router.query.referrer],
+		[router],
 	);
 
 	const submitHandler = (e: React.FormEvent) => {
@@ -165,16 +163,28 @@ const Join: NextPage = () => {
 						<button type={'submit'} className={'primary-btn'}>
 							{loginView ? t('Log in') : t('Create account')}
 						</button>
-						<div className={'or-line'}>
-							<span>{t('or')}</span>
-						</div>
-						<GoogleButton text={loginView ? 'signin_with' : 'signup_with'} onCredential={doGoogle} />
 						<p className={'hint'}>
 							{loginView ? t('New here? ') : t('Already a member? ')}
 							<button type={'button'} className={'link'} onClick={() => setLoginView(!loginView)}>
 								{loginView ? t('Create an account') : t('Log in')}
 							</button>
 						</p>
+						{REACT_APP_GOOGLE_CLIENT_ID && (
+							<>
+								<div className={'or-line'}>
+									<span>{t('or')}</span>
+								</div>
+								<div className={'google-login'}>
+									<GoogleLogin
+										onSuccess={(res) => doGoogleLogin(res.credential)}
+										onError={() => sweetMixinErrorAlert('Google sign-in failed, please try again!')}
+										shape={'pill'}
+										width={'320'}
+										text={loginView ? 'signin_with' : 'signup_with'}
+									/>
+								</div>
+							</>
+						)}
 					</form>
 				</div>
 			</div>

@@ -822,5 +822,6 @@
   "Passwords do not match": "Пароли не совпадают",
   "Password changed, you are logged in": "Пароль изменён, вы вошли в аккаунт",
   "Save new password": "Сохранить новый пароль",
-  "Back to log in": "Вернуться ко входу"
+  "Back to log in": "Вернуться ко входу",
+  "Google sign-in failed, please try again!": "Не удалось войти через Google, попробуйте снова!"
 }

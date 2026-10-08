@@ -822,5 +822,6 @@
   "Passwords do not match": "Passwords do not match",
   "Password changed, you are logged in": "Password changed, you are logged in",
   "Save new password": "Save new password",
-  "Back to log in": "Back to log in"
+  "Back to log in": "Back to log in",
+  "Google sign-in failed, please try again!": "Google sign-in failed, please try again!"
 }

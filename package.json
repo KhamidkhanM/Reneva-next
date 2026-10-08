@@ -16,6 +16,7 @@
 		"@mui/icons-material": "^5.4.2",
 		"@mui/lab": "^5.0.0-alpha.85",
 		"@mui/material": "^5.10.1",
+		"@react-oauth/google": "^0.13.5",
 		"animate.css": "^4.1.1",
 		"apollo-upload-client": "^17.0.0",
 		"google-auth-library": "^11.2.0",

@@ -7,6 +7,8 @@ import { ApolloProvider, useReactiveVar } from '@apollo/client';
 import { ratesVar } from '../apollo/store';
 import { GET_EXCHANGE_RATES } from '../apollo/user/query';
 import { useApollo } from '../apollo/client';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { REACT_APP_GOOGLE_CLIENT_ID } from '../libs/config';
 import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import moment from 'moment';
@@ -36,12 +38,15 @@ const App = ({ Component, pageProps }: AppProps) => {
 	}, []);
 
 	return (
-		<ApolloProvider client={client}>
-			<ThemeProvider theme={theme}>
-				<CssBaseline />
-				<Component {...pageProps} />
-			</ThemeProvider>
-		</ApolloProvider>
+		// Google writes its button in the site language; Google calls Korean "ko", the site uses "kr"
+		<GoogleOAuthProvider clientId={REACT_APP_GOOGLE_CLIENT_ID} locale={locale === 'kr' ? 'ko' : locale}>
+			<ApolloProvider client={client}>
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
+					<Component {...pageProps} />
+				</ThemeProvider>
+			</ApolloProvider>
+		</GoogleOAuthProvider>
 	);
 };
 
