@@ -18,6 +18,7 @@ import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { FREE_DELIVERY_FROM } from '../../libs/config';
 import { formatPrice, imageUrl, isConvertedPrice } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -31,6 +32,7 @@ const buyable = (item: Cart) =>
 	(item.optionData?.optionStock ?? 0) >= item.cartQuantity;
 
 const CartPage: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 
@@ -74,9 +76,9 @@ const CartPage: NextPage = () => {
 			<div id={'cart-page'}>
 				<div className={'container'}>
 					<div className={'no-data'}>
-						<p>Login to see your cart.</p>
+						<p>{t('Login to see your cart.')}</p>
 						<button className={'primary-btn'} onClick={() => router.push('/account/join')}>
-							Login
+							{t('Login')}
 						</button>
 					</div>
 				</div>
@@ -94,9 +96,9 @@ const CartPage: NextPage = () => {
 					<Stack className={'cart-items'}>
 						{items.length === 0 && !loading ? (
 							<div className={'no-data'}>
-								<p>Your cart is empty.</p>
+								<p>{t('Your cart is empty.')}</p>
 								<Link href={'/product'} className={'primary-btn'}>
-									Start shopping
+									{t('Start shopping')}
 								</Link>
 							</div>
 						) : (
@@ -107,7 +109,7 @@ const CartPage: NextPage = () => {
 											checked={items.length > 0 && items.every((item) => item.cartSelected)}
 											onChange={(e) => selectAllHandler(e.target.checked)}
 										/>
-										Select all ({selectedCount}/{items.length})
+										{t('Select all (')}{selectedCount}/{items.length})
 									</label>
 								</div>
 								{items.map((item) => {
@@ -118,7 +120,7 @@ const CartPage: NextPage = () => {
 											<Checkbox
 												checked={item.cartSelected}
 												onChange={(e) => updateHandler({ _id: item._id, cartSelected: e.target.checked })}
-												inputProps={{ 'aria-label': `Select ${item.productData?.productTitle}` }}
+												inputProps={{ 'aria-label': t('Select {{name}}', { name: item.productData?.productTitle }) }}
 											/>
 											<Link href={{ pathname: '/product/detail', query: { id: item.productId } }}>
 												<ProductThumb image={imageUrl(item.optionData?.optionImage || item.productData?.productImages?.[0])} seed={item.productId} size={96} radius={20} />
@@ -129,11 +131,11 @@ const CartPage: NextPage = () => {
 													{item.productData?.productTitle}
 												</Link>
 												<span className={'option'}>{item.optionData?.optionName}</span>
-												{!ok && <span className={'warn'}>Not enough stock right now</span>}
+												{!ok && <span className={'warn'}>{t('Not enough stock right now')}</span>}
 											</div>
 											<div className={'qty'}>
 												<IconButton
-													aria-label={'Less'}
+													aria-label={t('Less')}
 													size={'small'}
 													disabled={item.cartQuantity <= 1}
 													onClick={() => updateHandler({ _id: item._id, cartQuantity: item.cartQuantity - 1 })}
@@ -142,7 +144,7 @@ const CartPage: NextPage = () => {
 												</IconButton>
 												<span>{item.cartQuantity}</span>
 												<IconButton
-													aria-label={'More'}
+													aria-label={t('More')}
 													size={'small'}
 													disabled={item.cartQuantity >= Math.min(99, item.optionData?.optionStock ?? 0)}
 													onClick={() => updateHandler({ _id: item._id, cartQuantity: item.cartQuantity + 1 })}
@@ -151,7 +153,7 @@ const CartPage: NextPage = () => {
 												</IconButton>
 											</div>
 											<b className={'line-total'}>{formatPrice(price * item.cartQuantity)}</b>
-											<IconButton aria-label={'Remove'} onClick={() => removeHandler(item._id)}>
+											<IconButton aria-label={t('Remove')} onClick={() => removeHandler(item._id)}>
 												<DeleteOutlineRoundedIcon />
 											</IconButton>
 										</article>
@@ -162,29 +164,29 @@ const CartPage: NextPage = () => {
 					</Stack>
 
 					<Stack className={'cart-summary'}>
-						<h2>Summary</h2>
+						<h2>{t('Summary')}</h2>
 						<div className={'row'}>
-							<span>Products</span>
+							<span>{t('Products')}</span>
 							<b>{formatPrice(subtotal)}</b>
 						</div>
 						<div className={'row'}>
-							<span>Delivery</span>
-							<b>{cart?.cartDeliveryFee ? formatPrice(cart.cartDeliveryFee) : 'Free'}</b>
+							<span>{t('Delivery')}</span>
+							<b>{cart?.cartDeliveryFee ? formatPrice(cart.cartDeliveryFee) : t('Free (delivery)')}</b>
 						</div>
 						{subtotal > 0 && (
 							<div className={'free-bar'}>
 								<LinearProgress variant={'determinate'} value={Math.min(100, (subtotal / FREE_DELIVERY_FROM) * 100)} />
-								<span>{toFree > 0 ? `Add ${formatPrice(toFree)} more for free delivery` : 'You get free delivery'}</span>
+								<span>{toFree > 0 ? t('Add {{amount}} more for free delivery', { amount: formatPrice(toFree) }) : t('You get free delivery')}</span>
 							</div>
 						)}
 						<div className={'row total'}>
-							<span>Total</span>
+							<span>{t('Total')}</span>
 							<b>{formatPrice(cart?.cartTotal ?? 0)}</b>
 						</div>
-						<p className={'hint'}>Coupons and points are applied at checkout.</p>
-						{isConvertedPrice() && <p className={'hint'}>Orders are paid in so'm. Prices in other currencies are approximate.</p>}
+						<p className={'hint'}>{t('Coupons and points are applied at checkout.')}</p>
+						{isConvertedPrice() && <p className={'hint'}>{t("Orders are paid in so'm. Prices in other currencies are approximate.")}</p>}
 						<button className={'primary-btn'} disabled={selectedCount === 0} onClick={() => router.push('/order')}>
-							Checkout ({selectedCount})
+							{t('Checkout (')}{selectedCount})
 						</button>
 					</Stack>
 				</Stack>

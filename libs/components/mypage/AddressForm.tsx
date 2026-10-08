@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/client';
 import { CREATE_ADDRESS } from '../../../apollo/user/mutation';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface AddressFormProps {
 	onSaved: (addressId: string) => void;
@@ -13,6 +14,7 @@ interface AddressFormProps {
 const empty = { addressLabel: 'Home', addressRecipient: '', addressPhone: '', addressZip: '', addressLine1: '', addressLine2: '' };
 
 const AddressForm = ({ onSaved, onCancel }: AddressFormProps) => {
+	const { t } = useTranslation('common');
 	const [form, setForm] = useState({ ...empty });
 	const [makeDefault, setMakeDefault] = useState<boolean>(true);
 	const [createAddress, { loading }] = useMutation(CREATE_ADDRESS);
@@ -51,15 +53,15 @@ const AddressForm = ({ onSaved, onCancel }: AddressFormProps) => {
 				{field('addressLine2', 'Detail', 'Apartment, floor (optional)', true, false)}
 			</div>
 			<Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} flexWrap={'wrap'} gap={'10px'}>
-				<FormControlLabel control={<Checkbox checked={makeDefault} onChange={(e) => setMakeDefault(e.target.checked)} />} label={'Use as my default address'} />
+				<FormControlLabel control={<Checkbox checked={makeDefault} onChange={(e) => setMakeDefault(e.target.checked)} />} label={t('Use as my default address')} />
 				<div className={'btns'}>
 					{onCancel && (
 						<button type={'button'} className={'ghost-btn'} onClick={onCancel}>
-							Cancel
+							{t('Cancel')}
 						</button>
 					)}
 					<button type={'submit'} className={'primary-btn'} disabled={loading}>
-						Save address
+						{t('Save address')}
 					</button>
 				</div>
 			</Stack>

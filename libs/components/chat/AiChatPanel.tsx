@@ -11,10 +11,11 @@ import { GET_AI_MESSAGES, GET_MY_AI_CHATS } from '../../../apollo/user/query';
 import { CREATE_AI_CHAT, FEEDBACK_AI_MESSAGE, SEND_AI_MESSAGE } from '../../../apollo/user/mutation';
 import { AiChat, AiMessage } from '../../types/chat';
 import { AiChatStatus, AiChatType, AiMessageFeedback, AiMessageRole } from '../../enums/ai.enum';
-import { formatPrice, imageUrl } from '../../utils';
+import { formatPrice, imageUrl, labelOf } from '../../utils';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
 import { openChatRoomById } from './openChat';
 import ProductThumb from '../common/ProductThumb';
+import { useTranslation } from 'next-i18next';
 
 const quickReplies = [
 	'My skin gets dry in winter, which cream?',
@@ -33,6 +34,7 @@ interface AiChatPanelProps {
 }
 
 const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, analysisId, initialChat, onChatChange, startFresh }: AiChatPanelProps) => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const client = useApolloClient();
@@ -156,11 +158,11 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 			<Box component={'div'} className={'ai-chat-top'}>
 				<img src={'/img/logo/rena-ai.svg'} alt={''} className={'avatar'} />
 				<div className={'who'}>
-					<strong>Rena</strong>
-					<span>AI beauty advisor · recommends real Reneva products</span>
+					<strong>{t('Rena')}</strong>
+					<span>{t('AI beauty advisor · recommends real Reneva products')}</span>
 				</div>
 				{messages.length > 0 && (
-					<IconButton aria-label={'Start a new chat'} title={'New chat'} onClick={newChatHandler} size={'small'}>
+					<IconButton aria-label={t('Start a new chat')} title={t('New chat')} onClick={newChatHandler} size={'small'}>
 						<AddCommentOutlinedIcon fontSize={'small'} />
 					</IconButton>
 				)}
@@ -170,14 +172,14 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 				{messages.length === 0 && (
 					<Stack className={'ai-welcome'}>
 						<img src={'/img/logo/rena-ai.svg'} alt={''} />
-						<strong>Hi{user.memberNick ? `, ${user.memberNick}` : ''}! I&apos;m Rena.</strong>
+						<strong>{t('Hi')}{user.memberNick ? `, ${user.memberNick}` : ''}{t('! I\'m Rena.')}</strong>
 						<p>
-							Tell me about your skin or what you are looking for. I pick from products Reneva really sells
-							{user.memberSkinType ? `, with your ${user.memberSkinType.toLowerCase()} skin in mind` : ''}.
+							{t('Tell me about your skin or what you are looking for. I pick from products Reneva really sells')}
+							{user.memberSkinType ? t(', with your {{skin}} skin in mind', { skin: t(labelOf(user.memberSkinType)).toLowerCase() }) : ''}.
 						</p>
 						{!user._id && (
 							<button className={'primary-btn'} onClick={() => router.push('/account/join')}>
-								Login to chat with Rena
+								{t('Login to chat with Rena')}
 							</button>
 						)}
 					</Stack>
@@ -212,7 +214,7 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 								{!mine && !message._id.startsWith('temp') && (
 									<div className={'feedback'}>
 										<IconButton
-											aria-label={'Helpful'}
+											aria-label={t('Helpful')}
 											size={'small'}
 											className={message.aiMessageFeedback === AiMessageFeedback.LIKE ? 'on' : ''}
 											onClick={() => feedbackHandler(message, AiMessageFeedback.LIKE)}
@@ -220,7 +222,7 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 											<ThumbUpAltOutlinedIcon fontSize={'inherit'} />
 										</IconButton>
 										<IconButton
-											aria-label={'Not helpful'}
+											aria-label={t('Not helpful')}
 											size={'small'}
 											className={message.aiMessageFeedback === AiMessageFeedback.DISLIKE ? 'on' : ''}
 											onClick={() => feedbackHandler(message, AiMessageFeedback.DISLIKE)}
@@ -238,21 +240,21 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 					<div className={'ai-msg rena'}>
 						<img src={'/img/logo/rena-ai.svg'} alt={''} className={'mini-avatar'} />
 						<div className={'bubble thinking'}>
-							<CircularProgress size={14} /> Rena is thinking…
+							<CircularProgress size={14} /> {t('Rena is thinking…')}
 						</div>
 					</div>
 				)}
 
 				{handedOff && (
 					<div className={'handoff'}>
-						<span>Rena passed this to Reneva support. A person will answer you in Messages.</span>
+						<span>{t('Rena passed this to Reneva support. A person will answer you in Messages.')}</span>
 						{aiChat?.roomId && (
 							<button className={'primary-btn'} onClick={() => openChatRoomById(aiChat.roomId as string)}>
-								Open support chat
+								{t('Open support chat')}
 							</button>
 						)}
 						<button className={'ghost-btn'} onClick={newChatHandler}>
-							Ask Rena something else
+							{t('Ask Rena something else')}
 						</button>
 					</div>
 				)}
@@ -271,13 +273,13 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 					)}
 					<Box component={'div'} className={'ai-input'}>
 						<label className={'sr-only'} htmlFor={`ai-input-${variant}`}>
-							Message Rena
+							{t('Message Rena')}
 						</label>
 						<textarea
 							id={`ai-input-${variant}`}
 							rows={1}
 							value={text}
-							placeholder={user._id ? 'Ask about skin, routines, ingredients…' : 'Login to chat with Rena'}
+							placeholder={user._id ? t('Ask about skin, routines, ingredients…') : t('Login to chat with Rena')}
 							disabled={!user._id || thinking}
 							onChange={(e) => setText(e.target.value)}
 							onKeyDown={keyHandler}
@@ -285,7 +287,7 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 						/>
 						<button
 							className={'send-btn'}
-							aria-label={'Send'}
+							aria-label={t('Send')}
 							onClick={() => sendHandler()}
 							disabled={!user._id || thinking || !text.trim()}
 						>

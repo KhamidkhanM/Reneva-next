@@ -95,3 +95,52 @@ export const GET_ALL_NOTICES_BY_ADMIN = gql`
 		}
 	}
 `;
+
+export const GET_ALL_REVIEWS_BY_ADMIN = gql`
+	query GetAllReviewsByAdmin($input: OrdinaryInquiry!) {
+		getAllReviewsByAdmin(input: $input) {
+			list {
+				_id
+				reviewRating
+				reviewContent
+				reviewImages
+				productId
+				createdAt
+				memberData {
+					_id
+					memberNick
+					memberImage
+				}
+				productData {
+					_id
+					productTitle
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_ALL_COMMENTS_BY_ADMIN = gql`
+	query GetAllCommentsByAdmin($input: OrdinaryInquiry!) {
+		getAllCommentsByAdmin(input: $input) {
+			list {
+				_id
+				commentGroup
+				commentContent
+				commentRefId
+				createdAt
+				memberData {
+					_id
+					memberNick
+					memberImage
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;

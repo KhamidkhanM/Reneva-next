@@ -162,6 +162,15 @@ export const UPDATE_PRODUCT = gql`
 	}
 `;
 
+export const ADD_PRODUCT_OPTION = gql`
+	mutation AddProductOption($productId: String!, $input: ProductOptionInput!) {
+		addProductOption(productId: $productId, input: $input) {
+			_id
+			productStatus
+		}
+	}
+`;
+
 export const UPDATE_PRODUCT_OPTION = gql`
 	mutation UpdateProductOption($input: ProductOptionUpdate!) {
 		updateProductOption(input: $input) {

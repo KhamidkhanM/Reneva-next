@@ -8,6 +8,7 @@ import { logOut } from '../../auth';
 import { labelOf, memberImage } from '../../utils';
 import { MemberType } from '../../enums/member.enum';
 import { sweetConfirmAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface MenuGroup {
 	title: string;
@@ -57,6 +58,7 @@ const commonGroups: MenuGroup[] = [
 ];
 
 const MyMenu = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const category = (router.query.category as string) ?? 'myProfile';
@@ -72,22 +74,22 @@ const MyMenu = () => {
 				<img src={memberImage(user.memberImage)} alt={''} />
 				<div>
 					<b>{user.memberNick}</b>
-					<span>{user.memberType === MemberType.USER ? `${labelOf(user.memberLevel)} member` : labelOf(user.memberType)}</span>
+					<span>{user.memberType === MemberType.USER ? t('{{level}} member', { level: labelOf(user.memberLevel) }) : t(labelOf(user.memberType))}</span>
 				</div>
 			</div>
 			{user.memberType === MemberType.USER && (
 				<div className={'points'}>
 					<span>
-						<b>{user.memberPoints ?? 0}P</b> points
+						<b>{user.memberPoints ?? 0}P</b> {t('points')}
 					</span>
 					<span>
-						<b>{user.memberOrders ?? 0}</b> orders
+						<b>{user.memberOrders ?? 0}</b> {t('orders')}
 					</span>
 				</div>
 			)}
 			{groups.map((group) => (
 				<nav key={group.title} className={'group'} aria-label={group.title}>
-					<span className={'title'}>{group.title}</span>
+					<span className={'title'}>{t(group.title)}</span>
 					{group.items.map((item) => (
 						<Link
 							key={item.category}
@@ -95,13 +97,13 @@ const MyMenu = () => {
 							scroll={false}
 							className={category === item.category ? 'on' : ''}
 						>
-							{item.label}
+							{t(item.label)}
 						</Link>
 					))}
 				</nav>
 			))}
 			<button className={'logout'} onClick={logoutHandler}>
-				Log out
+				{t('Log out')}
 			</button>
 		</Stack>
 	);

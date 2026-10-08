@@ -117,7 +117,7 @@ const withLayoutBasic = (Component: any) => {
 		return (
 			<>
 				<Head>
-					<title>{memoizedValues.title ? `${t(memoizedValues.title)} · Reneva` : 'Reneva'}</title>
+					<title>{memoizedValues.title ? `${t(memoizedValues.title)} · Reneva` : t('Reneva')}</title>
 					<meta name={'title'} content={`Reneva`} />
 				</Head>
 				<Stack id={device === 'mobile' ? 'mobile-wrap' : 'pc-wrap'}>

@@ -4,6 +4,7 @@ import { Stack } from '@mui/material';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import { SkinConcern } from '../../enums/member.enum';
 import { labelOf } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 const concerns = [
 	{ value: SkinConcern.DRYNESS, tone: 'lilac' },
@@ -15,6 +16,7 @@ const concerns = [
 ];
 
 const ShopByConcern = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 
 	const pushHandler = async (concern: SkinConcern) => {
@@ -25,14 +27,14 @@ const ShopByConcern = () => {
 	return (
 		<Stack className={'shop-by-concern'}>
 			<Stack className={'container column'}>
-				<h2 className={'section-title'}>Shop by concern</h2>
+				<h2 className={'section-title'}>{t('Shop by concern')}</h2>
 				<div className={'concern-grid'}>
 					{concerns.map((item) => (
 						<button key={item.value} className={`concern ${item.tone}`} onClick={() => pushHandler(item.value)}>
 							<span className={'icon'}>
 								<WaterDropOutlinedIcon fontSize={'small'} />
 							</span>
-							<b>{labelOf(item.value === SkinConcern.WRINKLE ? 'WRINKLES' : item.value)}</b>
+							<b>{t(labelOf(item.value === SkinConcern.WRINKLE ? 'WRINKLES' : item.value))}</b>
 						</button>
 					))}
 				</div>

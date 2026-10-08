@@ -5,8 +5,10 @@ import { REMOVE_ADDRESS, UPDATE_ADDRESS } from '../../../apollo/user/mutation';
 import { Address } from '../../types/order';
 import AddressForm from './AddressForm';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyAddresses = () => {
+	const { t } = useTranslation('common');
 	const [adding, setAdding] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
@@ -38,16 +40,16 @@ const MyAddresses = () => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>Addresses</h2>
-				<p>The default address is picked first at checkout.</p>
+				<h2>{t('Addresses')}</h2>
+				<p>{t('The default address is picked first at checkout.')}</p>
 			</div>
-			{addresses.length === 0 && !adding && <div className={'no-data'}>No saved addresses.</div>}
+			{addresses.length === 0 && !adding && <div className={'no-data'}>{t('No saved addresses.')}</div>}
 			<div className={'address-list'}>
 				{addresses.map((address) => (
 					<div key={address._id} className={`address-card ${address.addressDefault ? 'on' : ''}`}>
 						<b>
 							{address.addressLabel}
-							{address.addressDefault && <span className={'tag-pill'}>Default</span>}
+							{address.addressDefault && <span className={'tag-pill'}>{t('Default')}</span>}
 						</b>
 						<span>
 							{address.addressRecipient} · {address.addressPhone}
@@ -58,11 +60,11 @@ const MyAddresses = () => {
 						<div className={'btns'}>
 							{!address.addressDefault && (
 								<button className={'ghost-btn small'} onClick={() => defaultHandler(address._id)}>
-									Make default
+									{t('Make default')}
 								</button>
 							)}
 							<button className={'ghost-btn small'} onClick={() => removeHandler(address._id)}>
-								Remove
+								{t('Remove')}
 							</button>
 						</div>
 					</div>
@@ -79,7 +81,7 @@ const MyAddresses = () => {
 			) : (
 				<div className={'actions'}>
 					<button className={'soft-btn'} onClick={() => setAdding(true)}>
-						+ Add address
+						{t('+ Add address')}
 					</button>
 				</div>
 			)}

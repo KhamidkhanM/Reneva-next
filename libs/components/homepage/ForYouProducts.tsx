@@ -9,11 +9,13 @@ import { AiRecommendation } from '../../types/chat';
 import { Product } from '../../types/product';
 import { T } from '../../types/common';
 import { ProductTag } from '../../enums/product.enum';
-import { likeHandler } from '../../utils';
+import { labelOf, likeHandler } from '../../utils';
 import ProductCard from '../common/ProductCard';
+import { useTranslation } from 'next-i18next';
 
 // logged in: the "For You" list from the batch and the AI advisor; guests: best sellers
 const ForYouProducts = () => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [items, setItems] = useState<{ product: Product; note?: string }[]>([]);
 
@@ -44,22 +46,22 @@ const ForYouProducts = () => {
 			<Stack className={'container column'}>
 				<Stack className={'info-box'}>
 					<Box component={'div'} className={'left'}>
-						<h2 className={'section-title'}>{user._id ? 'Picked for you' : 'Best sellers'}</h2>
+						<h2 className={'section-title'}>{user._id ? t('Picked for you') : t('Best sellers')}</h2>
 						<p>
 							{user._id
 								? user.memberSkinType
-									? `Matched to your ${user.memberSkinType.toLowerCase()} skin and what you looked at`
-									: 'Add your skin type in My Page for better picks'
-								: 'What Reneva shoppers buy most'}
+									? t('Matched to your {{skin}} skin and what you looked at', { skin: t(labelOf(user.memberSkinType)).toLowerCase() })
+									: t('Add your skin type in My Page for better picks')
+								: t('What Reneva shoppers buy most')}
 						</p>
 					</Box>
 					<Link href={'/product'} className={'more-link'}>
-						View all →
+						{t('View all →')}
 					</Link>
 				</Stack>
 				{items.length === 0 ? (
 					<Box component={'div'} className={'empty-list'}>
-						No products yet
+						{t('No products yet')}
 					</Box>
 				) : (
 					<div className={'product-grid four'}>

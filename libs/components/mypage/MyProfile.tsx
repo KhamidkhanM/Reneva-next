@@ -9,8 +9,10 @@ import { labelOf, memberImage } from '../../utils';
 import { Messages, skinConcernList, skinTypeList } from '../../config';
 import { SkinConcern, SkinType } from '../../enums/member.enum';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const MyProfile = () => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [form, setForm] = useState({
 		memberNick: '',
@@ -85,49 +87,49 @@ const MyProfile = () => {
 	return (
 		<form className={'my-section'} onSubmit={submitHandler}>
 			<div className={'section-head'}>
-				<h2>My profile</h2>
-				<p>Your skin profile helps Rena and the shop pick products for you.</p>
+				<h2>{t('My profile')}</h2>
+				<p>{t('Your skin profile helps Rena and the shop pick products for you.')}</p>
 			</div>
 
 			<div className={'box'}>
 				<div className={'avatar-row'}>
 					<img src={memberImage(form.memberImage)} alt={''} />
 					<label className={'soft-btn'}>
-						<PhotoCameraRoundedIcon fontSize={'small'} /> Change photo
+						<PhotoCameraRoundedIcon fontSize={'small'} /> {t('Change photo')}
 						<input type={'file'} hidden accept={'image/png, image/jpg, image/jpeg'} onChange={uploadImage} />
 					</label>
 				</div>
 				<div className={'form-grid'}>
 					<label className={'field'}>
-						<span>Nickname</span>
+						<span>{t('Nickname')}</span>
 						<input value={form.memberNick} onChange={change('memberNick')} required />
 					</label>
 					<label className={'field'}>
-						<span>Phone</span>
+						<span>{t('Phone')}</span>
 						<input type={'tel'} value={form.memberPhone} onChange={change('memberPhone')} required />
 					</label>
 					<label className={'field'}>
-						<span>Full name</span>
+						<span>{t('Full name')}</span>
 						<input value={form.memberFullName} onChange={change('memberFullName')} />
 					</label>
 					<label className={'field'}>
-						<span>Email</span>
+						<span>{t('Email')}</span>
 						<input type={'email'} value={form.memberEmail} onChange={change('memberEmail')} />
 					</label>
 					<label className={'field wide'}>
-						<span>Address</span>
+						<span>{t('Address')}</span>
 						<input value={form.memberAddress} onChange={change('memberAddress')} />
 					</label>
 					<label className={'field wide'}>
-						<span>About me</span>
+						<span>{t('About me')}</span>
 						<textarea rows={3} value={form.memberDesc} onChange={change('memberDesc')} />
 					</label>
 				</div>
 			</div>
 
 			<div className={'box'}>
-				<h2>Skin profile</h2>
-				<span className={'label'}>Skin type</span>
+				<h2>{t('Skin profile')}</h2>
+				<span className={'label'}>{t('Skin type')}</span>
 				<Stack className={'chips'}>
 					{skinTypeList.map((type) => (
 						<button
@@ -137,11 +139,11 @@ const MyProfile = () => {
 							aria-pressed={skinType === type}
 							onClick={() => setSkinType(skinType === type ? '' : type)}
 						>
-							{labelOf(type)}
+							{t(labelOf(type))}
 						</button>
 					))}
 				</Stack>
-				<span className={'label'}>Concerns</span>
+				<span className={'label'}>{t('Concerns')}</span>
 				<Stack className={'chips'}>
 					{skinConcernList.map((concern) => (
 						<button
@@ -151,7 +153,7 @@ const MyProfile = () => {
 							aria-pressed={concerns.includes(concern)}
 							onClick={() => toggleConcern(concern)}
 						>
-							{labelOf(concern)}
+							{t(labelOf(concern))}
 						</button>
 					))}
 				</Stack>
@@ -159,7 +161,7 @@ const MyProfile = () => {
 
 			<div className={'actions'}>
 				<button type={'submit'} className={'primary-btn'} disabled={loading}>
-					Save profile
+					{t('Save profile')}
 				</button>
 			</div>
 		</form>

@@ -14,6 +14,7 @@ import { ARCHIVE_AI_CHAT } from '../../apollo/user/mutation';
 import { AiChat } from '../../libs/types/chat';
 import { AiChatStatus, AiChatType } from '../../libs/enums/ai.enum';
 import { labelOf } from '../../libs/utils';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -28,6 +29,7 @@ const modes = [
 ];
 
 const AiAdvisorPage: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const analysisId = (router.query.analysisId as string) || undefined;
@@ -66,12 +68,12 @@ const AiAdvisorPage: NextPage = () => {
 						<div className={'modes'}>
 							{modes.map((ele) => (
 								<button key={ele.type} className={`mode ${mode === ele.type && !chat ? 'on' : ''}`} onClick={() => openChatHandler(null, ele.type)}>
-									<b>{ele.label}</b>
-									<span>{ele.desc}</span>
+									<b>{t(ele.label)}</b>
+									<span>{t(ele.desc)}</span>
 								</button>
 							))}
 						</div>
-						{analysisId && !chat && <div className={'context-note'}>Rena can see your latest skin analysis in this chat.</div>}
+						{analysisId && !chat && <div className={'context-note'}>{t('Rena can see your latest skin analysis in this chat.')}</div>}
 						<AiChatPanel
 							key={`${panelKey}-${mode}-${analysisId ?? ''}`}
 							variant={'page'}
@@ -85,50 +87,50 @@ const AiAdvisorPage: NextPage = () => {
 
 					<Stack className={'ai-side'}>
 						<section className={'box skin'}>
-							<h2>Your skin profile</h2>
+							<h2>{t('Your skin profile')}</h2>
 							{user.memberSkinType ? (
 								<>
 									<p>
-										<b>{labelOf(user.memberSkinType)}</b> skin
-										{user.memberSkinConcerns?.length ? ` · ${user.memberSkinConcerns.map(labelOf).join(', ')}` : ''}
+										<b>{t(labelOf(user.memberSkinType))}</b> {t('skin')}
+										{user.memberSkinConcerns?.length ? ` · ${user.memberSkinConcerns.map((ele) => t(labelOf(ele))).join(', ')}` : ''}
 									</p>
-									<span>Rena uses this to choose products for you.</span>
+									<span>{t('Rena uses this to choose products for you.')}</span>
 								</>
 							) : (
-								<p>Not set yet. Take a skin analysis or set it in My Page so Rena can pick better.</p>
+								<p>{t('Not set yet. Take a skin analysis or set it in My Page so Rena can pick better.')}</p>
 							)}
 							<div className={'btns'}>
 								<Link href={'/ai/skin'} className={'primary-btn'}>
-									Analyze my skin
+									{t('Analyze my skin')}
 								</Link>
 								<Link href={'/mypage?category=myProfile'} className={'ghost-btn'}>
-									Edit
+									{t('Edit')}
 								</Link>
 							</div>
 						</section>
 
 						<section className={'box'}>
-							<h2>Past chats</h2>
-							{!user._id && <p>Login to keep your chats.</p>}
-							{user._id && chats.length === 0 && <p>No chats yet.</p>}
+							<h2>{t('Past chats')}</h2>
+							{!user._id && <p>{t('Login to keep your chats.')}</p>}
+							{user._id && chats.length === 0 && <p>{t('No chats yet.')}</p>}
 							<div className={'past-chats'}>
 								{chats.map((ele) => (
 									<div key={ele._id} className={`past ${chat?._id === ele._id ? 'on' : ''}`}>
 										<button className={'open'} onClick={() => openChatHandler(ele)}>
 											<b>{ele.aiChatTitle}</b>
 											<span>
-												{labelOf(ele.aiChatType)} · {ele.aiChatStatus === AiChatStatus.HANDOFF ? 'with support' : moment(ele.lastMessageAt ?? ele.createdAt).fromNow()}
+												{t(labelOf(ele.aiChatType))} · {ele.aiChatStatus === AiChatStatus.HANDOFF ? t('with support') : moment(ele.lastMessageAt ?? ele.createdAt).fromNow()}
 											</span>
 										</button>
 										<button className={'link-btn'} onClick={() => archiveHandler(ele._id)} aria-label={`Remove chat ${ele.aiChatTitle}`}>
-											Remove
+											{t('Remove')}
 										</button>
 									</div>
 								))}
 							</div>
 						</section>
 
-						<p className={'disclaimer'}>Rena gives cosmetic advice, not medical advice. For skin problems that hurt or last, see a dermatologist.</p>
+						<p className={'disclaimer'}>{t('Rena gives cosmetic advice, not medical advice. For skin problems that hurt or last, see a dermatologist.')}</p>
 					</Stack>
 				</Stack>
 			</div>

@@ -12,6 +12,7 @@ import { Product, ProductsInquiry } from '../../types/product';
 import { T } from '../../types/common';
 import { likeHandler } from '../../utils';
 import ProductCard from '../common/ProductCard';
+import { useTranslation } from 'next-i18next';
 
 interface TrendProductsProps {
 	initialInput?: ProductsInquiry;
@@ -20,6 +21,7 @@ interface TrendProductsProps {
 const defaultInput: ProductsInquiry = { page: 1, limit: 8, sort: 'productLikes', direction: 'DESC', search: {} };
 
 const TrendProducts = ({ initialInput = defaultInput }: TrendProductsProps) => {
+	const { t } = useTranslation('common');
 	const device = useDeviceDetect();
 	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
 
@@ -41,17 +43,17 @@ const TrendProducts = ({ initialInput = defaultInput }: TrendProductsProps) => {
 			<Stack className={'container column'}>
 				<Stack className={'info-box'}>
 					<Box component={'div'} className={'left'}>
-						<h2 className={'section-title'}>New and trending</h2>
-						<p>The most loved products this week</p>
+						<h2 className={'section-title'}>{t('New and trending')}</h2>
+						<p>{t('The most loved products this week')}</p>
 					</Box>
 					{device !== 'mobile' && (
 						<Box component={'div'} className={'right'}>
 							<div className={'pagination-box'}>
-								<button className={'swiper-trend-prev'} aria-label={'Previous'}>
+								<button className={'swiper-trend-prev'} aria-label={t('Previous')}>
 									<WestIcon />
 								</button>
 								<div className={'swiper-trend-pagination'}></div>
-								<button className={'swiper-trend-next'} aria-label={'Next'}>
+								<button className={'swiper-trend-next'} aria-label={t('Next')}>
 									<EastIcon />
 								</button>
 							</div>
@@ -61,7 +63,7 @@ const TrendProducts = ({ initialInput = defaultInput }: TrendProductsProps) => {
 				<Stack className={'card-box'}>
 					{trendProducts.length === 0 ? (
 						<Box component={'div'} className={'empty-list'}>
-							No trending products yet
+							{t('No trending products yet')}
 						</Box>
 					) : (
 						<Swiper

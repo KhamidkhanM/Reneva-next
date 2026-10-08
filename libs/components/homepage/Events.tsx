@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import { DELIVERY_FEE, FREE_DELIVERY_FROM } from '../../config';
 import { formatPrice } from '../../utils';
 
@@ -12,24 +13,25 @@ const levels = [
 ];
 
 const Events = () => {
+	const { t } = useTranslation('common');
 	return (
 		<Stack className={'events'}>
 			<Stack className={'container column'}>
-				<h2 className={'section-title'}>Benefits</h2>
+				<h2 className={'section-title'}>{t('Benefits')}</h2>
 				<div className={'event-grid'}>
 					<div className={'event-card peach'}>
-						<span className={'eyebrow'}>EVERY DAY</span>
-						<b>Free delivery over {formatPrice(FREE_DELIVERY_FROM)}</b>
-						<span>Below that, delivery is {formatPrice(DELIVERY_FEE)}</span>
+						<span className={'eyebrow'}>{t('EVERY DAY')}</span>
+						<b>{t('Free delivery over {{amount}}', { amount: formatPrice(FREE_DELIVERY_FROM) })}</b>
+						<span>{t('Below that, delivery is {{amount}}', { amount: formatPrice(DELIVERY_FEE) })}</span>
 					</div>
 					<div className={'event-card'}>
-						<span className={'eyebrow'}>REVIEW REWARDS</span>
-						<b>3,000P per photo review</b>
-						<span>1,000P for a text review, only for products you bought</span>
+						<span className={'eyebrow'}>{t('REVIEW REWARDS')}</span>
+						<b>{t('3,000P per photo review')}</b>
+						<span>{t('1,000P for a text review, only for products you bought')}</span>
 					</div>
 					<div className={'event-card membership'}>
-						<span className={'eyebrow'}>MEMBERSHIP</span>
-						<b>Points back on every order</b>
+						<span className={'eyebrow'}>{t('MEMBERSHIP')}</span>
+						<b>{t('Points back on every order')}</b>
 						<div className={'levels'}>
 							{levels.map((level) => (
 								<span key={level.name} className={'level'}>

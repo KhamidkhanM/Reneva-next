@@ -9,10 +9,12 @@ import { getJwtToken, updateUserInfo } from '../../auth';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { useTranslation } from 'next-i18next';
 
 // pages that draw their own header, like the product detail page
 const withLayoutFull = (Component: any) => {
 	return (props: any) => {
+	const { t } = useTranslation('common');
 		const device = useDeviceDetect();
 
 		/** LIFECYCLES **/
@@ -24,7 +26,7 @@ const withLayoutFull = (Component: any) => {
 		return (
 			<>
 				<Head>
-					<title>Reneva</title>
+					<title>{t('Reneva')}</title>
 					<meta name={'title'} content={`Reneva`} />
 				</Head>
 				<Stack id={device === 'mobile' ? 'mobile-wrap' : 'pc-wrap'}>

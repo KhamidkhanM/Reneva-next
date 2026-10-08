@@ -7,11 +7,13 @@ import { BoardArticleCategory } from '../../enums/board-article.enum';
 import { imageUrl, labelOf } from '../../utils';
 import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 // members write in these boards; NEWS and EVENT are for the Reneva team
 const boards = [BoardArticleCategory.FREE, BoardArticleCategory.BEAUTY_TIP, BoardArticleCategory.ROUTINE];
 
 const WriteArticle = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [form, setForm] = useState({ articleCategory: BoardArticleCategory.FREE, articleTitle: '', articleContent: '', articleImage: '' });
 
@@ -48,11 +50,11 @@ const WriteArticle = () => {
 	return (
 		<form className={'my-section'} onSubmit={submitHandler}>
 			<div className={'section-head'}>
-				<h2>Write article</h2>
-				<p>Share a routine, a tip or an honest product story.</p>
+				<h2>{t('Write article')}</h2>
+				<p>{t('Share a routine, a tip or an honest product story.')}</p>
 			</div>
 			<div className={'box'}>
-				<span className={'label'}>Board</span>
+				<span className={'label'}>{t('Board')}</span>
 				<Stack className={'chips'}>
 					{boards.map((board) => (
 						<button
@@ -61,29 +63,29 @@ const WriteArticle = () => {
 							className={`chip ${form.articleCategory === board ? 'on' : ''}`}
 							onClick={() => setForm({ ...form, articleCategory: board })}
 						>
-							{labelOf(board)}
+							{t(labelOf(board))}
 						</button>
 					))}
 				</Stack>
 				<label className={'field'}>
-					<span>Title</span>
+					<span>{t('Title')}</span>
 					<input value={form.articleTitle} onChange={(e) => setForm({ ...form, articleTitle: e.target.value })} maxLength={100} required />
 				</label>
 				<label className={'field'}>
-					<span>Content</span>
+					<span>{t('Content')}</span>
 					<textarea rows={10} value={form.articleContent} onChange={(e) => setForm({ ...form, articleContent: e.target.value })} required />
 				</label>
 				<div className={'upload-row'}>
 					{form.articleImage && <img src={imageUrl(form.articleImage)} alt={''} />}
 					<label className={'soft-btn'}>
-						{form.articleImage ? 'Change cover photo' : 'Add cover photo'}
+						{form.articleImage ? t('Change cover photo') : t('Add cover photo')}
 						<input type={'file'} hidden accept={'image/png, image/jpg, image/jpeg'} onChange={uploadImage} />
 					</label>
 				</div>
 			</div>
 			<div className={'actions'}>
 				<button type={'submit'} className={'primary-btn'} disabled={loading}>
-					Post article
+					{t('Post article')}
 				</button>
 			</div>
 		</form>
