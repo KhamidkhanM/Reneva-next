@@ -282,6 +282,12 @@
 	flex-wrap: wrap;
 	gap: 8px;
 	.method {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		img {
+			height: 20px;
+		}
 		min-height: 48px;
 		padding: 0 20px;
 		border-radius: 14px;
@@ -440,4 +446,78 @@
 		font-size: 12px;
 		color: $muted;
 	}
+}
+
+/** TEST PAYMENT PAGE (stands in for Payme / Click while PAYMENT_MODE=test) **/
+#payment-test-page {
+	padding: 60px 16px 100px;
+	display: flex;
+	justify-content: center;
+	.pay-card {
+		position: relative;
+		width: 100%;
+		max-width: 420px;
+		padding: 40px 32px;
+		border-radius: $radius-l;
+		background: $white;
+		box-shadow: $shadow-soft;
+		text-align: center;
+		border-top: 8px solid #33cccc;
+		&.click {
+			border-top-color: #0074e4;
+		}
+		h1 {
+			margin: 0 0 8px;
+			font-size: 28px;
+		}
+		.amount {
+			margin: 16px 0;
+			font-size: 32px;
+			font-weight: 800;
+			color: $ink;
+		}
+		.hint {
+			color: $muted;
+			font-size: 14px;
+		}
+		.test-badge {
+			position: absolute;
+			top: 16px;
+			right: 16px;
+			padding: 4px 10px;
+			border-radius: 999px;
+			background: $peach;
+			color: $warning;
+			font-size: 12px;
+			font-weight: 800;
+		}
+		.actions {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			margin-top: 24px;
+		}
+		.pay-btn {
+			min-height: 52px;
+			border: 0;
+			border-radius: 999px;
+			background: #33cccc;
+			color: $white;
+			font-size: 16px;
+			font-weight: 800;
+			cursor: pointer;
+			&:disabled {
+				opacity: 0.5;
+			}
+		}
+		&.click .pay-btn {
+			background: #0074e4;
+		}
+	}
+}
+
+.pay-again {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }

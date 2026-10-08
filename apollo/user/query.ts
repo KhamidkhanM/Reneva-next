@@ -672,3 +672,15 @@ export const CHECK_PHONE_VERIFICATION = gql`
 		}
 	}
 `;
+
+export const GET_MY_PAYMENT = gql`
+	query GetMyPayment($paymentId: String!) {
+		getMyPayment(paymentId: $paymentId) {
+			_id
+			orderId
+			paymentMethod
+			paymentAmount
+			paymentStatus
+		}
+	}
+`;
