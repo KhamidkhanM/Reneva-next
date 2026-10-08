@@ -10,6 +10,7 @@ import { CouponStatus, CouponType } from '../../enums/coupon.enum';
 import { formatKRW, labelOf } from '../../utils';
 import { Messages } from '../../config';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const couponValue = (coupon: Pick<Coupon, 'couponType' | 'couponValue'>): string => {
 	if (coupon.couponType === CouponType.PERCENT) return `${coupon.couponValue}%`;
@@ -36,6 +37,7 @@ interface CouponManagerProps {
 
 // sellers make coupons for their store; the admin sees and controls every coupon
 const CouponManager = ({ admin = false }: CouponManagerProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [form, setForm] = useState(empty());
 	const [open, setOpen] = useState<boolean>(false);
@@ -96,30 +98,30 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 	return (
 		<div className={'my-section'}>
 			<div className={admin ? 'admin-head' : 'section-head'}>
-				<h2>{admin ? 'Coupons' : 'Store coupons'}</h2>
-				<p>Customers add a coupon with its code, then use it at checkout.</p>
+				<h2>{admin ? t('Coupons') : t('Store coupons')}</h2>
+				<p>{t('Customers add a coupon with its code, then use it at checkout.')}</p>
 				{!open && (
 					<button className={'primary-btn'} onClick={() => setOpen(true)}>
-						+ New coupon
+						{t('+ New coupon')}
 					</button>
 				)}
 			</div>
 
 			{open && (
 				<form className={'box'} onSubmit={createHandler}>
-					<h2>New coupon</h2>
+					<h2>{t('New coupon')}</h2>
 					<div className={'form-grid'}>
 						<label className={'field'}>
-							<span>Title</span>
-							<input value={form.couponTitle} onChange={change('couponTitle')} placeholder={'Spring sale 15%'} required />
+							<span>{t('Title')}</span>
+							<input value={form.couponTitle} onChange={change('couponTitle')} placeholder={t('Spring sale 15%')} required />
 						</label>
 						<label className={'field'}>
-							<span>Code</span>
-							<input value={form.couponCode} onChange={change('couponCode')} placeholder={'SPRING15'} required />
+							<span>{t('Code')}</span>
+							<input value={form.couponCode} onChange={change('couponCode')} placeholder={t('SPRING15')} required />
 						</label>
 						{!admin && (
 							<label className={'field'}>
-								<span>Brand</span>
+								<span>{t('Brand')}</span>
 								<select value={form.brandId || myBrands[0]?._id || ''} onChange={change('brandId')}>
 									{myBrands.map((brand) => (
 										<option key={brand._id} value={brand._id}>
@@ -130,63 +132,63 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 							</label>
 						)}
 						<label className={'field'}>
-							<span>Type</span>
+							<span>{t('Type')}</span>
 							<select value={form.couponType} onChange={change('couponType')}>
 								{Object.values(CouponType).map((type) => (
 									<option key={type} value={type}>
-										{labelOf(type)}
+										{t(labelOf(type))}
 									</option>
 								))}
 							</select>
 						</label>
 						{form.couponType !== CouponType.FREE_DELIVERY && (
 							<label className={'field'}>
-								<span>{form.couponType === CouponType.PERCENT ? 'Percent off' : 'Won off'}</span>
+								<span>{form.couponType === CouponType.PERCENT ? t('Percent off') : t('Won off')}</span>
 								<input type={'number'} min={1} value={form.couponValue} onChange={change('couponValue')} required />
 							</label>
 						)}
 						<label className={'field'}>
-							<span>Minimum order (₩)</span>
+							<span>{t('Minimum order (₩)')}</span>
 							<input type={'number'} min={0} value={form.couponMinOrder} onChange={change('couponMinOrder')} />
 						</label>
 						{form.couponType === CouponType.PERCENT && (
 							<label className={'field'}>
-								<span>Max discount (₩)</span>
+								<span>{t('Max discount (₩)')}</span>
 								<input type={'number'} min={0} value={form.couponMaxDiscount} onChange={change('couponMaxDiscount')} />
 							</label>
 						)}
 						<label className={'field'}>
-							<span>Starts</span>
+							<span>{t('Starts')}</span>
 							<input type={'date'} value={form.startAt} onChange={change('startAt')} required />
 						</label>
 						<label className={'field'}>
-							<span>Ends</span>
+							<span>{t('Ends')}</span>
 							<input type={'date'} value={form.endAt} onChange={change('endAt')} required />
 						</label>
 					</div>
 					<div className={'btns'}>
 						<button type={'submit'} className={'primary-btn'} disabled={loading}>
-							Create coupon
+							{t('Create coupon')}
 						</button>
 						<button type={'button'} className={'ghost-btn'} onClick={() => setOpen(false)}>
-							Cancel
+							{t('Cancel')}
 						</button>
 					</div>
 				</form>
 			)}
 
 			{coupons.length === 0 ? (
-				<div className={'no-data'}>No coupons yet.</div>
+				<div className={'no-data'}>{t('No coupons yet.')}</div>
 			) : (
 				<div className={'table-box'}>
 					<table>
 						<thead>
 							<tr>
-								<th>Coupon</th>
-								<th>Code</th>
-								<th>Value</th>
-								<th>Period</th>
-								<th>Status</th>
+								<th>{t('Coupon')}</th>
+								<th>{t('Code')}</th>
+								<th>{t('Value')}</th>
+								<th>{t('Period')}</th>
+								<th>{t('Status')}</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -195,7 +197,7 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 								<tr key={coupon._id}>
 									<td>
 										<b>{coupon.couponTitle}</b>
-										<small>{coupon.couponMinOrder ? `From ${formatKRW(coupon.couponMinOrder)}` : 'No minimum'}</small>
+										<small>{coupon.couponMinOrder ? t('From {{amount}}', { amount: formatKRW(coupon.couponMinOrder) }) : t('No minimum')}</small>
 									</td>
 									<td>
 										<code>{coupon.couponCode}</code>
@@ -205,17 +207,17 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 										{moment(coupon.startAt).format('MM.DD')} – {moment(coupon.endAt).format('YY.MM.DD')}
 									</td>
 									<td>
-										<span className={`status-pill ${coupon.couponStatus}`}>{labelOf(coupon.couponStatus)}</span>
+										<span className={`status-pill ${coupon.couponStatus}`}>{t(labelOf(coupon.couponStatus))}</span>
 									</td>
 									<td className={'row-btns'}>
 										<button
 											className={'ghost-btn small'}
 											onClick={() => statusHandler(coupon, coupon.couponStatus === CouponStatus.ACTIVE ? CouponStatus.PAUSE : CouponStatus.ACTIVE)}
 										>
-											{coupon.couponStatus === CouponStatus.ACTIVE ? 'Pause' : 'Activate'}
+											{coupon.couponStatus === CouponStatus.ACTIVE ? t('Pause') : t('Activate')}
 										</button>
 										<button className={'ghost-btn small'} onClick={() => statusHandler(coupon, CouponStatus.DELETE)}>
-											Delete
+											{t('Delete')}
 										</button>
 									</td>
 								</tr>

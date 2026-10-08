@@ -6,6 +6,7 @@ import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
 import { Product } from '../../types/product';
 import { likeHandler } from '../../utils';
 import ProductCard from '../common/ProductCard';
+import { useTranslation } from 'next-i18next';
 
 interface MyProductListProps {
 	kind: 'favorites' | 'visited';
@@ -13,6 +14,7 @@ interface MyProductListProps {
 
 // wishlist and recently viewed share the same grid
 const MyProductList = ({ kind }: MyProductListProps) => {
+	const { t } = useTranslation('common');
 	const [page, setPage] = useState<number>(1);
 	const limit = 8;
 	const favorites = kind === 'favorites';
@@ -32,11 +34,11 @@ const MyProductList = ({ kind }: MyProductListProps) => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>{favorites ? 'Wishlist' : 'Recently viewed'}</h2>
-				<p>{favorites ? 'Products you saved with the heart button.' : 'Products you looked at lately.'}</p>
+				<h2>{favorites ? t('Wishlist') : t('Recently viewed')}</h2>
+				<p>{favorites ? t('Products you saved with the heart button.') : t('Products you looked at lately.')}</p>
 			</div>
 			{products.length === 0 ? (
-				<div className={'no-data'}>{favorites ? 'Your wishlist is empty.' : 'Nothing viewed yet.'}</div>
+				<div className={'no-data'}>{favorites ? t('Your wishlist is empty.') : t('Nothing viewed yet.')}</div>
 			) : (
 				<div className={'product-grid four'}>
 					{products.map((product) => (

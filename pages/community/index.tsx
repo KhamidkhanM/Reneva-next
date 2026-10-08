@@ -15,6 +15,7 @@ import { BoardArticleCategory } from '../../libs/enums/board-article.enum';
 import { T } from '../../libs/types/common';
 import { labelOf, likeHandler } from '../../libs/utils';
 import { sweetLoginConfirmAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -37,6 +38,7 @@ const sorts = [
 ];
 
 const Community: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const articleCategory = (router.query.articleCategory as BoardArticleCategory) ?? BoardArticleCategory.FREE;
@@ -74,35 +76,35 @@ const Community: NextPage = () => {
 			<div className={'container'}>
 				<Stack className={'community-layout'}>
 					<aside className={'board-menu'}>
-						<span className={'title'}>Boards</span>
+						<span className={'title'}>{t('Boards')}</span>
 						{boards.map((ele) => (
 							<button
 								key={ele.id}
 								className={ele.id === articleCategory ? 'on' : ''}
 								onClick={() => router.push({ pathname: '/community', query: { articleCategory: ele.id } }, undefined, { scroll: false })}
 							>
-								<b>{labelOf(ele.id)}</b>
-								<span>{ele.desc}</span>
+								<b>{t(labelOf(ele.id))}</b>
+								<span>{t(ele.desc)}</span>
 							</button>
 						))}
 						<button className={'primary-btn write'} onClick={writeHandler}>
-							<EditRoundedIcon fontSize={'small'} /> Write
+							<EditRoundedIcon fontSize={'small'} /> {t('Write')}
 						</button>
 					</aside>
 
 					<Stack className={'board-main'}>
 						<div className={'board-head'}>
 							<div>
-								<h2 className={'section-title'}>{labelOf(board.id)}</h2>
-								<p>{board.desc}</p>
+								<h2 className={'section-title'}>{t(labelOf(board.id))}</h2>
+								<p>{t(board.desc)}</p>
 							</div>
 							<form onSubmit={searchHandler} className={'search'}>
 								<label className={'sr-only'} htmlFor={'article-search'}>
-									Search articles
+									{t('Search articles')}
 								</label>
-								<input id={'article-search'} type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={'Search articles'} />
+								<input id={'article-search'} type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Search articles')} />
 								<button type={'submit'} className={'primary-btn'}>
-									Search
+									{t('Search')}
 								</button>
 							</form>
 						</div>
@@ -113,13 +115,13 @@ const Community: NextPage = () => {
 									className={`chip ${inquiry.sort === sort.id ? 'on' : ''}`}
 									onClick={() => setInquiry({ ...inquiry, page: 1, sort: sort.id, direction: 'DESC' })}
 								>
-									{sort.label}
+									{t(sort.label)}
 								</button>
 							))}
 						</Stack>
 
 						{articles.length === 0 ? (
-							<div className={'no-data'}>No articles on this board yet. Be the first to write one!</div>
+							<div className={'no-data'}>{t('No articles on this board yet. Be the first to write one!')}</div>
 						) : (
 							<div className={'article-grid'}>
 								{articles.map((article) => (

@@ -9,6 +9,7 @@ import { SkinConcern, SkinType } from '../../enums/member.enum';
 import { ProductTag } from '../../enums/product.enum';
 import { productTagList, skinConcernList, skinTypeList } from '../../config';
 import { formatKRW, labelOf } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface FilterType {
 	searchFilter: ProductsInquiry;
@@ -19,6 +20,7 @@ interface FilterType {
 const PRICE_MAX = 100000;
 
 const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [text, setText] = useState<string>(searchFilter.search.text ?? '');
 	const [price, setPrice] = useState<number[]>([
@@ -85,22 +87,22 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		<Stack className={'filter-main'}>
 			<form className={'find-your-product'} onSubmit={textHandler}>
 				<label htmlFor={'filter-text'} className={'title'}>
-					Find your product
+					{t('Find your product')}
 				</label>
 				<input
 					id={'filter-text'}
 					type={'search'}
 					value={text}
-					placeholder={'Product name'}
+					placeholder={t('Product name')}
 					onChange={(e) => setText(e.target.value)}
 				/>
-				<button type={'button'} className={'reset'} onClick={resetHandler} aria-label={'Reset filters'}>
-					<RefreshRoundedIcon fontSize={'small'} /> Reset
+				<button type={'button'} className={'reset'} onClick={resetHandler} aria-label={t('Reset filters')}>
+					<RefreshRoundedIcon fontSize={'small'} /> {t('Reset')}
 				</button>
 			</form>
 
 			<fieldset className={'find-your-product'}>
-				<legend className={'title'}>Skin type</legend>
+				<legend className={'title'}>{t('Skin type')}</legend>
 				<div className={'chip-list'}>
 					{skinTypeList.map((type: SkinType) => {
 						const on = !!searchFilter.search.skinTypeList?.includes(type);
@@ -112,7 +114,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 								aria-pressed={on}
 								onClick={() => pushFilter({ ...searchFilter.search, skinTypeList: toggleIn(searchFilter.search.skinTypeList, type) })}
 							>
-								{labelOf(type)}
+								{t(labelOf(type))}
 							</button>
 						);
 					})}
@@ -120,7 +122,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 			</fieldset>
 
 			<fieldset className={'find-your-product'}>
-				<legend className={'title'}>Concern</legend>
+				<legend className={'title'}>{t('Concern')}</legend>
 				<div className={'chip-list'}>
 					{skinConcernList.map((concern: SkinConcern) => {
 						const on = !!searchFilter.search.concernList?.includes(concern);
@@ -132,7 +134,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 								aria-pressed={on}
 								onClick={() => pushFilter({ ...searchFilter.search, concernList: toggleIn(searchFilter.search.concernList, concern) })}
 							>
-								{labelOf(concern)}
+								{t(labelOf(concern))}
 							</button>
 						);
 					})}
@@ -141,7 +143,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 
 			{tree.length > 0 && (
 				<fieldset className={'find-your-product'}>
-					<legend className={'title'}>Category</legend>
+					<legend className={'title'}>{t('Category')}</legend>
 					{tree.map(({ parent, children }) => (
 						<div key={parent._id} className={'category-group'}>
 							<FormControlLabel
@@ -175,7 +177,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 
 			{brands.length > 0 && (
 				<fieldset className={'find-your-product'}>
-					<legend className={'title'}>Brand</legend>
+					<legend className={'title'}>{t('Brand')}</legend>
 					{brands.map((brand) => (
 						<FormControlLabel
 							key={brand._id}
@@ -193,7 +195,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 			)}
 
 			<fieldset className={'find-your-product'}>
-				<legend className={'title'}>Price</legend>
+				<legend className={'title'}>{t('Price')}</legend>
 				<Slider
 					value={price}
 					onChange={(e, value) => setPrice(value as number[])}
@@ -211,7 +213,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 			</fieldset>
 
 			<fieldset className={'find-your-product'}>
-				<legend className={'title'}>Tags</legend>
+				<legend className={'title'}>{t('Tags')}</legend>
 				<div className={'chip-list'}>
 					{productTagList.map((tag: ProductTag) => {
 						const on = !!searchFilter.search.tagList?.includes(tag);
@@ -223,7 +225,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 								aria-pressed={on}
 								onClick={() => pushFilter({ ...searchFilter.search, tagList: toggleIn(searchFilter.search.tagList, tag) })}
 							>
-								{labelOf(tag)}
+								{t(labelOf(tag))}
 							</button>
 						);
 					})}

@@ -12,6 +12,7 @@ import { ProductTag } from '../../enums/product.enum';
 import { imageUrl, labelOf } from '../../utils';
 import { Messages, productTagList, skinConcernList, skinTypeList } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface OptionRow {
 	_id?: string;
@@ -38,6 +39,7 @@ const toggle = <T,>(list: T[], value: T): T[] => (list.includes(value) ? list.fi
 
 // one form for "add product" and "edit product" (?productId=...)
 const AddProduct = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const productId = router.query.productId as string | undefined;
@@ -216,7 +218,7 @@ const AddProduct = () => {
 	if (productId && !productData?.getProduct) {
 		return (
 			<div className={'my-section'}>
-				<div className={'no-data'}>Loading product…</div>
+				<div className={'no-data'}>{t('Loading product…')}</div>
 			</div>
 		);
 	}
@@ -225,12 +227,12 @@ const AddProduct = () => {
 		return (
 			<div className={'my-section'}>
 				<div className={'section-head'}>
-					<h2>Add product</h2>
+					<h2>{t('Add product')}</h2>
 				</div>
 				<div className={'no-data'}>
-					Create a brand first, then add its products.
+					{t('Create a brand first, then add its products.')}
 					<button className={'primary-btn'} onClick={() => router.push('/mypage?category=myBrands')}>
-						Go to my brands
+						{t('Go to my brands')}
 					</button>
 				</div>
 			</div>
@@ -240,19 +242,19 @@ const AddProduct = () => {
 	return (
 		<form className={'my-section'} onSubmit={submitHandler}>
 			<div className={'section-head'}>
-				<h2>{productId ? 'Edit product' : 'Add product'}</h2>
-				<p>Clear photos and skin tags help Rena recommend your product to the right people.</p>
+				<h2>{productId ? t('Edit product') : t('Add product')}</h2>
+				<p>{t('Clear photos and skin tags help Rena recommend your product to the right people.')}</p>
 			</div>
 
 			<div className={'box'}>
-				<h2>Basics</h2>
+				<h2>{t('Basics')}</h2>
 				<div className={'form-grid'}>
 					<label className={'field wide'}>
-						<span>Product name</span>
-						<input value={form.productTitle} onChange={change('productTitle')} placeholder={'Green Tea Seed Serum'} required />
+						<span>{t('Product name')}</span>
+						<input value={form.productTitle} onChange={change('productTitle')} placeholder={t('Green Tea Seed Serum')} required />
 					</label>
 					<label className={'field'}>
-						<span>Brand</span>
+						<span>{t('Brand')}</span>
 						<select value={form.brandId} onChange={change('brandId')} disabled={!!productId} required>
 							{brands.map((brand) => (
 								<option key={brand._id} value={brand._id}>
@@ -262,9 +264,9 @@ const AddProduct = () => {
 						</select>
 					</label>
 					<label className={'field'}>
-						<span>Category</span>
+						<span>{t('Category')}</span>
 						<select value={form.categoryId} onChange={change('categoryId')} required>
-							<option value={''}>Choose…</option>
+							<option value={''}>{t('Choose…')}</option>
 							{categories.map((category) => (
 								<option key={category._id} value={category._id}>
 									{category.categoryName}
@@ -273,43 +275,43 @@ const AddProduct = () => {
 						</select>
 					</label>
 					<label className={'field'}>
-						<span>Price (₩)</span>
+						<span>{t('Price (₩)')}</span>
 						<input type={'number'} min={0} value={form.productPrice} onChange={change('productPrice')} required />
 					</label>
 					<label className={'field'}>
-						<span>Sale price (₩)</span>
-						<input type={'number'} min={0} value={form.productSalePrice} onChange={change('productSalePrice')} placeholder={'Same as price'} />
+						<span>{t('Sale price (₩)')}</span>
+						<input type={'number'} min={0} value={form.productSalePrice} onChange={change('productSalePrice')} placeholder={t('Same as price')} />
 					</label>
 					<label className={'field'}>
-						<span>Volume</span>
-						<input value={form.productVolume} onChange={change('productVolume')} placeholder={'50ml'} required />
+						<span>{t('Volume')}</span>
+						<input value={form.productVolume} onChange={change('productVolume')} placeholder={t('50ml')} required />
 					</label>
 					<label className={'field wide'}>
-						<span>Description</span>
+						<span>{t('Description')}</span>
 						<textarea rows={4} value={form.productDesc} onChange={change('productDesc')} />
 					</label>
 					<label className={'field wide'}>
-						<span>Key ingredients (comma separated)</span>
-						<input value={form.productIngredients} onChange={change('productIngredients')} placeholder={'Green tea, Niacinamide, Panthenol'} />
+						<span>{t('Key ingredients (comma separated)')}</span>
+						<input value={form.productIngredients} onChange={change('productIngredients')} placeholder={t('Green tea, Niacinamide, Panthenol')} />
 					</label>
 				</div>
 			</div>
 
 			<div className={'box'}>
-				<h2>Photos</h2>
-				<p className={'hint'}>Up to 5 photos. The first one is the cover.</p>
+				<h2>{t('Photos')}</h2>
+				<p className={'hint'}>{t('Up to 5 photos. The first one is the cover.')}</p>
 				<div className={'photo-row'}>
 					{images.map((image, index) => (
 						<div key={image} className={'photo'}>
 							<img src={imageUrl(image)} alt={''} />
-							<button type={'button'} aria-label={'Remove photo'} onClick={() => setImages(images.filter((ele, i) => i !== index))}>
+							<button type={'button'} aria-label={t('Remove photo')} onClick={() => setImages(images.filter((ele, i) => i !== index))}>
 								<CloseRoundedIcon fontSize={'small'} />
 							</button>
 						</div>
 					))}
 					{images.length < 5 && (
 						<label className={'photo add'}>
-							{uploading ? 'Uploading…' : '+ Add'}
+							{uploading ? t('Uploading…') : t('+ Add')}
 							<input type={'file'} hidden multiple accept={'image/png, image/jpg, image/jpeg'} onChange={uploadImages} />
 						</label>
 					)}
@@ -317,16 +319,16 @@ const AddProduct = () => {
 			</div>
 
 			<div className={'box'}>
-				<h2>Skin match</h2>
-				<span className={'label'}>Good for skin types</span>
+				<h2>{t('Skin match')}</h2>
+				<span className={'label'}>{t('Good for skin types')}</span>
 				<Stack className={'chips'}>
 					{skinTypeList.map((type) => (
 						<button type={'button'} key={type} className={`chip ${skinTypes.includes(type) ? 'on' : ''}`} onClick={() => setSkinTypes(toggle(skinTypes, type))}>
-							{labelOf(type)}
+							{t(labelOf(type))}
 						</button>
 					))}
 				</Stack>
-				<span className={'label'}>Targets concerns</span>
+				<span className={'label'}>{t('Targets concerns')}</span>
 				<Stack className={'chips'}>
 					{skinConcernList.map((concern) => (
 						<button
@@ -335,59 +337,59 @@ const AddProduct = () => {
 							className={`chip ${concerns.includes(concern) ? 'on' : ''}`}
 							onClick={() => setConcerns(toggle(concerns, concern))}
 						>
-							{labelOf(concern)}
+							{t(labelOf(concern))}
 						</button>
 					))}
 				</Stack>
-				<span className={'label'}>Tags</span>
+				<span className={'label'}>{t('Tags')}</span>
 				<Stack className={'chips'}>
 					{productTagList.map((tag) => (
 						<button type={'button'} key={tag} className={`chip ${tags.includes(tag) ? 'on' : ''}`} onClick={() => setTags(toggle(tags, tag))}>
-							{labelOf(tag)}
+							{t(labelOf(tag))}
 						</button>
 					))}
 				</Stack>
 			</div>
 
 			<div className={'box'}>
-				<h2>Options</h2>
-				<p className={'hint'}>Sizes or shades. Shoppers choose one when they add to cart.</p>
+				<h2>{t('Options')}</h2>
+				<p className={'hint'}>{t('Sizes or shades. Shoppers choose one when they add to cart.')}</p>
 				{options.map((option, index) => (
 					<div key={option._id ?? index} className={'option-row'}>
 						<label className={'field'}>
-							<span>Name</span>
-							<input value={option.optionName} onChange={(e) => changeOption(index, 'optionName', e.target.value)} placeholder={'50ml'} />
+							<span>{t('Name')}</span>
+							<input value={option.optionName} onChange={(e) => changeOption(index, 'optionName', e.target.value)} placeholder={t('50ml')} />
 						</label>
 						<label className={'field'}>
-							<span>Color</span>
+							<span>{t('Color')}</span>
 							<input type={'color'} value={option.optionColor || '#c9bdeb'} onChange={(e) => changeOption(index, 'optionColor', e.target.value)} />
 						</label>
 						<label className={'field'}>
-							<span>Extra price (₩)</span>
+							<span>{t('Extra price (₩)')}</span>
 							<input type={'number'} min={0} value={option.optionExtraPrice} onChange={(e) => changeOption(index, 'optionExtraPrice', e.target.value)} />
 						</label>
 						<label className={'field'}>
-							<span>Stock</span>
+							<span>{t('Stock')}</span>
 							<input type={'number'} min={0} value={option.optionStock} onChange={(e) => changeOption(index, 'optionStock', e.target.value)} />
 						</label>
 						{!option._id && options.length > 1 && (
 							<button type={'button'} className={'ghost-btn small'} onClick={() => setOptions(options.filter((ele, i) => i !== index))}>
-								Remove
+								{t('Remove')}
 							</button>
 						)}
 					</div>
 				))}
 				<button type={'button'} className={'soft-btn'} onClick={() => setOptions([...options, emptyOption()])}>
-					+ Add option
+					{t('+ Add option')}
 				</button>
 			</div>
 
 			<div className={'actions'}>
 				<button type={'submit'} className={'primary-btn'} disabled={creating || updating || uploading}>
-					{productId ? 'Save product' : 'Publish product'}
+					{productId ? t('Save product') : t('Publish product')}
 				</button>
 				<button type={'button'} className={'ghost-btn'} onClick={() => router.push('/mypage?category=myProducts')}>
-					Cancel
+					{t('Cancel')}
 				</button>
 			</div>
 		</form>

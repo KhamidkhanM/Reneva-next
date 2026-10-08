@@ -16,6 +16,7 @@ import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { PaymentMethod } from '../../libs/enums/order.enum';
 import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { i18n, useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -38,7 +39,7 @@ const previewDiscount = (memberCoupon: MemberCoupon | undefined, items: Cart[], 
 		.filter((item) => !coupon.brandId || item.productData?.brandId === coupon.brandId)
 		.reduce((sum, item) => sum + ((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity, 0);
 	if (eligible === 0) return { discount: 0, freeDelivery: false, error: 'This coupon is for another brand' };
-	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: `Needs ${formatKRW(coupon.couponMinOrder)} of eligible items` };
+	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: i18n?.t('Needs {{amount}} of eligible items', { amount: formatKRW(coupon.couponMinOrder) }) ?? '' };
 	if (coupon.couponType === CouponType.FREE_DELIVERY) return { discount: 0, freeDelivery: deliveryFee > 0, error: '' };
 	let discount = coupon.couponType === CouponType.PERCENT ? Math.floor((eligible * coupon.couponValue) / 100) : coupon.couponValue;
 	if (coupon.couponMaxDiscount) discount = Math.min(discount, coupon.couponMaxDiscount);
@@ -46,6 +47,7 @@ const previewDiscount = (memberCoupon: MemberCoupon | undefined, items: Cart[], 
 };
 
 const Checkout: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [addressId, setAddressId] = useState<string>('');
@@ -125,9 +127,9 @@ const Checkout: NextPage = () => {
 			<div id={'checkout-page'}>
 				<div className={'container'}>
 					<div className={'no-data'}>
-						<p>No selected items to order.</p>
+						<p>{t('No selected items to order.')}</p>
 						<button className={'primary-btn'} onClick={() => router.push('/cart')}>
-							Back to cart
+							{t('Back to cart')}
 						</button>
 					</div>
 				</div>
@@ -141,14 +143,14 @@ const Checkout: NextPage = () => {
 				<Stack className={'cart-layout'}>
 					<Stack className={'checkout-main'}>
 						<section className={'box'}>
-							<h2>Delivery address</h2>
+							<h2>{t('Delivery address')}</h2>
 							{addresses.map((address) => (
 								<label key={address._id} className={`address-option ${addressId === address._id ? 'on' : ''}`}>
 									<Radio checked={addressId === address._id} onChange={() => setAddressId(address._id)} />
 									<span>
 										<b>
 											{address.addressLabel} · {address.addressRecipient}
-											{address.addressDefault && <span className={'tag-pill'}>Default</span>}
+											{address.addressDefault && <span className={'tag-pill'}>{t('Default')}</span>}
 										</b>
 										<span>
 											{address.addressLine1} {address.addressLine2 ?? ''} ({address.addressZip})
@@ -168,20 +170,20 @@ const Checkout: NextPage = () => {
 								/>
 							) : (
 								<button className={'soft-btn'} onClick={() => setShowAddressForm(true)}>
-									+ Add a new address
+									{t('+ Add a new address')}
 								</button>
 							)}
 						</section>
 
 						<section className={'box'}>
-							<h2>Items ({items.length})</h2>
+							<h2>{t('Items (')}{items.length})</h2>
 							{items.map((item) => (
 								<div key={item._id} className={'order-line'}>
 									<ProductThumb image={imageUrl(item.optionData?.optionImage || item.productData?.productImages?.[0])} seed={item.productId} size={64} radius={16} />
 									<span className={'txt'}>
 										<b>{item.productData?.productTitle}</b>
 										<span>
-											{item.optionData?.optionName} · {item.cartQuantity} pcs
+											{item.optionData?.optionName} · {item.cartQuantity} {t('pcs')}
 										</span>
 									</span>
 									<b>
@@ -192,11 +194,11 @@ const Checkout: NextPage = () => {
 						</section>
 
 						<section className={'box'}>
-							<h2>Coupon and points</h2>
+							<h2>{t('Coupon and points')}</h2>
 							<label className={'field'}>
-								<span>Coupon</span>
+								<span>{t('Coupon')}</span>
 								<select value={memberCouponId} onChange={(e) => setMemberCouponId(e.target.value)}>
-									<option value={''}>No coupon</option>
+									<option value={''}>{t('No coupon')}</option>
 									{coupons.map((ele) => (
 										<option key={ele._id} value={ele._id}>
 											{ele.couponData?.couponTitle} ({ele.couponData?.couponCode})
@@ -206,7 +208,7 @@ const Checkout: NextPage = () => {
 								{totals.couponError && <small className={'warn'}>{totals.couponError}</small>}
 							</label>
 							<label className={'field'}>
-								<span>Points (you have {myPoints}P)</span>
+								<span>{t('Points (you have')} {myPoints}P)</span>
 								<div className={'points-row'}>
 									<input
 										type={'number'}
@@ -216,56 +218,56 @@ const Checkout: NextPage = () => {
 										onChange={(e) => setPoints(Math.max(0, Number(e.target.value) || 0))}
 									/>
 									<button type={'button'} className={'ghost-btn'} onClick={() => setPoints(myPoints)}>
-										Use all
+										{t('Use all')}
 									</button>
 								</div>
 							</label>
 							<label className={'field'}>
-								<span>Delivery note</span>
-								<input value={memo} maxLength={100} onChange={(e) => setMemo(e.target.value)} placeholder={'Leave at the door'} />
+								<span>{t('Delivery note')}</span>
+								<input value={memo} maxLength={100} onChange={(e) => setMemo(e.target.value)} placeholder={t('Leave at the door')} />
 							</label>
 						</section>
 
 						<section className={'box'}>
-							<h2>Payment</h2>
+							<h2>{t('Payment')}</h2>
 							<div className={'methods'}>
 								{methods.map((ele) => (
 									<button key={ele.id} type={'button'} className={`method ${method === ele.id ? 'on' : ''}`} onClick={() => setMethod(ele.id)} aria-pressed={method === ele.id}>
-										{ele.label}
+										{t(ele.label)}
 									</button>
 								))}
 							</div>
-							<p className={'hint'}>Test mode: payments are simulated and always succeed.</p>
+							<p className={'hint'}>{t('Test mode: payments are simulated and always succeed.')}</p>
 						</section>
 					</Stack>
 
 					<Stack className={'cart-summary'}>
-						<h2>Order summary</h2>
+						<h2>{t('Order summary')}</h2>
 						<div className={'row'}>
-							<span>Products</span>
+							<span>{t('Products')}</span>
 							<b>{formatKRW(totals.subtotal)}</b>
 						</div>
 						<div className={'row'}>
-							<span>Coupon</span>
+							<span>{t('Coupon')}</span>
 							<b className={'minus'}>{totals.discount ? `−${formatKRW(totals.discount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
-							<span>Points</span>
+							<span>{t('Points')}</span>
 							<b className={'minus'}>{totals.usedPoints ? `−${formatKRW(totals.usedPoints)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
-							<span>Delivery</span>
-							<b>{totals.deliveryFee ? formatKRW(totals.deliveryFee) : 'Free'}</b>
+							<span>{t('Delivery')}</span>
+							<b>{totals.deliveryFee ? formatKRW(totals.deliveryFee) : t('Free')}</b>
 						</div>
 						<div className={'row total'}>
-							<span>Total</span>
+							<span>{t('Total')}</span>
 							<b>{formatKRW(totals.total)}</b>
 						</div>
 						<p className={'hint'}>
-							You earn {user.memberLevel ? labelOf(user.memberLevel) : 'Baby'} level points after you confirm delivery.
+							{t('You earn')} {user.memberLevel ? labelOf(user.memberLevel) : t('Baby')} {t('level points after you confirm delivery.')}
 						</p>
 						<button className={'primary-btn'} onClick={placeOrderHandler} disabled={placing || !addressId}>
-							{placing ? 'Placing order…' : `Pay ${formatKRW(totals.total)}`}
+							{placing ? t('Placing order…') : t('Pay {{amount}}', { amount: formatKRW(totals.total) })}
 						</button>
 					</Stack>
 				</Stack>

@@ -15,6 +15,7 @@ import { Notice } from '../../libs/types/community';
 import { NoticeCategory } from '../../libs/enums/notice.enum';
 import { openAiAdvisor, openSupportChat } from '../../libs/components/chat/openChat';
 import { sweetLoginConfirmAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,6 +30,7 @@ const tabs = [
 ];
 
 const CS: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const tab = tabs.find((ele) => ele.id === router.query.tab) ?? tabs[0];
@@ -58,12 +60,12 @@ const CS: NextPage = () => {
 									className={`chip ${tab.id === ele.id ? 'on' : ''}`}
 									onClick={() => router.push({ pathname: '/cs', query: { tab: ele.id } }, undefined, { scroll: false })}
 								>
-									{ele.label}
+									{t(ele.label)}
 								</button>
 							))}
 						</Stack>
 						{notices.length === 0 ? (
-							<div className={'no-data'}>Nothing posted here yet.</div>
+							<div className={'no-data'}>{t('Nothing posted here yet.')}</div>
 						) : (
 							<div className={'notice-list'}>
 								{notices.map((notice) => (
@@ -92,26 +94,26 @@ const CS: NextPage = () => {
 
 					<aside className={'contact-box'}>
 						<img src={'/img/logo/rena-ai.svg'} alt={''} />
-						<h2>Still need help?</h2>
-						<p>Ask Rena first. She answers in seconds and can pass you to a person.</p>
+						<h2>{t('Still need help?')}</h2>
+						<p>{t('Ask Rena first. She answers in seconds and can pass you to a person.')}</p>
 						<button className={'soft-btn'} onClick={openAiAdvisor}>
-							Ask Rena
+							{t('Ask Rena')}
 						</button>
 						<div className={'contact-option'}>
 							<SupportAgentRoundedIcon />
 							<span>
-								<b>Reneva support</b>
-								<span>Reports, refunds, account or order problems. A team member replies in the chat.</span>
+								<b>{t('Reneva support')}</b>
+								<span>{t('Reports, refunds, account or order problems. A team member replies in the chat.')}</span>
 							</span>
 						</div>
 						<button className={'primary-btn'} onClick={supportHandler}>
-							Chat with support
+							{t('Chat with support')}
 						</button>
 						<div className={'contact-option'}>
 							<StorefrontRoundedIcon />
 							<span>
-								<b>A store</b>
-								<span>Questions about a product? Use “Chat with store” on the product or brand page.</span>
+								<b>{t('A store')}</b>
+								<span>{t('Questions about a product? Use “Chat with store” on the product or brand page.')}</span>
 							</span>
 						</div>
 					</aside>

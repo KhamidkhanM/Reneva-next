@@ -14,6 +14,7 @@ import { LIKE_TARGET_BRAND } from '../../apollo/user/mutation';
 import { Brand } from '../../libs/types/product';
 import { T } from '../../libs/types/common';
 import { isLiked, likeHandler } from '../../libs/utils';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,6 +30,7 @@ const sorts = [
 ];
 
 const BrandList: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [text, setText] = useState<string>('');
@@ -55,24 +57,24 @@ const BrandList: NextPage = () => {
 				<div className={'brand-toolbar'}>
 					<form onSubmit={searchHandler} className={'search'}>
 						<label className={'sr-only'} htmlFor={'brand-search'}>
-							Search brands
+							{t('Search brands')}
 						</label>
-						<input id={'brand-search'} type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={'Search brands'} />
+						<input id={'brand-search'} type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Search brands')} />
 						<button type={'submit'} className={'primary-btn'}>
-							Search
+							{t('Search')}
 						</button>
 					</form>
 					<div className={'sorts'}>
 						{sorts.map((sort) => (
 							<button key={sort.id} className={`chip ${inquiry.sort === sort.id ? 'on' : ''}`} onClick={() => sortHandler(sort.id)}>
-								{sort.label}
+								{t(sort.label)}
 							</button>
 						))}
 					</div>
 				</div>
 
 				{brands.length === 0 ? (
-					<div className={'no-data'}>No brands found.</div>
+					<div className={'no-data'}>{t('No brands found.')}</div>
 				) : (
 					<div className={'brand-grid'}>
 						{brands.map((brand, index) => (
@@ -81,7 +83,7 @@ const BrandList: NextPage = () => {
 									<BrandCircle brand={brand} index={index} size={96} />
 									<b>{brand.brandName}</b>
 									<span>
-										{brand.brandCountry} · {brand.brandProducts} products
+										{brand.brandCountry} · {brand.brandProducts} {t('products')}
 									</span>
 								</button>
 								<button

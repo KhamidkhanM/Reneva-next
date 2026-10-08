@@ -12,6 +12,7 @@ import { T } from '../../types/common';
 import { SkinType } from '../../enums/member.enum';
 import { skinTypeList } from '../../config';
 import { imageUrl, isLiked, labelOf, likeHandler, memberImage } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface ReviewsProps {
 	productId: string;
@@ -20,6 +21,7 @@ interface ReviewsProps {
 }
 
 const Reviews = ({ productId, rating, total }: ReviewsProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [skinType, setSkinType] = useState<SkinType | null>(null);
 	const [withImages, setWithImages] = useState<boolean>(false);
@@ -53,35 +55,35 @@ const Reviews = ({ productId, rating, total }: ReviewsProps) => {
 				<div className={'score'}>
 					<b>{rating.toFixed(1)}</b>
 					<Rating value={rating} precision={0.1} readOnly />
-					<span>{total} reviews</span>
+					<span>{total} {t('reviews')}</span>
 				</div>
-				<p>Only people who bought this product can review it.</p>
+				<p>{t('Only people who bought this product can review it.')}</p>
 			</div>
 
 			<div className={'review-filters'}>
 				<button className={`chip ${!skinType ? 'on' : ''}`} onClick={() => { setSkinType(null); setPage(1); }}>
-					All skin types
+					{t('All skin types')}
 				</button>
 				{skinTypeList.map((type) => (
 					<button key={type} className={`chip ${skinType === type ? 'on' : ''}`} onClick={() => { setSkinType(type); setPage(1); }}>
-						{labelOf(type)}
+						{t(labelOf(type))}
 					</button>
 				))}
 				<button className={`chip ${withImages ? 'on' : ''}`} onClick={() => { setWithImages(!withImages); setPage(1); }} aria-pressed={withImages}>
-					With photos
+					{t('With photos')}
 				</button>
 				<label className={'sort'}>
-					<span className={'sr-only'}>Sort reviews</span>
+					<span className={'sr-only'}>{t('Sort reviews')}</span>
 					<select value={sort} onChange={(e) => setSort(e.target.value)}>
-						<option value={'createdAt'}>Newest</option>
-						<option value={'reviewLikes'}>Most helpful</option>
-						<option value={'reviewRating'}>Highest rating</option>
+						<option value={'createdAt'}>{t('Newest')}</option>
+						<option value={'reviewLikes'}>{t('Most helpful')}</option>
+						<option value={'reviewRating'}>{t('Highest rating')}</option>
 					</select>
 				</label>
 			</div>
 
 			{reviews.length === 0 ? (
-				<div className={'empty-list'}>No reviews {skinType ? `from ${labelOf(skinType).toLowerCase()} skin ` : ''}yet.</div>
+				<div className={'empty-list'}>{t('No reviews')} {skinType ? `from ${labelOf(skinType).toLowerCase()} skin ` : ''}{t('yet.')}</div>
 			) : (
 				reviews.map((review) => (
 					<article key={review._id} className={'review'}>
@@ -90,7 +92,7 @@ const Reviews = ({ productId, rating, total }: ReviewsProps) => {
 							<span>
 								<b>{review.memberData?.memberNick}</b>
 								<small>
-									{review.reviewSkinType ? `${labelOf(review.reviewSkinType)} skin` : 'Skin type not set'}
+									{review.reviewSkinType ? t('{{type}} skin', { type: t(labelOf(review.reviewSkinType)) }) : t('Skin type not set')}
 									{review.optionData ? ` · ${review.optionData.optionName}` : ''} · {moment(review.createdAt).format('YYYY.MM.DD')}
 								</small>
 							</span>
@@ -100,13 +102,13 @@ const Reviews = ({ productId, rating, total }: ReviewsProps) => {
 						{review.reviewImages.length > 0 && (
 							<div className={'review-images'}>
 								{review.reviewImages.map((img) => (
-									<img key={img} src={imageUrl(img)} alt={'Review photo'} />
+									<img key={img} src={imageUrl(img)} alt={t('Review photo')} />
 								))}
 							</div>
 						)}
 						<button className={`helpful ${isLiked(review) ? 'on' : ''}`} onClick={() => helpfulHandler(review._id)}>
 							{isLiked(review) ? <ThumbUpAltRoundedIcon fontSize={'small'} /> : <ThumbUpAltOutlinedIcon fontSize={'small'} />}
-							Helpful {review.reviewLikes > 0 ? `(${review.reviewLikes})` : ''}
+							{t('Helpful')} {review.reviewLikes > 0 ? `(${review.reviewLikes})` : ''}
 						</button>
 					</article>
 				))

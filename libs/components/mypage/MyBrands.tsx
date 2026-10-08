@@ -10,10 +10,12 @@ import { imageUrl, labelOf } from '../../utils';
 import { Messages } from '../../config';
 import { BrandCircle } from '../homepage/TopBrands';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const empty = { _id: '', brandName: '', brandCountry: 'KR', brandDesc: '', brandLogo: '', brandBanner: '' };
 
 const MyBrands = () => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [form, setForm] = useState({ ...empty });
 	const [open, setOpen] = useState<boolean>(false);
@@ -87,47 +89,47 @@ const MyBrands = () => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>My brands</h2>
-				<p>Every product belongs to one of your brands. Shoppers can follow and chat with your store.</p>
+				<h2>{t('My brands')}</h2>
+				<p>{t('Every product belongs to one of your brands. Shoppers can follow and chat with your store.')}</p>
 				{!open && (
 					<button className={'primary-btn'} onClick={() => setOpen(true)}>
-						+ New brand
+						{t('+ New brand')}
 					</button>
 				)}
 			</div>
 
 			{open && (
 				<form className={'box'} onSubmit={submitHandler}>
-					<h2>{form._id ? 'Edit brand' : 'New brand'}</h2>
+					<h2>{form._id ? t('Edit brand') : t('New brand')}</h2>
 					<div className={'form-grid'}>
 						<label className={'field'}>
-							<span>Brand name</span>
+							<span>{t('Brand name')}</span>
 							<input value={form.brandName} onChange={change('brandName')} required />
 						</label>
 						<label className={'field'}>
-							<span>Country</span>
-							<input value={form.brandCountry} onChange={change('brandCountry')} placeholder={'KR'} />
+							<span>{t('Country')}</span>
+							<input value={form.brandCountry} onChange={change('brandCountry')} placeholder={t('KR')} />
 						</label>
 						<label className={'field wide'}>
-							<span>Story</span>
+							<span>{t('Story')}</span>
 							<textarea rows={3} value={form.brandDesc} onChange={change('brandDesc')} />
 						</label>
 					</div>
 					<div className={'upload-row'}>
 						{form.brandLogo && <img className={'logo'} src={imageUrl(form.brandLogo)} alt={''} />}
 						<label className={'soft-btn'}>
-							{form.brandLogo ? 'Change logo' : 'Upload logo'}
+							{form.brandLogo ? t('Change logo') : t('Upload logo')}
 							<input type={'file'} hidden accept={'image/png, image/jpg, image/jpeg'} onChange={uploadImage('brandLogo')} />
 						</label>
 						{form.brandBanner && <img src={imageUrl(form.brandBanner)} alt={''} />}
 						<label className={'soft-btn'}>
-							{form.brandBanner ? 'Change banner' : 'Upload banner'}
+							{form.brandBanner ? t('Change banner') : t('Upload banner')}
 							<input type={'file'} hidden accept={'image/png, image/jpg, image/jpeg'} onChange={uploadImage('brandBanner')} />
 						</label>
 					</div>
 					<div className={'btns'}>
 						<button type={'submit'} className={'primary-btn'} disabled={creating || updating}>
-							{form._id ? 'Save brand' : 'Create brand'}
+							{form._id ? t('Save brand') : t('Create brand')}
 						</button>
 						<button
 							type={'button'}
@@ -137,7 +139,7 @@ const MyBrands = () => {
 								setOpen(false);
 							}}
 						>
-							Cancel
+							{t('Cancel')}
 						</button>
 					</div>
 				</form>
@@ -145,9 +147,9 @@ const MyBrands = () => {
 
 			{brands.length === 0 && !open ? (
 				<div className={'no-data'}>
-					You have no brand yet.
+					{t('You have no brand yet.')}
 					<button className={'primary-btn'} onClick={() => setOpen(true)}>
-						Create your first brand
+						{t('Create your first brand')}
 					</button>
 				</div>
 			) : (
@@ -160,15 +162,15 @@ const MyBrands = () => {
 									<b>{brand.brandName}</b>
 								</Link>
 								<span>
-									{brand.brandProducts} products · {brand.brandLikes} followers
+									{brand.brandProducts} {t('products ·')} {brand.brandLikes} {t('followers')}
 								</span>
 							</span>
-							<span className={`status-pill ${brand.brandStatus}`}>{labelOf(brand.brandStatus)}</span>
+							<span className={`status-pill ${brand.brandStatus}`}>{t(labelOf(brand.brandStatus))}</span>
 							<button className={'ghost-btn small'} onClick={() => editHandler(brand)}>
-								Edit
+								{t('Edit')}
 							</button>
 							<button className={'ghost-btn small'} onClick={() => pauseHandler(brand)}>
-								{brand.brandStatus === BrandStatus.ACTIVE ? 'Pause' : 'Activate'}
+								{brand.brandStatus === BrandStatus.ACTIVE ? t('Pause') : t('Activate')}
 							</button>
 						</div>
 					))}

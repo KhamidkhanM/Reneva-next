@@ -14,6 +14,7 @@ import { Product, ProductsInquiry } from '../../libs/types/product';
 import { T } from '../../libs/types/common';
 import { Direction } from '../../libs/enums/common.enum';
 import { likeHandler } from '../../libs/utils';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -55,6 +56,7 @@ const readInput = (query: T): ProductsInquiry => {
 };
 
 const ProductList: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(readInput(router.query));
 	const [products, setProducts] = useState<Product[]>([]);
@@ -110,16 +112,16 @@ const ProductList: NextPage = () => {
 					</Stack>
 					<Stack className={'main-config'}>
 						<Box component={'div'} className={'list-top'}>
-							<Typography className={'total'}>{loading ? 'Loading…' : `${total} product${total === 1 ? '' : 's'}`}</Typography>
+							<Typography className={'total'}>{loading ? t('Loading…') : `${total} product${total === 1 ? '' : 's'}`}</Typography>
 							<div className={'sort-box'}>
-								<span>Sort by</span>
+								<span>{t('Sort by')}</span>
 								<Button onClick={(e) => setAnchorEl(e.currentTarget)} endIcon={<KeyboardArrowDownRoundedIcon />}>
 									{sortName}
 								</Button>
 								<Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
 									{sorts.map((ele) => (
 										<MenuItem key={ele.id} id={ele.id} onClick={sortingHandler} selected={ele.label === sortName}>
-											{ele.label}
+											{t(ele.label)}
 										</MenuItem>
 									))}
 								</Menu>
@@ -129,9 +131,9 @@ const ProductList: NextPage = () => {
 							{products.length === 0 && !loading ? (
 								<div className={'no-data'}>
 									<img src={'/img/logo/rena-ai.svg'} alt={''} width={56} />
-									<p>No products match these filters.</p>
+									<p>{t('No products match these filters.')}</p>
 									<button className={'soft-btn'} onClick={() => pushInput(initialInput)}>
-										Clear filters
+										{t('Clear filters')}
 									</button>
 								</div>
 							) : (

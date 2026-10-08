@@ -9,6 +9,7 @@ import { Product } from '../../types/product';
 import { ProductStatus } from '../../enums/product.enum';
 import { formatKRW, imageUrl, isLiked, labelOf, salePercent } from '../../utils';
 import ProductThumb from './ProductThumb';
+import { useTranslation } from 'next-i18next';
 
 interface ProductCardProps {
 	product: Product;
@@ -18,6 +19,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, likeProductHandler, note, rank }: ProductCardProps) => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const off = salePercent(product.productPrice, product.productSalePrice);
@@ -33,12 +35,12 @@ const ProductCard = ({ product, likeProductHandler, note, rank }: ProductCardPro
 					<ProductThumb image={imageUrl(product.productImages?.[0])} seed={product._id} radius={24} />
 				</button>
 				{rank && <span className={'rank'}>{rank}</span>}
-				{!rank && tag && <span className={'tag-pill'}>{labelOf(tag)}</span>}
-				{soldOut && <span className={'soldout-pill'}>Sold out</span>}
+				{!rank && tag && <span className={'tag-pill'}>{t(labelOf(tag))}</span>}
+				{soldOut && <span className={'soldout-pill'}>{t('Sold out')}</span>}
 				{likeProductHandler && (
 					<IconButton
 						className={'like-btn'}
-						aria-label={isLiked(product) ? 'Remove from wishlist' : 'Add to wishlist'}
+						aria-label={isLiked(product) ? t('Remove from wishlist') : t('Add to wishlist')}
 						onClick={() => likeProductHandler(user, product._id)}
 					>
 						{isLiked(product) ? <FavoriteRoundedIcon className={'liked'} /> : <FavoriteBorderRoundedIcon />}
@@ -51,7 +53,7 @@ const ProductCard = ({ product, likeProductHandler, note, rank }: ProductCardPro
 					{product.productTitle}
 				</button>
 				<span className={'meta'}>
-					★ {product.productRating?.toFixed(1) ?? '0.0'} · {product.productReviews} reviews
+					★ {product.productRating?.toFixed(1) ?? '0.0'} · {product.productReviews} {t('reviews')}
 				</span>
 				{note && <span className={'note'}>{note}</span>}
 			</div>
@@ -62,7 +64,7 @@ const ProductCard = ({ product, likeProductHandler, note, rank }: ProductCardPro
 					{off > 0 && <s>{formatKRW(product.productPrice)}</s>}
 				</span>
 				<button className={'soft-btn small'} onClick={pushDetailHandler}>
-					View
+					{t('View')}
 				</button>
 			</div>
 		</Stack>

@@ -18,6 +18,7 @@ import { BoardArticleStatus } from '../../libs/enums/board-article.enum';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { imageUrl, isLiked, labelOf, likeHandler, memberImage } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -26,6 +27,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const CommunityDetail: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const articleId = router.query.id as string;
@@ -54,10 +56,10 @@ const CommunityDetail: NextPage = () => {
 		<div id={'community-detail-page'}>
 			<div className={'container column narrow'}>
 				<Link href={{ pathname: '/community', query: { articleCategory: article.articleCategory } }} className={'back-link'}>
-					<ArrowBackRoundedIcon fontSize={'small'} /> {labelOf(article.articleCategory)} board
+					<ArrowBackRoundedIcon fontSize={'small'} /> {t(labelOf(article.articleCategory))} {t('board')}
 				</Link>
 				<article className={'article-box'}>
-					<span className={'cat'}>{labelOf(article.articleCategory)}</span>
+					<span className={'cat'}>{t(labelOf(article.articleCategory))}</span>
 					<h1>{article.articleTitle}</h1>
 					<div className={'author-row'}>
 						<Link href={authorHref} className={'author'}>
@@ -65,13 +67,13 @@ const CommunityDetail: NextPage = () => {
 							<span>
 								<b>{article.memberData?.memberNick}</b>
 								<span>
-									{moment(article.createdAt).format('YYYY.MM.DD HH:mm')} · {article.articleViews} views
+									{moment(article.createdAt).format('YYYY.MM.DD HH:mm')} · {article.articleViews} {t('views')}
 								</span>
 							</span>
 						</Link>
 						{article.memberId === user._id && (
 							<button className={'ghost-btn small'} onClick={removeHandler}>
-								Delete
+								{t('Delete')}
 							</button>
 						)}
 					</div>
@@ -87,11 +89,11 @@ const CommunityDetail: NextPage = () => {
 						aria-pressed={isLiked(article)}
 					>
 						{isLiked(article) ? <FavoriteRoundedIcon /> : <FavoriteBorderRoundedIcon />}
-						{article.articleLikes} likes
+						{article.articleLikes} {t('likes')}
 					</button>
 				</article>
 				<div className={'box'}>
-					<Comments commentGroup={CommentGroup.ARTICLE} commentRefId={article._id} title={`Comments`} onChange={() => refetch()} />
+					<Comments commentGroup={CommentGroup.ARTICLE} commentRefId={article._id} title={t('Comments')} onChange={() => refetch()} />
 				</div>
 			</div>
 		</div>
