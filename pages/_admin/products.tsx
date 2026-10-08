@@ -13,7 +13,7 @@ import { UPDATE_PRODUCT } from '../../apollo/user/mutation';
 import { Product } from '../../libs/types/product';
 import { ProductStatus } from '../../libs/enums/product.enum';
 import { T } from '../../libs/types/common';
-import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
+import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { useTranslation } from 'next-i18next';
 
@@ -95,7 +95,7 @@ const AdminProducts: NextPage = () => {
 										</span>
 									</Link>
 								</td>
-								<td>{formatKRW(product.productSalePrice)}</td>
+								<td>{formatPrice(product.productSalePrice)}</td>
 								<td>{product.productSold}</td>
 								<td>{product.productViews}</td>
 								<td>

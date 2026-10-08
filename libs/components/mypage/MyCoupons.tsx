@@ -7,7 +7,7 @@ import { CLAIM_COUPON } from '../../../apollo/user/mutation';
 import { MemberCoupon } from '../../types/order';
 import { MemberCouponStatus } from '../../enums/coupon.enum';
 import { couponValue } from './CouponManager';
-import { formatKRW, labelOf } from '../../utils';
+import { formatPrice, labelOf } from '../../utils';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useTranslation } from 'next-i18next';
 
@@ -75,8 +75,8 @@ const MyCoupons = () => {
 								<div className={'txt'}>
 									<b>{coupon.couponTitle}</b>
 									<span>
-										{coupon.couponMinOrder ? t('Orders from {{amount}}', { amount: formatKRW(coupon.couponMinOrder) }) : t('No minimum')}
-										{coupon.couponMaxDiscount ? ` · ${t('up to {{amount}}', { amount: formatKRW(coupon.couponMaxDiscount) })}` : ''}
+										{coupon.couponMinOrder ? t('Orders from {{amount}}', { amount: formatPrice(coupon.couponMinOrder) }) : t('No minimum')}
+										{coupon.couponMaxDiscount ? ` · ${t('up to {{amount}}', { amount: formatPrice(coupon.couponMaxDiscount) })}` : ''}
 									</span>
 									<span>{t('Until')} {moment(coupon.endAt).format('YYYY.MM.DD')}</span>
 								</div>

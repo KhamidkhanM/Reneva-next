@@ -275,11 +275,11 @@ const AddProduct = () => {
 						</select>
 					</label>
 					<label className={'field'}>
-						<span>{t('Price (₩)')}</span>
+						<span>{t("Price (so'm)")}</span>
 						<input type={'number'} min={0} value={form.productPrice} onChange={change('productPrice')} required />
 					</label>
 					<label className={'field'}>
-						<span>{t('Sale price (₩)')}</span>
+						<span>{t("Sale price (so'm)")}</span>
 						<input type={'number'} min={0} value={form.productSalePrice} onChange={change('productSalePrice')} placeholder={t('Same as price')} />
 					</label>
 					<label className={'field'}>
@@ -365,7 +365,7 @@ const AddProduct = () => {
 							<input type={'color'} value={option.optionColor || '#c9bdeb'} onChange={(e) => changeOption(index, 'optionColor', e.target.value)} />
 						</label>
 						<label className={'field'}>
-							<span>{t('Extra price (₩)')}</span>
+							<span>{t("Extra price (so'm)")}</span>
 							<input type={'number'} min={0} value={option.optionExtraPrice} onChange={(e) => changeOption(index, 'optionExtraPrice', e.target.value)} />
 						</label>
 						<label className={'field'}>

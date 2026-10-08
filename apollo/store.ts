@@ -37,3 +37,6 @@ export const chatWidgetVar = makeVar<ChatWidgetState>({ open: false, tab: 'ai', 
 
 // unread 1:1 messages, shown on the chat button and the top menu
 export const unreadChatVar = makeVar<number>(0);
+
+// how many so'm one dollar / one won costs; the API replaces these with the Central Bank's daily rates
+export const ratesVar = makeVar<{ usd: number; krw: number }>({ usd: 12800, krw: 9.2 });

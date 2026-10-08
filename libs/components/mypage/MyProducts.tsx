@@ -6,7 +6,7 @@ import { GET_SELLER_PRODUCTS } from '../../../apollo/user/query';
 import { UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { Product } from '../../types/product';
 import { ProductStatus } from '../../enums/product.enum';
-import { formatKRW, imageUrl, labelOf } from '../../utils';
+import { formatPrice, imageUrl, labelOf } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../sweetAlert';
 import { useTranslation } from 'next-i18next';
@@ -91,7 +91,7 @@ const MyProducts = () => {
 											</span>
 										</div>
 									</td>
-									<td>{formatKRW(product.productSalePrice)}</td>
+									<td>{formatPrice(product.productSalePrice)}</td>
 									<td>{product.productSold}</td>
 									<td>
 										★ {product.productRating?.toFixed(1)} ({product.productReviews})

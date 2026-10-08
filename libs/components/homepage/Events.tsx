@@ -1,6 +1,8 @@
 import React from 'react';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'next-i18next';
+import { DELIVERY_FEE, FREE_DELIVERY_FROM } from '../../config';
+import { formatPrice } from '../../utils';
 
 const levels = [
 	{ name: 'Baby', rate: '0.5%', tone: 'light' },
@@ -19,13 +21,13 @@ const Events = () => {
 				<div className={'event-grid'}>
 					<div className={'event-card peach'}>
 						<span className={'eyebrow'}>{t('EVERY DAY')}</span>
-						<b>{t('Free delivery over ₩30,000')}</b>
-						<span>{t('Below that, delivery is ₩3,000')}</span>
+						<b>{t('Free delivery over {{amount}}', { amount: formatPrice(FREE_DELIVERY_FROM) })}</b>
+						<span>{t('Below that, delivery is {{amount}}', { amount: formatPrice(DELIVERY_FEE) })}</span>
 					</div>
 					<div className={'event-card'}>
 						<span className={'eyebrow'}>{t('REVIEW REWARDS')}</span>
-						<b>{t('300P per photo review')}</b>
-						<span>{t('100P for a text review, only for products you bought')}</span>
+						<b>{t('3,000P per photo review')}</b>
+						<span>{t('1,000P for a text review, only for products you bought')}</span>
 					</div>
 					<div className={'event-card membership'}>
 						<span className={'eyebrow'}>{t('MEMBERSHIP')}</span>

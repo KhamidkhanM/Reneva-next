@@ -14,7 +14,7 @@ import useChatSocket, { SocketEvent, sendSocketEvent } from '../../hooks/useChat
 import { ChatMessage, ChatRoom } from '../../types/chat';
 import { ChatType, MessageStatus, MessageType } from '../../enums/chat.enum';
 import { T } from '../../types/common';
-import { formatKRW, imageUrl } from '../../utils';
+import { formatPrice, imageUrl } from '../../utils';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
 import { roomAvatar, roomTitle } from './RoomList';
 import ProductThumb from '../common/ProductThumb';
@@ -154,7 +154,7 @@ const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
 					<ProductThumb image={imageUrl(room.productData.productImages?.[0])} size={40} seed={room.productData._id} radius={12} />
 					<span>
 						<b>{room.productData.productTitle}</b>
-						<span>{formatKRW(room.productData.productSalePrice)}</span>
+						<span>{formatPrice(room.productData.productSalePrice)}</span>
 					</span>
 				</button>
 			)}

@@ -7,7 +7,7 @@ import { CREATE_COUPON, UPDATE_COUPON } from '../../../apollo/user/mutation';
 import { Coupon } from '../../types/order';
 import { Brand } from '../../types/product';
 import { CouponStatus, CouponType } from '../../enums/coupon.enum';
-import { formatKRW, labelOf } from '../../utils';
+import { formatPrice, labelOf } from '../../utils';
 import { Messages } from '../../config';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useTranslation } from 'next-i18next';
@@ -15,7 +15,7 @@ import { useTranslation } from 'next-i18next';
 export const couponValue = (coupon: Pick<Coupon, 'couponType' | 'couponValue'>): string => {
 	if (coupon.couponType === CouponType.PERCENT) return `${coupon.couponValue}%`;
 	if (coupon.couponType === CouponType.FREE_DELIVERY) return 'Free ship';
-	return formatKRW(coupon.couponValue);
+	return formatPrice(coupon.couponValue);
 };
 
 const today = () => moment().format('YYYY-MM-DD');
@@ -143,17 +143,17 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 						</label>
 						{form.couponType !== CouponType.FREE_DELIVERY && (
 							<label className={'field'}>
-								<span>{form.couponType === CouponType.PERCENT ? t('Percent off') : t('Won off')}</span>
+								<span>{form.couponType === CouponType.PERCENT ? t('Percent off') : t("So'm off")}</span>
 								<input type={'number'} min={1} value={form.couponValue} onChange={change('couponValue')} required />
 							</label>
 						)}
 						<label className={'field'}>
-							<span>{t('Minimum order (₩)')}</span>
+							<span>{t("Minimum order (so'm)")}</span>
 							<input type={'number'} min={0} value={form.couponMinOrder} onChange={change('couponMinOrder')} />
 						</label>
 						{form.couponType === CouponType.PERCENT && (
 							<label className={'field'}>
-								<span>{t('Max discount (₩)')}</span>
+								<span>{t("Max discount (so'm)")}</span>
 								<input type={'number'} min={0} value={form.couponMaxDiscount} onChange={change('couponMaxDiscount')} />
 							</label>
 						)}
@@ -197,7 +197,7 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 								<tr key={coupon._id}>
 									<td>
 										<b>{coupon.couponTitle}</b>
-										<small>{coupon.couponMinOrder ? t('From {{amount}}', { amount: formatKRW(coupon.couponMinOrder) }) : t('No minimum')}</small>
+										<small>{coupon.couponMinOrder ? t('From {{amount}}', { amount: formatPrice(coupon.couponMinOrder) }) : t('No minimum')}</small>
 									</td>
 									<td>
 										<code>{coupon.couponCode}</code>

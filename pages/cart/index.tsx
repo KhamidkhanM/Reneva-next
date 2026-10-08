@@ -16,7 +16,7 @@ import { REMOVE_CART_ITEM, UPDATE_CART_ITEM } from '../../apollo/user/mutation';
 import { Cart, MyCart } from '../../libs/types/order';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { FREE_DELIVERY_FROM } from '../../libs/config';
-import { formatKRW, imageUrl } from '../../libs/utils';
+import { formatPrice, imageUrl, isConvertedPrice } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { useTranslation } from 'next-i18next';
 
@@ -152,7 +152,7 @@ const CartPage: NextPage = () => {
 													<AddRoundedIcon fontSize={'small'} />
 												</IconButton>
 											</div>
-											<b className={'line-total'}>{formatKRW(price * item.cartQuantity)}</b>
+											<b className={'line-total'}>{formatPrice(price * item.cartQuantity)}</b>
 											<IconButton aria-label={t('Remove')} onClick={() => removeHandler(item._id)}>
 												<DeleteOutlineRoundedIcon />
 											</IconButton>
@@ -167,23 +167,24 @@ const CartPage: NextPage = () => {
 						<h2>{t('Summary')}</h2>
 						<div className={'row'}>
 							<span>{t('Products')}</span>
-							<b>{formatKRW(subtotal)}</b>
+							<b>{formatPrice(subtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Delivery')}</span>
-							<b>{cart?.cartDeliveryFee ? formatKRW(cart.cartDeliveryFee) : t('Free')}</b>
+							<b>{cart?.cartDeliveryFee ? formatPrice(cart.cartDeliveryFee) : t('Free (delivery)')}</b>
 						</div>
 						{subtotal > 0 && (
 							<div className={'free-bar'}>
 								<LinearProgress variant={'determinate'} value={Math.min(100, (subtotal / FREE_DELIVERY_FROM) * 100)} />
-								<span>{toFree > 0 ? t('Add {{amount}} more for free delivery', { amount: formatKRW(toFree) }) : t('You get free delivery')}</span>
+								<span>{toFree > 0 ? t('Add {{amount}} more for free delivery', { amount: formatPrice(toFree) }) : t('You get free delivery')}</span>
 							</div>
 						)}
 						<div className={'row total'}>
 							<span>{t('Total')}</span>
-							<b>{formatKRW(cart?.cartTotal ?? 0)}</b>
+							<b>{formatPrice(cart?.cartTotal ?? 0)}</b>
 						</div>
 						<p className={'hint'}>{t('Coupons and points are applied at checkout.')}</p>
+						{isConvertedPrice() && <p className={'hint'}>{t("Orders are paid in so'm. Prices in other currencies are approximate.")}</p>}
 						<button className={'primary-btn'} disabled={selectedCount === 0} onClick={() => router.push('/order')}>
 							{t('Checkout (')}{selectedCount})
 						</button>

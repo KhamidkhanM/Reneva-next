@@ -641,3 +641,18 @@ export const GET_MY_RECOMMENDATIONS = gql`
 		}
 	}
 `;
+
+/**************************
+ *        CURRENCY        *
+ *************************/
+
+export const GET_EXCHANGE_RATES = gql`
+	query GetExchangeRates {
+		getExchangeRates {
+			usd
+			krw
+			date
+			source
+		}
+	}
+`;

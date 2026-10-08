@@ -11,7 +11,7 @@ import { UPDATE_ORDER_BY_ADMIN } from '../../apollo/admin/mutation';
 import { Order } from '../../libs/types/order';
 import { OrderStatus } from '../../libs/enums/order.enum';
 import { T } from '../../libs/types/common';
-import { formatKRW, labelOf } from '../../libs/utils';
+import { formatPrice, labelOf } from '../../libs/utils';
 import { orderTabs, statusLabel } from '../../libs/components/mypage/MyOrders';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { useTranslation } from 'next-i18next';
@@ -82,7 +82,7 @@ const AdminOrders: NextPage = () => {
 									</td>
 									<td>{order.memberData?.memberNick}</td>
 									<td>{moment(order.createdAt).format('YY.MM.DD HH:mm')}</td>
-									<td>{formatKRW(order.orderTotal)}</td>
+									<td>{formatPrice(order.orderTotal)}</td>
 									<td>{labelOf(order.payments?.[order.payments.length - 1]?.paymentMethod) || '—'}</td>
 									<td onClick={(e) => e.stopPropagation()}>
 										<select
@@ -106,7 +106,7 @@ const AdminOrders: NextPage = () => {
 												<div>
 													{order.orderItems?.map((item) => (
 														<p key={item._id}>
-															{item.itemTitle} · {item.itemOptionName} × {item.itemQuantity} — {formatKRW(item.itemPrice * item.itemQuantity)}
+															{item.itemTitle} · {item.itemOptionName} × {item.itemQuantity} — {formatPrice(item.itemPrice * item.itemQuantity)}
 														</p>
 													))}
 												</div>

@@ -14,7 +14,7 @@ import { Address, Cart, MemberCoupon, MyCart } from '../../libs/types/order';
 import { CouponType, MemberCouponStatus } from '../../libs/enums/coupon.enum';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { PaymentMethod } from '../../libs/enums/order.enum';
-import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
+import { formatPrice, imageUrl, isConvertedPrice, labelOf } from '../../libs/utils';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { i18n, useTranslation } from 'next-i18next';
 
@@ -39,7 +39,7 @@ const previewDiscount = (memberCoupon: MemberCoupon | undefined, items: Cart[], 
 		.filter((item) => !coupon.brandId || item.productData?.brandId === coupon.brandId)
 		.reduce((sum, item) => sum + ((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity, 0);
 	if (eligible === 0) return { discount: 0, freeDelivery: false, error: 'This coupon is for another brand' };
-	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: i18n?.t('Needs {{amount}} of eligible items', { amount: formatKRW(coupon.couponMinOrder) }) ?? '' };
+	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: i18n?.t('Needs {{amount}} of eligible items', { amount: formatPrice(coupon.couponMinOrder) }) ?? '' };
 	if (coupon.couponType === CouponType.FREE_DELIVERY) return { discount: 0, freeDelivery: deliveryFee > 0, error: '' };
 	let discount = coupon.couponType === CouponType.PERCENT ? Math.floor((eligible * coupon.couponValue) / 100) : coupon.couponValue;
 	if (coupon.couponMaxDiscount) discount = Math.min(discount, coupon.couponMaxDiscount);
@@ -187,7 +187,7 @@ const Checkout: NextPage = () => {
 										</span>
 									</span>
 									<b>
-										{formatKRW(((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity)}
+										{formatPrice(((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity)}
 									</b>
 								</div>
 							))}
@@ -237,6 +237,9 @@ const Checkout: NextPage = () => {
 									</button>
 								))}
 							</div>
+							{isConvertedPrice() && (
+								<p className={'hint'}>{t("You pay {{amount}}. Prices in other currencies are approximate.", { amount: formatPrice(totals.total, 'uz') })}</p>
+							)}
 							<p className={'hint'}>{t('Test mode: payments are simulated and always succeed.')}</p>
 						</section>
 					</Stack>
@@ -245,29 +248,29 @@ const Checkout: NextPage = () => {
 						<h2>{t('Order summary')}</h2>
 						<div className={'row'}>
 							<span>{t('Products')}</span>
-							<b>{formatKRW(totals.subtotal)}</b>
+							<b>{formatPrice(totals.subtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Coupon')}</span>
-							<b className={'minus'}>{totals.discount ? `−${formatKRW(totals.discount)}` : '-'}</b>
+							<b className={'minus'}>{totals.discount ? `−${formatPrice(totals.discount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Points')}</span>
-							<b className={'minus'}>{totals.usedPoints ? `−${formatKRW(totals.usedPoints)}` : '-'}</b>
+							<b className={'minus'}>{totals.usedPoints ? `−${formatPrice(totals.usedPoints)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Delivery')}</span>
-							<b>{totals.deliveryFee ? formatKRW(totals.deliveryFee) : t('Free')}</b>
+							<b>{totals.deliveryFee ? formatPrice(totals.deliveryFee) : t('Free (delivery)')}</b>
 						</div>
 						<div className={'row total'}>
 							<span>{t('Total')}</span>
-							<b>{formatKRW(totals.total)}</b>
+							<b>{formatPrice(totals.total)}</b>
 						</div>
 						<p className={'hint'}>
 							{t('You earn')} {user.memberLevel ? labelOf(user.memberLevel) : t('Baby')} {t('level points after you confirm delivery.')}
 						</p>
 						<button className={'primary-btn'} onClick={placeOrderHandler} disabled={placing || !addressId}>
-							{placing ? t('Placing order…') : t('Pay {{amount}}', { amount: formatKRW(totals.total) })}
+							{placing ? t('Placing order…') : t('Pay {{amount}}', { amount: formatPrice(totals.total) })}
 						</button>
 					</Stack>
 				</Stack>

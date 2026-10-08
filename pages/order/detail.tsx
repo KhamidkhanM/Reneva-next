@@ -14,7 +14,7 @@ import { GET_ORDER } from '../../apollo/user/query';
 import { CANCEL_ORDER, CONFIRM_ORDER, PAY_ORDER } from '../../apollo/user/mutation';
 import { Order, OrderItem } from '../../libs/types/order';
 import { OrderStatus, PaymentMethod } from '../../libs/enums/order.enum';
-import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
+import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { openSupportChat } from '../../libs/components/chat/openChat';
 import { useTranslation } from 'next-i18next';
@@ -113,7 +113,7 @@ const OrderDetail: NextPage = () => {
 									<span className={'txt'}>
 										<b>{item.itemTitle}</b>
 										<span>
-											{item.itemOptionName} · {item.itemQuantity} {t('pcs ·')} {formatKRW(item.itemPrice)}
+											{item.itemOptionName} · {item.itemQuantity} {t('pcs ·')} {formatPrice(item.itemPrice)}
 										</span>
 									</span>
 									{canReview &&
@@ -148,23 +148,23 @@ const OrderDetail: NextPage = () => {
 						<h2>{t('Payment')}</h2>
 						<div className={'row'}>
 							<span>{t('Products')}</span>
-							<b>{formatKRW(order.orderSubtotal)}</b>
+							<b>{formatPrice(order.orderSubtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Coupon')}</span>
-							<b className={'minus'}>{order.orderDiscount ? `−${formatKRW(order.orderDiscount)}` : '-'}</b>
+							<b className={'minus'}>{order.orderDiscount ? `−${formatPrice(order.orderDiscount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Points')}</span>
-							<b className={'minus'}>{order.orderPointsUsed ? `−${formatKRW(order.orderPointsUsed)}` : '-'}</b>
+							<b className={'minus'}>{order.orderPointsUsed ? `−${formatPrice(order.orderPointsUsed)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>{t('Delivery')}</span>
-							<b>{order.orderDeliveryFee ? formatKRW(order.orderDeliveryFee) : t('Free')}</b>
+							<b>{order.orderDeliveryFee ? formatPrice(order.orderDeliveryFee) : t('Free (delivery)')}</b>
 						</div>
 						<div className={'row total'}>
 							<span>{t('Total')}</span>
-							<b>{formatKRW(order.orderTotal)}</b>
+							<b>{formatPrice(order.orderTotal)}</b>
 						</div>
 						{payment && (
 							<p className={'hint'}>

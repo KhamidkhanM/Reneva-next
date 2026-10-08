@@ -20,7 +20,7 @@ import { T } from '../../libs/types/common';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { FREE_DELIVERY_FROM, Messages } from '../../libs/config';
-import { formatKRW, imageUrl, isLiked, labelOf, likeHandler, salePercent } from '../../libs/utils';
+import { formatPrice, imageUrl, isLiked, labelOf, likeHandler, salePercent } from '../../libs/utils';
 import { sweetLoginConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import ProductThumb from '../../libs/components/common/ProductThumb';
 import ProductCard from '../../libs/components/common/ProductCard';
@@ -176,8 +176,8 @@ const ProductDetail: NextPage = () => {
 
 						<div className={'price-row big'}>
 							{off > 0 && <span className={'sale'}>{off}%</span>}
-							<span className={'now'}>{formatKRW(unitPrice)}</span>
-							{off > 0 && <s>{formatKRW(product.productPrice + (option?.optionExtraPrice ?? 0))}</s>}
+							<span className={'now'}>{formatPrice(unitPrice)}</span>
+							{off > 0 && <s>{formatPrice(product.productPrice + (option?.optionExtraPrice ?? 0))}</s>}
 						</div>
 						<span className={'volume'}>{product.productVolume}</span>
 
@@ -221,7 +221,7 @@ const ProductDetail: NextPage = () => {
 											) : (
 												<>
 													{ele.optionName}
-													{ele.optionExtraPrice > 0 && <small>+{formatKRW(ele.optionExtraPrice)}</small>}
+													{ele.optionExtraPrice > 0 && <small>+{formatPrice(ele.optionExtraPrice)}</small>}
 												</>
 											)}
 										</button>
@@ -247,7 +247,7 @@ const ProductDetail: NextPage = () => {
 							</div>
 							<div className={'total'}>
 								<span>{t('Total')}</span>
-								<b>{formatKRW(unitPrice * quantity)}</b>
+								<b>{formatPrice(unitPrice * quantity)}</b>
 							</div>
 						</div>
 
@@ -270,7 +270,7 @@ const ProductDetail: NextPage = () => {
 						<div className={'service-row'}>
 							<span>
 								<LocalShippingOutlinedIcon fontSize={'small'} />
-								{t('Free delivery over')} {formatKRW(FREE_DELIVERY_FROM)}
+								{t('Free delivery over')} {formatPrice(FREE_DELIVERY_FROM)}
 							</span>
 							<button className={'link-btn'} onClick={() => openStoreChat(product._id)}>
 								<ChatBubbleOutlineRoundedIcon fontSize={'small'} /> {t('Chat with store')}
