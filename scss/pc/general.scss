@@ -1049,3 +1049,64 @@
 		}
 	}
 }
+
+/** PHONE VERIFY (Telegram) **/
+.phone-verify {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	.tg-btn {
+		min-height: 44px;
+		padding: 0 22px;
+		border-radius: 999px;
+		border: 0;
+		background: #229ed9;
+		color: $white;
+		font-size: 15px;
+		font-weight: 700;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		cursor: pointer;
+		&:hover {
+			background: #1b8bc0;
+		}
+		&:disabled {
+			opacity: 0.5;
+		}
+	}
+	.note {
+		margin: 0;
+		font-size: 13px;
+		color: $muted;
+		&.error {
+			color: $sale;
+		}
+	}
+	&.done {
+		flex-direction: row;
+		align-items: center;
+		padding: 10px 14px;
+		border-radius: $radius-s;
+		background: $lilac-light;
+		color: $success;
+		b {
+			color: $ink;
+		}
+		span {
+			font-size: 13px;
+		}
+	}
+}
+
+.phone-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	min-height: 48px;
+	b {
+		font-size: 15px;
+	}
+}

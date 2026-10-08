@@ -82,9 +82,9 @@ export const googleLogIn = async (credential: string, type?: string): Promise<{ 
 	}
 };
 
-export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {
+export const signUp = async (nick: string, password: string, phone: string, type: string, phoneToken?: string): Promise<void> => {
 	try {
-		const { jwtToken } = await requestSignUpJwtToken({ nick, password, phone, type });
+		const { jwtToken } = await requestSignUpJwtToken({ nick, password, phone, type, phoneToken });
 
 		if (jwtToken) {
 			updateStorage({ jwtToken });
@@ -104,11 +104,13 @@ const requestSignUpJwtToken = async ({
 	password,
 	phone,
 	type,
+	phoneToken,
 }: {
 	nick: string;
 	password: string;
 	phone: string;
 	type: string;
+	phoneToken?: string;
 }): Promise<{ jwtToken: string }> => {
 	const apolloClient = await initializeApollo();
 
@@ -116,7 +118,10 @@ const requestSignUpJwtToken = async ({
 		const result = await apolloClient.mutate({
 			mutation: SIGN_UP,
 			variables: {
-				input: { memberNick: nick, memberPassword: password, memberPhone: phone, memberType: type },
+				// with a Telegram token the backend takes the phone from Telegram, so the typed phone is not sent
+				input: phoneToken
+					? { memberNick: nick, memberPassword: password, memberType: type, phoneToken }
+					: { memberNick: nick, memberPassword: password, memberPhone: phone, memberType: type },
 			},
 			fetchPolicy: 'network-only',
 		});

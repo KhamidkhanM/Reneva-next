@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React, { useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
@@ -10,6 +11,10 @@ import { FREE_DELIVERY_FROM, Messages } from '../../libs/config';
 import { formatPrice } from '../../libs/utils';
 import { MemberType } from '../../libs/enums/member.enum';
 import { useTranslation } from 'next-i18next';
+import { useQuery } from '@apollo/client';
+import { GET_PHONE_VERIFICATION_ENABLED } from '../../apollo/user/query';
+import PhoneVerify from '../../libs/components/common/PhoneVerify';
+import { VerificationPurpose } from '../../libs/enums/verification.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -22,6 +27,11 @@ const Join: NextPage = () => {
 	const router = useRouter();
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: MemberType.USER });
 	const [loginView, setLoginView] = useState<boolean>(true);
+	const [phoneToken, setPhoneToken] = useState<string>('');
+
+	/** APOLLO REQUESTS **/
+	const { data: verificationData } = useQuery(GET_PHONE_VERIFICATION_ENABLED);
+	const verifyPhone = verificationData?.getPhoneVerificationEnabled ?? true;
 
 	/** HANDLERS **/
 	const handleInput = useCallback((name: string, value: string) => {
@@ -40,16 +50,17 @@ const Join: NextPage = () => {
 
 	const doSignUp = useCallback(async () => {
 		try {
-			if (!input.nick || !input.password || !input.phone) throw new Error(Messages.error3);
+			if (!input.nick || !input.password) throw new Error(Messages.error3);
+			if (verifyPhone ? !phoneToken : !input.phone) throw new Error(t('Please verify your phone number with Telegram first!'));
 			// same limits as the backend MemberInput
 			if (input.nick.length < 3 || input.nick.length > 12) throw new Error('Nickname must be 3 to 12 characters');
 			if (input.password.length < 5 || input.password.length > 12) throw new Error('Password must be 5 to 12 characters');
-			await signUp(input.nick, input.password, input.phone, input.type);
+			await signUp(input.nick, input.password, input.phone, input.type, verifyPhone ? phoneToken : undefined);
 			await router.push(input.type === MemberType.SELLER ? '/mypage?category=myBrands' : '/mypage?category=myProfile');
 		} catch (err: any) {
 			await sweetMixinErrorAlert(err.message);
 		}
-	}, [input]);
+	}, [input, phoneToken, verifyPhone]);
 
 	const doGoogle = useCallback(
 		async (credential: string) => {
@@ -117,10 +128,17 @@ const Join: NextPage = () => {
 
 						{!loginView && (
 							<>
-								<label className={'field'}>
-									<span>{t('Phone')}</span>
-									<input type={'tel'} value={input.phone} onChange={(e) => handleInput('phone', e.target.value)} placeholder={'010-0000-0000'} required />
-								</label>
+								{verifyPhone ? (
+									<div className={'field'}>
+										<span>{t('Phone')}</span>
+										<PhoneVerify purpose={VerificationPurpose.SIGNUP} onVerified={(token) => setPhoneToken(token)} />
+									</div>
+								) : (
+									<label className={'field'}>
+										<span>{t('Phone')}</span>
+										<input type={'tel'} value={input.phone} onChange={(e) => handleInput('phone', e.target.value)} placeholder={'+998 90 123 45 67'} required />
+									</label>
+								)}
 								<fieldset className={'type-pick'}>
 									<legend>{t('I want to')}</legend>
 									<label className={input.type === MemberType.USER ? 'on' : ''}>
@@ -137,6 +155,13 @@ const Join: NextPage = () => {
 							</>
 						)}
 
+						{loginView && verifyPhone && (
+							<p className={'hint'}>
+								<Link href={'/account/reset'} className={'link'}>
+									{t('Forgot password?')}
+								</Link>
+							</p>
+						)}
 						<button type={'submit'} className={'primary-btn'}>
 							{loginView ? t('Log in') : t('Create account')}
 						</button>

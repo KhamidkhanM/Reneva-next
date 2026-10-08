@@ -476,3 +476,33 @@ export const ARCHIVE_AI_CHAT = gql`
 		}
 	}
 `;
+
+export const START_PHONE_VERIFICATION = gql`
+	mutation StartPhoneVerification($purpose: VerificationPurpose!) {
+		startPhoneVerification(purpose: $purpose) {
+			token
+			botUrl
+			expiresAt
+		}
+	}
+`;
+
+export const UPDATE_MEMBER_PHONE = gql`
+	${MEMBER_FIELDS}
+	mutation UpdateMemberPhone($phoneToken: String!) {
+		updateMemberPhone(phoneToken: $phoneToken) {
+			...MemberFields
+			accessToken
+		}
+	}
+`;
+
+export const RESET_PASSWORD = gql`
+	${MEMBER_FIELDS}
+	mutation ResetPassword($input: ResetPasswordInput!) {
+		resetPassword(input: $input) {
+			...MemberFields
+			accessToken
+		}
+	}
+`;
