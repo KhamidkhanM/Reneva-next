@@ -836,5 +836,20 @@
   "Practice payment: no card is needed and no money is charged.": "연습 결제: 카드가 필요 없고 요금이 청구되지 않습니다.",
   "This payment is already finished.": "이미 완료된 결제입니다.",
   "This payment was not found.": "결제를 찾을 수 없습니다.",
-  "Real Payme and Click payments are not connected yet!": "실제 Payme 및 Click 결제는 아직 연결되지 않았습니다!"
+  "Real Payme and Click payments are not connected yet!": "실제 Payme 및 Click 결제는 아직 연결되지 않았습니다!",
+  "Card to card transfer": "카드 이체",
+  "Card transfer": "카드 이체",
+  "Pay by card transfer": "카드 이체로 결제",
+  "Open your bank app (or go to a bank) and send exactly this amount:": "은행 앱을 열고(또는 은행을 방문해) 정확히 이 금액을 보내세요:",
+  "Check that the name matches, then send the money.": "이름이 맞는지 확인한 뒤 송금하세요.",
+  "Send a photo of the receipt so the store can find your payment.": "스토어가 결제를 확인할 수 있도록 영수증 사진을 보내세요.",
+  "Send receipt in Telegram": "텔레그램으로 영수증 보내기",
+  "Receipt received. The store is checking your payment…": "영수증이 접수되었습니다. 스토어에서 결제를 확인 중입니다…",
+  "After the transfer, the store will check your payment and confirm the order.": "이체 후 스토어가 결제를 확인하고 주문을 승인합니다.",
+  "Copy": "복사",
+  "Copied": "복사됨",
+  "Could not copy, please write the number down": "복사하지 못했습니다. 번호를 적어 두세요",
+  "Card number": "카드 번호",
+  "Card transfer is available when all items are from one store!": "모든 상품이 한 스토어 상품일 때만 카드 이체를 사용할 수 있습니다!",
+  "This store does not accept card transfers yet!": "이 스토어는 아직 카드 이체를 받지 않습니다!"
 }

@@ -836,5 +836,20 @@
   "Practice payment: no card is needed and no money is charged.": "Учебный платёж: карта не нужна, деньги не списываются.",
   "This payment is already finished.": "Этот платёж уже завершён.",
   "This payment was not found.": "Платёж не найден.",
-  "Real Payme and Click payments are not connected yet!": "Реальные платежи Payme и Click ещё не подключены!"
+  "Real Payme and Click payments are not connected yet!": "Реальные платежи Payme и Click ещё не подключены!",
+  "Card to card transfer": "Перевод с карты на карту",
+  "Card transfer": "Перевод на карту",
+  "Pay by card transfer": "Оплата переводом на карту",
+  "Open your bank app (or go to a bank) and send exactly this amount:": "Откройте приложение банка (или зайдите в банк) и переведите ровно эту сумму:",
+  "Check that the name matches, then send the money.": "Проверьте, что имя совпадает, затем отправьте деньги.",
+  "Send a photo of the receipt so the store can find your payment.": "Отправьте фото чека, чтобы магазин нашёл ваш платёж.",
+  "Send receipt in Telegram": "Отправить чек в Telegram",
+  "Receipt received. The store is checking your payment…": "Чек получен. Магазин проверяет оплату…",
+  "After the transfer, the store will check your payment and confirm the order.": "После перевода магазин проверит оплату и подтвердит заказ.",
+  "Copy": "Копировать",
+  "Copied": "Скопировано",
+  "Could not copy, please write the number down": "Не удалось скопировать, запишите номер",
+  "Card number": "Номер карты",
+  "Card transfer is available when all items are from one store!": "Перевод на карту доступен, когда все товары из одного магазина!",
+  "This store does not accept card transfers yet!": "Этот магазин пока не принимает переводы на карту!"
 }

@@ -27,6 +27,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 const methods = [
 	{ id: PaymentMethod.PAYME, label: 'Payme', logo: '/img/payment/payme.svg' },
 	{ id: PaymentMethod.CLICK, label: 'Click', logo: '/img/payment/click.svg' },
+	{ id: PaymentMethod.CARD_TRANSFER, label: 'Card to card transfer', logo: '' },
 	{ id: PaymentMethod.CASH, label: 'Cash on delivery', logo: '' },
 ];
 
@@ -77,6 +78,9 @@ const Checkout: NextPage = () => {
 			item.optionData?.optionStatus === OptionStatus.ACTIVE &&
 			(item.optionData?.optionStock ?? 0) >= item.cartQuantity,
 	);
+	// card transfer goes to one seller's card, so it is offered only when every item is from one store
+	const oneStore = new Set(items.map((item) => item.productData?.memberId)).size === 1;
+	const shownMethods = methods.filter((ele) => ele.id !== PaymentMethod.CARD_TRANSFER || oneStore);
 	const addresses: Address[] = addressData?.getMyAddresses ?? [];
 	const coupons: MemberCoupon[] = couponData?.getMyCoupons?.list ?? [];
 	const myPoints: number = memberData?.getMember?.memberPoints ?? 0;
@@ -116,8 +120,9 @@ const Checkout: NextPage = () => {
 					window.location.href = paymentUrl;
 					return;
 				}
-			} catch (err) {
+			} catch (err: any) {
 				// the order is kept as "waiting for payment", the shopper can pay from the order page
+				if (method === PaymentMethod.CARD_TRANSFER) await sweetMixinErrorAlert(err.message);
 			}
 			await router.push({ pathname: '/order/detail', query: { id: orderId, placed: 1 } });
 		} catch (err: any) {
@@ -236,7 +241,7 @@ const Checkout: NextPage = () => {
 						<section className={'box'}>
 							<h2>{t('Payment')}</h2>
 							<div className={'methods'}>
-								{methods.map((ele) => (
+								{shownMethods.map((ele) => (
 									<button key={ele.id} type={'button'} className={`method ${method === ele.id ? 'on' : ''}`} onClick={() => setMethod(ele.id)} aria-pressed={method === ele.id}>
 										{/* hides itself until the logo file is added to public/img/payment */}
 										{ele.logo && <img src={ele.logo} alt={''} onError={(e) => (e.currentTarget.style.display = 'none')} />}
@@ -244,6 +249,7 @@ const Checkout: NextPage = () => {
 									</button>
 								))}
 							</div>
+							{!oneStore && <p className={'hint'}>{t('Card transfer is available when all items are from one store!')}</p>}
 							{isConvertedPrice() && (
 								<p className={'hint'}>{t("You pay {{amount}}. Prices in other currencies are approximate.", { amount: formatPrice(totals.total, 'uz') })}</p>
 							)}
