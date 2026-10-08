@@ -18,6 +18,13 @@ import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
+// the moves the server allows from each status; delivered, cancelled and refunded orders are final
+const nextStatuses: Partial<Record<OrderStatus, OrderStatus[]>> = {
+	[OrderStatus.PAUSE]: [OrderStatus.CANCEL],
+	[OrderStatus.PROCESS]: [OrderStatus.DELIVERY, OrderStatus.CANCEL],
+	[OrderStatus.DELIVERY]: [OrderStatus.FINISH, OrderStatus.REFUND],
+};
+
 const AdminOrders: NextPage = () => {
 	const { t } = useTranslation('common');
 	const [inquiry, setInquiry] = useState<T>({ page: 1, limit: 10, sort: 'createdAt', direction: 'DESC', search: {} });
@@ -90,8 +97,9 @@ const AdminOrders: NextPage = () => {
 											className={`status-select ${order.orderStatus}`}
 											value={order.orderStatus}
 											onChange={(e) => statusHandler(order, e.target.value)}
+											disabled={!nextStatuses[order.orderStatus]}
 										>
-											{Object.values(OrderStatus).map((ele) => (
+											{[order.orderStatus, ...(nextStatuses[order.orderStatus] ?? [])].map((ele) => (
 												<option key={ele} value={ele}>
 													{t(statusLabel(ele))}
 												</option>
