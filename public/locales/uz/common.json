@@ -822,5 +822,6 @@
   "Password changed, you are logged in": "Parol o'zgartirildi, siz tizimga kirdingiz",
   "Save new password": "Yangi parolni saqlash",
   "Back to log in": "Kirishga qaytish",
-  "or": "yoki"
+  "or": "yoki",
+  "Google sign-in failed, please try again!": "Google orqali kirib bo'lmadi, qaytadan urinib ko'ring!"
 }

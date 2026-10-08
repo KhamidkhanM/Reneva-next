@@ -38,8 +38,8 @@ export const LOGIN = gql`
 
 export const GOOGLE_LOGIN = gql`
 	${MEMBER_FIELDS}
-	mutation GoogleLogin($input: GoogleLoginInput!) {
-		googleLogin(input: $input) {
+	mutation GoogleLogin($idToken: String!) {
+		googleLogin(idToken: $idToken) {
 			...MemberFields
 			accessToken
 		}

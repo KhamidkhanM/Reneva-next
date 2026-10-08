@@ -257,11 +257,10 @@
 			content: '';
 			flex: 1;
 			height: 1px;
-			background: currentColor;
-			opacity: 0.3;
+			background: $line;
 		}
 	}
-	.google-btn {
+	.google-login {
 		display: flex;
 		justify-content: center;
 		min-height: 44px;
