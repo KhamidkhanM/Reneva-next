@@ -7,6 +7,7 @@ import { GET_BRANDS } from '../../../apollo/user/query';
 import { Brand } from '../../types/product';
 import { T } from '../../types/common';
 import { imageUrl } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 const tones = ['lilac', 'peach', 'light', 'peach-light'];
 
@@ -20,6 +21,7 @@ export const BrandCircle = ({ brand, index, size = 110 }: { brand: Brand; index:
 };
 
 const TopBrands = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [brands, setBrands] = useState<Brand[]>([]);
 
@@ -33,14 +35,14 @@ const TopBrands = () => {
 		<Stack className={'top-brands'}>
 			<Stack className={'container column'}>
 				<Stack className={'info-box'}>
-					<h2 className={'section-title'}>Top brands</h2>
+					<h2 className={'section-title'}>{t('Top brands')}</h2>
 					<Link href={'/brand'} className={'more-link'}>
-						All brands →
+						{t('All brands →')}
 					</Link>
 				</Stack>
 				{brands.length === 0 ? (
 					<Box component={'div'} className={'empty-list'}>
-						No brands yet
+						{t('No brands yet')}
 					</Box>
 				) : (
 					<div className={'brand-row'}>
@@ -48,7 +50,7 @@ const TopBrands = () => {
 							<button key={brand._id} className={'brand-item'} onClick={() => router.push({ pathname: '/brand/detail', query: { id: brand._id } })}>
 								<BrandCircle brand={brand} index={index} />
 								<b>{brand.brandName}</b>
-								<span>{brand.brandLikes} followers</span>
+								<span>{brand.brandLikes} {t('followers')}</span>
 							</button>
 						))}
 					</div>

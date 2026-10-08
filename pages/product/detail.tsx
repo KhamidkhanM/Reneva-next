@@ -27,6 +27,7 @@ import ProductCard from '../../libs/components/common/ProductCard';
 import Reviews from '../../libs/components/product/Reviews';
 import Comments from '../../libs/components/common/Comments';
 import { openStoreChat } from '../../libs/components/chat/openChat';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -35,6 +36,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const ProductDetail: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const productId = router.query.id as string;
@@ -107,7 +109,7 @@ const ProductDetail: NextPage = () => {
 		return (
 			<div id={'product-detail-page'}>
 				<div className={'container'}>
-					<div className={'no-data'}>This product is not available.</div>
+					<div className={'no-data'}>{t('This product is not available.')}</div>
 				</div>
 			</div>
 		);
@@ -123,10 +125,10 @@ const ProductDetail: NextPage = () => {
 	return (
 		<div id={'product-detail-page'}>
 			<div className={'container column'}>
-				<nav className={'breadcrumb'} aria-label={'Breadcrumb'}>
-					<Link href={'/'}>Home</Link>
+				<nav className={'breadcrumb'} aria-label={t('Breadcrumb')}>
+					<Link href={'/'}>{t('Home')}</Link>
 					<span>/</span>
-					<Link href={'/product'}>Shop</Link>
+					<Link href={'/product'}>{t('Shop')}</Link>
 					{product.categoryData && (
 						<>
 							<span>/</span>
@@ -141,7 +143,7 @@ const ProductDetail: NextPage = () => {
 					<div className={'gallery'}>
 						<div className={'main-img'}>
 							<ProductThumb image={imageUrl(images[slide])} seed={product._id} radius={36} alt={product.productTitle} />
-							{off > 0 && <span className={'off-pill'}>{off}% OFF</span>}
+							{off > 0 && <span className={'off-pill'}>{off}{t('% OFF')}</span>}
 						</div>
 						{images.length > 1 && (
 							<div className={'thumbs'}>
@@ -150,7 +152,7 @@ const ProductDetail: NextPage = () => {
 										key={img + index}
 										className={slide === index ? 'on' : ''}
 										onClick={() => setSlide(index)}
-										aria-label={`Photo ${index + 1}`}
+										aria-label={t('Photo {{n}}', { n: index + 1 })}
 									>
 										<ProductThumb image={imageUrl(img)} seed={product._id + index} size={72} radius={16} />
 									</button>
@@ -167,9 +169,9 @@ const ProductDetail: NextPage = () => {
 						<div className={'rating-row'}>
 							<Rating value={product.productRating} precision={0.1} readOnly size={'small'} />
 							<button className={'link-btn'} onClick={() => setTab('reviews')}>
-								{product.productRating.toFixed(1)} · {product.productReviews} reviews
+								{product.productRating.toFixed(1)} · {product.productReviews} {t('reviews')}
 							</button>
-							<span>· {product.productSold} sold</span>
+							<span>· {product.productSold} {t('sold')}</span>
 						</div>
 
 						<div className={'price-row big'}>
@@ -183,22 +185,22 @@ const ProductDetail: NextPage = () => {
 							<div className={'fit-chips'}>
 								{product.productSkinTypes.map((type) => (
 									<span key={type} className={`chip ${user.memberSkinType === type ? 'on' : ''}`}>
-										{labelOf(type)} skin
+										{t(labelOf(type))} {t('skin')}
 									</span>
 								))}
 								{product.productConcerns.map((concern) => (
 									<span key={concern} className={'chip peach'}>
-										{labelOf(concern)}
+										{t(labelOf(concern))}
 									</span>
 								))}
 							</div>
 						)}
 						{user.memberSkinType && product.productSkinTypes.includes(user.memberSkinType as any) && (
-							<p className={'fit-note'}>Made for your {user.memberSkinType.toLowerCase()} skin</p>
+							<p className={'fit-note'}>{t('Made for your')} {user.memberSkinType.toLowerCase()} {t('skin')}</p>
 						)}
 
 						<fieldset className={'options'}>
-							<legend>{hasShades ? 'Shade' : 'Option'}{option ? `: ${option.optionName}` : ''}</legend>
+							<legend>{hasShades ? t('Shade') : t('Option')}{option ? `: ${option.optionName}` : ''}</legend>
 							<div className={hasShades ? 'swatches' : 'sizes'}>
 								{product.productOptions?.map((ele) => {
 									const out = ele.optionStatus !== OptionStatus.ACTIVE || ele.optionStock === 0;
@@ -211,7 +213,7 @@ const ProductDetail: NextPage = () => {
 												setQuantity(1);
 											}}
 											aria-pressed={option?._id === ele._id}
-											aria-label={`${ele.optionName}${out ? ', sold out' : ''}`}
+											aria-label={`${ele.optionName}${out ? `, ${t('Sold out')}` : ''}`}
 											title={ele.optionName}
 										>
 											{hasShades ? (
@@ -226,17 +228,17 @@ const ProductDetail: NextPage = () => {
 									);
 								})}
 							</div>
-							{option && optionAvailable && option.optionStock <= 5 && <span className={'stock-note'}>Only {option.optionStock} left</span>}
+							{option && optionAvailable && option.optionStock <= 5 && <span className={'stock-note'}>{t('Only')} {option.optionStock} {t('left')}</span>}
 						</fieldset>
 
 						<div className={'qty-row'}>
-							<div className={'qty'} aria-label={'Quantity'}>
-								<IconButton aria-label={'Less'} onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1}>
+							<div className={'qty'} aria-label={t('Quantity')}>
+								<IconButton aria-label={t('Less')} onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1}>
 									<RemoveRoundedIcon />
 								</IconButton>
 								<span aria-live={'polite'}>{quantity}</span>
 								<IconButton
-									aria-label={'More'}
+									aria-label={t('More')}
 									onClick={() => setQuantity(Math.min(option?.optionStock ?? 1, 99, quantity + 1))}
 									disabled={!option || quantity >= Math.min(option.optionStock, 99)}
 								>
@@ -244,7 +246,7 @@ const ProductDetail: NextPage = () => {
 								</IconButton>
 							</div>
 							<div className={'total'}>
-								<span>Total</span>
+								<span>{t('Total')}</span>
 								<b>{formatPrice(unitPrice * quantity)}</b>
 							</div>
 						</div>
@@ -252,26 +254,26 @@ const ProductDetail: NextPage = () => {
 						<div className={'buy-btns'}>
 							<IconButton
 								className={'like-big'}
-								aria-label={isLiked(product) ? 'Remove from wishlist' : 'Add to wishlist'}
+								aria-label={isLiked(product) ? t('Remove from wishlist') : t('Add to wishlist')}
 								onClick={() => likeProductHandler(user, product._id)}
 							>
 								{isLiked(product) ? <FavoriteRoundedIcon className={'liked'} /> : <FavoriteBorderRoundedIcon />}
 							</IconButton>
 							<button className={'soft-btn'} onClick={() => addToCartHandler(false)} disabled={soldOut || adding}>
-								Add to cart
+								{t('Add to cart')}
 							</button>
 							<button className={'primary-btn'} onClick={() => addToCartHandler(true)} disabled={soldOut || adding}>
-								{soldOut ? 'Sold out' : 'Buy now'}
+								{soldOut ? t('Sold out') : t('Buy now')}
 							</button>
 						</div>
 
 						<div className={'service-row'}>
 							<span>
 								<LocalShippingOutlinedIcon fontSize={'small'} />
-								Free delivery over {formatPrice(FREE_DELIVERY_FROM)}
+								{t('Free delivery over')} {formatPrice(FREE_DELIVERY_FROM)}
 							</span>
 							<button className={'link-btn'} onClick={() => openStoreChat(product._id)}>
-								<ChatBubbleOutlineRoundedIcon fontSize={'small'} /> Chat with store
+								<ChatBubbleOutlineRoundedIcon fontSize={'small'} /> {t('Chat with store')}
 							</button>
 						</div>
 					</div>
@@ -281,17 +283,17 @@ const ProductDetail: NextPage = () => {
 					<div className={'ai-summary'}>
 						<img src={'/img/logo/rena-ai.svg'} alt={''} />
 						<div>
-							<span className={'eyebrow'}>WHAT BUYERS SAY · AI SUMMARY</span>
+							<span className={'eyebrow'}>{t('WHAT BUYERS SAY · AI SUMMARY')}</span>
 							<p>{product.productReviewSummary}</p>
 						</div>
 					</div>
 				)}
 
-				<div className={'detail-tabs'} role={'tablist'} aria-label={'Product information'}>
+				<div className={'detail-tabs'} role={'tablist'} aria-label={t('Product information')}>
 					{[
 						{ id: 'details', label: 'Details' },
 						{ id: 'ingredients', label: 'Ingredients' },
-						{ id: 'reviews', label: `Reviews (${product.productReviews})` },
+						{ id: 'reviews', label: `${t('Reviews')} (${product.productReviews})` },
 						{ id: 'qna', label: `Q&A (${product.productComments})` },
 					].map((ele) => (
 						<button
@@ -301,7 +303,7 @@ const ProductDetail: NextPage = () => {
 							className={tab === ele.id ? 'on' : ''}
 							onClick={() => setTab(ele.id as any)}
 						>
-							{ele.label}
+							{t(ele.label)}
 						</button>
 					))}
 				</div>
@@ -309,15 +311,15 @@ const ProductDetail: NextPage = () => {
 				<div className={'tab-panel'} role={'tabpanel'}>
 					{tab === 'details' && (
 						<div className={'details'}>
-							<p>{product.productDesc || 'The seller has not added a description yet.'}</p>
+							<p>{product.productDesc || t('The seller has not added a description yet.')}</p>
 							<dl>
-								<dt>Volume</dt>
+								<dt>{t('Volume')}</dt>
 								<dd>{product.productVolume}</dd>
-								<dt>Category</dt>
+								<dt>{t('Category')}</dt>
 								<dd>{product.categoryData?.categoryName ?? '-'}</dd>
-								<dt>Good for</dt>
-								<dd>{product.productSkinTypes.map(labelOf).join(', ') || 'All skin types'}</dd>
-								<dt>Seller</dt>
+								<dt>{t('Good for')}</dt>
+								<dd>{product.productSkinTypes.map((ele) => t(labelOf(ele))).join(', ') || t('All skin types')}</dd>
+								<dt>{t('Seller')}</dt>
 								<dd>{product.memberData?.memberNick ?? '-'}</dd>
 							</dl>
 						</div>
@@ -325,7 +327,7 @@ const ProductDetail: NextPage = () => {
 					{tab === 'ingredients' && (
 						<div className={'ingredients'}>
 							{product.productIngredients.length === 0 ? (
-								<div className={'empty-list'}>The seller has not listed ingredients yet.</div>
+								<div className={'empty-list'}>{t('The seller has not listed ingredients yet.')}</div>
 							) : (
 								<ul>
 									{product.productIngredients.map((ing) => (
@@ -333,7 +335,7 @@ const ProductDetail: NextPage = () => {
 									))}
 								</ul>
 							)}
-							<p className={'hint'}>Not sure about an ingredient? Ask Rena in the chat, she can check it against your skin type.</p>
+							<p className={'hint'}>{t('Not sure about an ingredient? Ask Rena in the chat, she can check it against your skin type.')}</p>
 						</div>
 					)}
 					{tab === 'reviews' && <Reviews productId={product._id} rating={product.productRating} total={product.productReviews} />}
@@ -341,8 +343,8 @@ const ProductDetail: NextPage = () => {
 						<Comments
 							commentGroup={CommentGroup.PRODUCT}
 							commentRefId={product._id}
-							title={'Questions'}
-							placeholder={'Ask a question about this product'}
+							title={t('Questions')}
+							placeholder={t('Ask a question about this product')}
 							onChange={() => getProductRefetch()}
 						/>
 					)}
@@ -350,7 +352,7 @@ const ProductDetail: NextPage = () => {
 
 				{moreFromBrand.length > 0 && (
 					<Stack className={'more-from'}>
-						<h2 className={'section-title'}>More from {product.brandData?.brandName}</h2>
+						<h2 className={'section-title'}>{t('More from')} {product.brandData?.brandName}</h2>
 						<div className={'product-grid four'}>
 							{moreFromBrand.map((ele) => (
 								<ProductCard key={ele._id} product={ele} />

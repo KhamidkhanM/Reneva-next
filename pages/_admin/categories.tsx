@@ -11,6 +11,7 @@ import { T } from '../../libs/types/common';
 import { labelOf } from '../../libs/utils';
 import { Messages } from '../../libs/config';
 import { sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
@@ -24,6 +25,7 @@ const slugify = (text: string) =>
 const empty = { categoryName: '', categorySlug: '', categoryParentId: '', categoryOrder: '0' };
 
 const AdminCategories: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [form, setForm] = useState({ ...empty });
 
 	/** APOLLO REQUESTS **/
@@ -67,7 +69,7 @@ const AdminCategories: NextPage = () => {
 		<tr key={category._id} className={child ? 'child' : ''}>
 			<td>
 				<input
-					aria-label={'Category name'}
+					aria-label={t('Category name')}
 					defaultValue={category.categoryName}
 					onBlur={(e) => e.target.value.trim() && e.target.value !== category.categoryName && updateHandler(category, { categoryName: e.target.value.trim() })}
 				/>
@@ -77,7 +79,7 @@ const AdminCategories: NextPage = () => {
 			</td>
 			<td>
 				<input
-					aria-label={'Order'}
+					aria-label={t('Order')}
 					type={'number'}
 					className={'short'}
 					defaultValue={category.categoryOrder}
@@ -86,14 +88,14 @@ const AdminCategories: NextPage = () => {
 			</td>
 			<td>
 				<select
-					aria-label={'Category status'}
+					aria-label={t('Category status')}
 					className={`status-select ${category.categoryStatus}`}
 					value={category.categoryStatus}
 					onChange={(e) => updateHandler(category, { categoryStatus: e.target.value })}
 				>
 					{Object.values(CategoryStatus).map((ele) => (
 						<option key={ele} value={ele}>
-							{labelOf(ele)}
+							{t(labelOf(ele))}
 						</option>
 					))}
 				</select>
@@ -104,29 +106,29 @@ const AdminCategories: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Categories</h2>
-				<p>Main categories show in the shop menu; sub categories hold the products. Edit a name or order and click away to save.</p>
+				<h2>{t('Categories')}</h2>
+				<p>{t('Main categories show in the shop menu; sub categories hold the products. Edit a name or order and click away to save.')}</p>
 			</div>
 			<form className={'box'} onSubmit={createHandler}>
-				<h2>New category</h2>
+				<h2>{t('New category')}</h2>
 				<div className={'form-grid'}>
 					<label className={'field'}>
-						<span>Name</span>
+						<span>{t('Name')}</span>
 						<input
 							value={form.categoryName}
 							onChange={(e) => setForm({ ...form, categoryName: e.target.value, categorySlug: slugify(e.target.value) })}
-							placeholder={'Serums'}
+							placeholder={t('Serums')}
 							required
 						/>
 					</label>
 					<label className={'field'}>
-						<span>Slug</span>
+						<span>{t('Slug')}</span>
 						<input value={form.categorySlug} onChange={(e) => setForm({ ...form, categorySlug: slugify(e.target.value) })} />
 					</label>
 					<label className={'field'}>
-						<span>Parent</span>
+						<span>{t('Parent')}</span>
 						<select value={form.categoryParentId} onChange={(e) => setForm({ ...form, categoryParentId: e.target.value })}>
-							<option value={''}>None (main category)</option>
+							<option value={''}>{t('None (main category)')}</option>
 							{parents.map((parent) => (
 								<option key={parent._id} value={parent._id}>
 									{parent.categoryName}
@@ -135,13 +137,13 @@ const AdminCategories: NextPage = () => {
 						</select>
 					</label>
 					<label className={'field'}>
-						<span>Order</span>
+						<span>{t('Order')}</span>
 						<input type={'number'} value={form.categoryOrder} onChange={(e) => setForm({ ...form, categoryOrder: e.target.value })} />
 					</label>
 				</div>
 				<div className={'btns'}>
 					<button type={'submit'} className={'primary-btn'} disabled={loading}>
-						Add category
+						{t('Add category')}
 					</button>
 				</div>
 			</form>
@@ -149,10 +151,10 @@ const AdminCategories: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Slug</th>
-							<th>Order</th>
-							<th>Status</th>
+							<th>{t('Name')}</th>
+							<th>{t('Slug')}</th>
+							<th>{t('Order')}</th>
+							<th>{t('Status')}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -164,7 +166,7 @@ const AdminCategories: NextPage = () => {
 						))}
 					</tbody>
 				</table>
-				{categories.length === 0 && <div className={'no-data'}>No categories yet.</div>}
+				{categories.length === 0 && <div className={'no-data'}>{t('No categories yet.')}</div>}
 			</div>
 		</div>
 	);

@@ -9,10 +9,12 @@ import { ProductStatus } from '../../enums/product.enum';
 import { formatPrice, imageUrl, labelOf } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const tabs = ['', ProductStatus.ACTIVE, ProductStatus.SOLDOUT, ProductStatus.HIDE];
 
 const MyProducts = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [status, setStatus] = useState<string>('');
 	const [page, setPage] = useState<number>(1);
@@ -40,10 +42,10 @@ const MyProducts = () => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>My products</h2>
-				<p>Hide a product to take it off the shop for a while, or mark it sold out.</p>
+				<h2>{t('My products')}</h2>
+				<p>{t('Hide a product to take it off the shop for a while, or mark it sold out.')}</p>
 				<button className={'primary-btn'} onClick={() => router.push('/mypage?category=addProduct')}>
-					+ Add product
+					{t('+ Add product')}
 				</button>
 			</div>
 			<Stack className={'chips'}>
@@ -56,22 +58,22 @@ const MyProducts = () => {
 							setPage(1);
 						}}
 					>
-						{tab ? labelOf(tab) : 'All'}
+						{tab ? labelOf(tab) : t('All')}
 					</button>
 				))}
 			</Stack>
 			{products.length === 0 ? (
-				<div className={'no-data'}>No products here.</div>
+				<div className={'no-data'}>{t('No products here.')}</div>
 			) : (
 				<div className={'table-box'}>
 					<table>
 						<thead>
 							<tr>
-								<th>Product</th>
-								<th>Price</th>
-								<th>Sold</th>
-								<th>Rating</th>
-								<th>Status</th>
+								<th>{t('Product')}</th>
+								<th>{t('Price')}</th>
+								<th>{t('Sold')}</th>
+								<th>{t('Rating')}</th>
+								<th>{t('Status')}</th>
 								<th></th>
 							</tr>
 						</thead>
@@ -95,20 +97,20 @@ const MyProducts = () => {
 										★ {product.productRating?.toFixed(1)} ({product.productReviews})
 									</td>
 									<td>
-										<span className={`status-pill ${product.productStatus}`}>{labelOf(product.productStatus)}</span>
+										<span className={`status-pill ${product.productStatus}`}>{t(labelOf(product.productStatus))}</span>
 									</td>
 									<td className={'row-btns'}>
 										<button className={'ghost-btn small'} onClick={() => router.push({ pathname: '/mypage', query: { category: 'addProduct', productId: product._id } })}>
-											Edit
+											{t('Edit')}
 										</button>
 										<select
-											aria-label={'Change status'}
+											aria-label={t('Change status')}
 											value={product.productStatus}
 											onChange={(e) => statusHandler(product, e.target.value as ProductStatus)}
 										>
 											{Object.values(ProductStatus).map((ele) => (
 												<option key={ele} value={ele}>
-													{labelOf(ele)}
+													{t(labelOf(ele))}
 												</option>
 											))}
 										</select>

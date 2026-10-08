@@ -14,10 +14,12 @@ import { MemberLevel, MemberStatus, MemberType } from '../../libs/enums/member.e
 import { T } from '../../libs/types/common';
 import { labelOf, memberImage } from '../../libs/utils';
 import { sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
 const AdminUsers: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [text, setText] = useState<string>('');
 	const [inquiry, setInquiry] = useState<T>({ page: 1, limit: 10, sort: 'createdAt', direction: 'DESC', search: {} });
 
@@ -48,7 +50,7 @@ const AdminUsers: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Members</h2>
+				<h2>{t('Members')}</h2>
 				<form
 					className={'search'}
 					onSubmit={(e) => {
@@ -56,19 +58,19 @@ const AdminUsers: NextPage = () => {
 						filter('text', text.trim());
 					}}
 				>
-					<input type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={'Search nickname'} aria-label={'Search nickname'} />
+					<input type={'search'} value={text} onChange={(e) => setText(e.target.value)} placeholder={t('Search nickname')} aria-label={t('Search nickname')} />
 					<button type={'submit'} className={'primary-btn'}>
-						Search
+						{t('Search')}
 					</button>
 				</form>
 			</div>
 			<Stack className={'chips'}>
 				<button className={`chip ${!inquiry.search.memberType ? 'on' : ''}`} onClick={() => filter('memberType')}>
-					All
+					{t('All')}
 				</button>
 				{Object.values(MemberType).map((type) => (
 					<button key={type} className={`chip ${inquiry.search.memberType === type ? 'on' : ''}`} onClick={() => filter('memberType', type)}>
-						{labelOf(type)}
+						{t(labelOf(type))}
 					</button>
 				))}
 				<span className={'divider'} />
@@ -78,7 +80,7 @@ const AdminUsers: NextPage = () => {
 						className={`chip ${inquiry.search.memberStatus === status ? 'on' : ''}`}
 						onClick={() => filter('memberStatus', inquiry.search.memberStatus === status ? undefined : status)}
 					>
-						{labelOf(status)}
+						{t(labelOf(status))}
 					</button>
 				))}
 			</Stack>
@@ -86,13 +88,13 @@ const AdminUsers: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Member</th>
-							<th>Phone</th>
-							<th>Joined</th>
-							<th>Orders</th>
-							<th>Type</th>
-							<th>Level</th>
-							<th>Status</th>
+							<th>{t('Member')}</th>
+							<th>{t('Phone')}</th>
+							<th>{t('Joined')}</th>
+							<th>{t('Orders')}</th>
+							<th>{t('Type')}</th>
+							<th>{t('Level')}</th>
+							<th>{t('Status')}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -111,33 +113,33 @@ const AdminUsers: NextPage = () => {
 								<td>{moment(member.createdAt).format('YY.MM.DD')}</td>
 								<td>{member.memberOrders}</td>
 								<td>
-									<select aria-label={'Member type'} value={member.memberType} onChange={(e) => updateHandler(member, { memberType: e.target.value })}>
+									<select aria-label={t('Member type')} value={member.memberType} onChange={(e) => updateHandler(member, { memberType: e.target.value })}>
 										{Object.values(MemberType).map((ele) => (
 											<option key={ele} value={ele}>
-												{labelOf(ele)}
+												{t(labelOf(ele))}
 											</option>
 										))}
 									</select>
 								</td>
 								<td>
-									<select aria-label={'Member level'} value={member.memberLevel} onChange={(e) => updateHandler(member, { memberLevel: e.target.value })}>
+									<select aria-label={t('Member level')} value={member.memberLevel} onChange={(e) => updateHandler(member, { memberLevel: e.target.value })}>
 										{Object.values(MemberLevel).map((ele) => (
 											<option key={ele} value={ele}>
-												{labelOf(ele)}
+												{t(labelOf(ele))}
 											</option>
 										))}
 									</select>
 								</td>
 								<td>
 									<select
-										aria-label={'Member status'}
+										aria-label={t('Member status')}
 										className={`status-select ${member.memberStatus}`}
 										value={member.memberStatus}
 										onChange={(e) => updateHandler(member, { memberStatus: e.target.value })}
 									>
 										{Object.values(MemberStatus).map((ele) => (
 											<option key={ele} value={ele}>
-												{labelOf(ele)}
+												{t(labelOf(ele))}
 											</option>
 										))}
 									</select>
@@ -146,7 +148,7 @@ const AdminUsers: NextPage = () => {
 						))}
 					</tbody>
 				</table>
-				{members.length === 0 && <div className={'no-data'}>No members found.</div>}
+				{members.length === 0 && <div className={'no-data'}>{t('No members found.')}</div>}
 			</div>
 			<AdminPager page={inquiry.page} limit={inquiry.limit} total={total} onChange={(page) => setInquiry({ ...inquiry, page })} />
 		</div>

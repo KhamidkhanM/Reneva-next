@@ -7,6 +7,7 @@ import { CREATE_REVIEW, IMAGES_UPLOADER } from '../../../apollo/user/mutation';
 import { OrderItem } from '../../types/order';
 import { imageUrl } from '../../utils';
 import { sweetMixinErrorAlert, sweetTopSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface ReviewFormProps {
 	item: OrderItem | null;
@@ -15,6 +16,7 @@ interface ReviewFormProps {
 }
 
 const ReviewForm = ({ item, onClose, onSaved }: ReviewFormProps) => {
+	const { t } = useTranslation('common');
 	const [rating, setRating] = useState<number | null>(5);
 	const [content, setContent] = useState<string>('');
 	const [images, setImages] = useState<string[]>([]);
@@ -56,8 +58,8 @@ const ReviewForm = ({ item, onClose, onSaved }: ReviewFormProps) => {
 				<form onSubmit={submitHandler}>
 					<Stack gap={'16px'}>
 						<div className={'dialog-head'}>
-							<h2>Write a review</h2>
-							<IconButton aria-label={'Close'} onClick={onClose}>
+							<h2>{t('Write a review')}</h2>
+							<IconButton aria-label={t('Close')} onClick={onClose}>
 								<CloseRoundedIcon />
 							</IconButton>
 						</div>
@@ -65,28 +67,28 @@ const ReviewForm = ({ item, onClose, onSaved }: ReviewFormProps) => {
 							{item?.itemTitle} {item?.itemOptionName ? `· ${item.itemOptionName}` : ''}
 						</p>
 						<div className={'rating'}>
-							<span>Your rating</span>
+							<span>{t('Your rating')}</span>
 							<Rating value={rating} onChange={(e, value) => setRating(value)} size={'large'} />
 						</div>
 						<label className={'field'}>
-							<span>How did it work for your skin?</span>
-							<textarea value={content} onChange={(e) => setContent(e.target.value)} minLength={10} maxLength={1000} rows={5} placeholder={'Texture, scent, how your skin felt after a week…'} />
+							<span>{t('How did it work for your skin?')}</span>
+							<textarea value={content} onChange={(e) => setContent(e.target.value)} minLength={10} maxLength={1000} rows={5} placeholder={t('Texture, scent, how your skin felt after a week…')} />
 						</label>
 						<div className={'photos'}>
 							{images.map((img) => (
-								<img key={img} src={imageUrl(img)} alt={'Review photo'} />
+								<img key={img} src={imageUrl(img)} alt={t('Review photo')} />
 							))}
 							{images.length < 5 && (
 								<button type={'button'} className={'add-photo'} onClick={() => fileRef.current?.click()} disabled={uploading}>
 									<AddPhotoAlternateOutlinedIcon />
-									Photo
+									{t('Photo')}
 								</button>
 							)}
 							<input ref={fileRef} type={'file'} multiple accept={'image/png,image/jpeg'} hidden onChange={uploadHandler} />
 						</div>
-						<p className={'hint'}>Photo reviews earn 3,000P, text reviews 1,000P.</p>
+						<p className={'hint'}>{t('Photo reviews earn 3,000P, text reviews 1,000P.')}</p>
 						<button type={'submit'} className={'primary-btn'} disabled={loading}>
-							Post review
+							{t('Post review')}
 						</button>
 					</Stack>
 				</form>

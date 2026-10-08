@@ -77,3 +77,20 @@ export const REMOVE_REVIEW_BY_ADMIN = gql`
 		}
 	}
 `;
+
+export const REMOVE_BOARD_ARTICLE_BY_ADMIN = gql`
+	mutation RemoveBoardArticleByAdmin($input: String!) {
+		removeBoardArticleByAdmin(articleId: $input) {
+			_id
+			articleStatus
+		}
+	}
+`;
+
+export const REMOVE_COMMENT_BY_ADMIN = gql`
+	mutation RemoveCommentByAdmin($input: String!) {
+		removeCommentByAdmin(commentId: $input) {
+			_id
+		}
+	}
+`;

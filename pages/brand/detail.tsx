@@ -16,6 +16,7 @@ import { Brand, Product } from '../../libs/types/product';
 import { T } from '../../libs/types/common';
 import { imageUrl, isLiked, likeHandler } from '../../libs/utils';
 import { openStoreChat } from '../../libs/components/chat/openChat';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -24,6 +25,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const BrandDetail: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const brandId = router.query.id as string;
@@ -59,16 +61,16 @@ const BrandDetail: NextPage = () => {
 					<BrandCircle brand={brand} index={0} size={120} />
 					<div className={'txt'}>
 						<span className={'eyebrow'}>
-							{brand.brandCountry} · SINCE {new Date(brand.createdAt).getFullYear()}
+							{brand.brandCountry} {t('· SINCE')} {new Date(brand.createdAt).getFullYear()}
 						</span>
 						<h2>{brand.brandName}</h2>
-						<p>{brand.brandDesc || 'This brand has not written its story yet.'}</p>
+						<p>{brand.brandDesc || t('This brand has not written its story yet.')}</p>
 						<div className={'stats'}>
 							<span>
-								<b>{brand.brandProducts}</b> products
+								<b>{brand.brandProducts}</b> {t('products')}
 							</span>
 							<span>
-								<b>{brand.brandLikes}</b> followers
+								<b>{brand.brandLikes}</b> {t('followers')}
 							</span>
 						</div>
 					</div>
@@ -83,19 +85,19 @@ const BrandDetail: NextPage = () => {
 							) : (
 								<FavoriteBorderRoundedIcon fontSize={'small'} />
 							)}
-							{isLiked(brand) ? 'Following' : 'Follow brand'}
+							{isLiked(brand) ? t('Following') : t('Follow brand')}
 						</button>
 						{products[0] && (
 							<button className={'ghost-btn'} onClick={() => openStoreChat(products[0]._id)}>
-								Chat with store
+								{t('Chat with store')}
 							</button>
 						)}
 					</div>
 				</div>
 
-				<h2 className={'section-title'}>Products</h2>
+				<h2 className={'section-title'}>{t('Products')}</h2>
 				{products.length === 0 ? (
-					<div className={'no-data'}>No products yet.</div>
+					<div className={'no-data'}>{t('No products yet.')}</div>
 				) : (
 					<div className={'product-grid four'}>
 						{products.map((product) => (

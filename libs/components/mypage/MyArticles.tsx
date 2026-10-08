@@ -9,12 +9,14 @@ import { BoardArticleStatus } from '../../enums/board-article.enum';
 import { likeHandler } from '../../utils';
 import ArticleCard from '../community/ArticleCard';
 import { sweetConfirmAlert, sweetMixinErrorAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface MyArticlesProps {
 	memberId?: string; // set on the public member page
 }
 
 const MyArticles = ({ memberId }: MyArticlesProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const owner = !memberId || memberId === user._id;
 	const [page, setPage] = useState<number>(1);
@@ -44,11 +46,11 @@ const MyArticles = ({ memberId }: MyArticlesProps) => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>{owner ? 'My articles' : 'Articles'}</h2>
-				{owner && <p>Tips, routines and reviews you shared with the community.</p>}
+				<h2>{owner ? t('My articles') : t('Articles')}</h2>
+				{owner && <p>{t('Tips, routines and reviews you shared with the community.')}</p>}
 			</div>
 			{articles.length === 0 ? (
-				<div className={'no-data'}>No articles yet.</div>
+				<div className={'no-data'}>{t('No articles yet.')}</div>
 			) : (
 				<div className={'article-grid'}>
 					{articles.map((article) => (

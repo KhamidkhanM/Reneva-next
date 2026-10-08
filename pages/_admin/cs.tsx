@@ -14,12 +14,14 @@ import { T } from '../../libs/types/common';
 import { labelOf } from '../../libs/utils';
 import { Messages } from '../../libs/config';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
 const empty = { _id: '', noticeCategory: NoticeCategory.FAQ, noticeTitle: '', noticeContent: '', noticeStatus: NoticeStatus.ACTIVE };
 
 const AdminCs: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [inquiry, setInquiry] = useState<T>({ page: 1, limit: 10, search: {} });
 	const [form, setForm] = useState({ ...empty });
 	const [open, setOpen] = useState<boolean>(false);
@@ -73,48 +75,48 @@ const AdminCs: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Notices & FAQ</h2>
-				<p>Active posts show on the CS page. Hold keeps a draft hidden.</p>
+				<h2>{t('Notices & FAQ')}</h2>
+				<p>{t('Active posts show on the CS page. Hold keeps a draft hidden.')}</p>
 				{!open && (
 					<button className={'primary-btn'} onClick={() => setOpen(true)}>
-						+ New post
+						{t('+ New post')}
 					</button>
 				)}
 			</div>
 
 			{open && (
 				<form className={'box'} onSubmit={submitHandler}>
-					<h2>{form._id ? 'Edit post' : 'New post'}</h2>
+					<h2>{form._id ? t('Edit post') : t('New post')}</h2>
 					<div className={'form-grid'}>
 						<label className={'field'}>
-							<span>Category</span>
+							<span>{t('Category')}</span>
 							<select value={form.noticeCategory} onChange={(e) => setForm({ ...form, noticeCategory: e.target.value as NoticeCategory })}>
 								{Object.values(NoticeCategory).map((ele) => (
 									<option key={ele} value={ele}>
-										{ele === NoticeCategory.EVENT ? 'Notice / event' : labelOf(ele)}
+										{ele === NoticeCategory.EVENT ? t('Notice / event') : labelOf(ele)}
 									</option>
 								))}
 							</select>
 						</label>
 						<label className={'field'}>
-							<span>Status</span>
+							<span>{t('Status')}</span>
 							<select value={form.noticeStatus} onChange={(e) => setForm({ ...form, noticeStatus: e.target.value as NoticeStatus })}>
-								<option value={NoticeStatus.ACTIVE}>Active</option>
-								<option value={NoticeStatus.HOLD}>Hold</option>
+								<option value={NoticeStatus.ACTIVE}>{t('Active')}</option>
+								<option value={NoticeStatus.HOLD}>{t('Hold')}</option>
 							</select>
 						</label>
 						<label className={'field wide'}>
-							<span>{form.noticeCategory === NoticeCategory.FAQ ? 'Question' : 'Title'}</span>
+							<span>{form.noticeCategory === NoticeCategory.FAQ ? t('Question') : t('Title')}</span>
 							<input value={form.noticeTitle} onChange={(e) => setForm({ ...form, noticeTitle: e.target.value })} required />
 						</label>
 						<label className={'field wide'}>
-							<span>{form.noticeCategory === NoticeCategory.FAQ ? 'Answer' : 'Content'}</span>
+							<span>{form.noticeCategory === NoticeCategory.FAQ ? t('Answer') : t('Content')}</span>
 							<textarea rows={6} value={form.noticeContent} onChange={(e) => setForm({ ...form, noticeContent: e.target.value })} required />
 						</label>
 					</div>
 					<div className={'btns'}>
 						<button type={'submit'} className={'primary-btn'} disabled={creating || updating}>
-							{form._id ? 'Save' : 'Post'}
+							{form._id ? t('Save') : t('Post')}
 						</button>
 						<button
 							type={'button'}
@@ -124,7 +126,7 @@ const AdminCs: NextPage = () => {
 								setOpen(false);
 							}}
 						>
-							Cancel
+							{t('Cancel')}
 						</button>
 					</div>
 				</form>
@@ -132,7 +134,7 @@ const AdminCs: NextPage = () => {
 
 			<Stack className={'chips'}>
 				<button className={`chip ${!inquiry.search.noticeCategory ? 'on' : ''}`} onClick={() => setInquiry({ ...inquiry, page: 1, search: {} })}>
-					All
+					{t('All')}
 				</button>
 				{Object.values(NoticeCategory).map((ele) => (
 					<button
@@ -140,7 +142,7 @@ const AdminCs: NextPage = () => {
 						className={`chip ${inquiry.search.noticeCategory === ele ? 'on' : ''}`}
 						onClick={() => setInquiry({ ...inquiry, page: 1, search: { noticeCategory: ele } })}
 					>
-						{labelOf(ele)}
+						{t(labelOf(ele))}
 					</button>
 				))}
 			</Stack>
@@ -148,10 +150,10 @@ const AdminCs: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Title</th>
-							<th>Category</th>
-							<th>Date</th>
-							<th>Status</th>
+							<th>{t('Title')}</th>
+							<th>{t('Category')}</th>
+							<th>{t('Date')}</th>
+							<th>{t('Status')}</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -161,30 +163,30 @@ const AdminCs: NextPage = () => {
 								<td>
 									<b>{notice.noticeTitle}</b>
 								</td>
-								<td>{labelOf(notice.noticeCategory)}</td>
+								<td>{t(labelOf(notice.noticeCategory))}</td>
 								<td>{moment(notice.createdAt).format('YY.MM.DD')}</td>
 								<td>
-									<span className={`status-pill ${notice.noticeStatus}`}>{labelOf(notice.noticeStatus)}</span>
+									<span className={`status-pill ${notice.noticeStatus}`}>{t(labelOf(notice.noticeStatus))}</span>
 								</td>
 								<td className={'row-btns'}>
 									<button className={'ghost-btn small'} onClick={() => editHandler(notice)}>
-										Edit
+										{t('Edit')}
 									</button>
 									<button
 										className={'ghost-btn small'}
 										onClick={() => statusHandler(notice, notice.noticeStatus === NoticeStatus.ACTIVE ? NoticeStatus.HOLD : NoticeStatus.ACTIVE)}
 									>
-										{notice.noticeStatus === NoticeStatus.ACTIVE ? 'Hold' : 'Publish'}
+										{notice.noticeStatus === NoticeStatus.ACTIVE ? t('Hold') : t('Publish')}
 									</button>
 									<button className={'ghost-btn small danger'} onClick={() => statusHandler(notice, NoticeStatus.DELETE)}>
-										Delete
+										{t('Delete')}
 									</button>
 								</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
-				{notices.length === 0 && <div className={'no-data'}>No posts here.</div>}
+				{notices.length === 0 && <div className={'no-data'}>{t('No posts here.')}</div>}
 			</div>
 			<AdminPager page={inquiry.page} limit={inquiry.limit} total={total} onChange={(page) => setInquiry({ ...inquiry, page })} />
 		</div>

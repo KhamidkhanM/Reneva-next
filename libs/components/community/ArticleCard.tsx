@@ -7,6 +7,7 @@ import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineR
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { BoardArticle } from '../../types/community';
 import { imageUrl, isLiked, labelOf, memberImage } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface ArticleCardProps {
 	article: BoardArticle;
@@ -17,16 +18,17 @@ interface ArticleCardProps {
 const tones = ['lilac', 'peach', 'mint'];
 
 const ArticleCard = ({ article, likeArticleHandler, onRemove }: ArticleCardProps) => {
+	const { t } = useTranslation('common');
 	const tone = tones[article._id.charCodeAt(article._id.length - 1) % tones.length];
 	const href = { pathname: '/community/detail', query: { articleCategory: article.articleCategory, id: article._id } };
 
 	return (
 		<article className={'article-card'}>
 			<Link href={href} className={`cover ${tone}`}>
-				{article.articleImage ? <img src={imageUrl(article.articleImage)} alt={''} /> : <span>{labelOf(article.articleCategory)}</span>}
+				{article.articleImage ? <img src={imageUrl(article.articleImage)} alt={''} /> : <span>{t(labelOf(article.articleCategory))}</span>}
 			</Link>
 			<div className={'body'}>
-				<span className={'cat'}>{labelOf(article.articleCategory)}</span>
+				<span className={'cat'}>{t(labelOf(article.articleCategory))}</span>
 				<Link href={href} className={'title'}>
 					{article.articleTitle}
 				</Link>
@@ -47,7 +49,7 @@ const ArticleCard = ({ article, likeArticleHandler, onRemove }: ArticleCardProps
 						className={isLiked(article) ? 'on' : ''}
 						onClick={() => likeArticleHandler?.(article._id)}
 						disabled={!likeArticleHandler}
-						aria-label={'Like article'}
+						aria-label={t('Like article')}
 						aria-pressed={isLiked(article)}
 					>
 						{isLiked(article) ? <FavoriteRoundedIcon fontSize={'inherit'} /> : <FavoriteBorderRoundedIcon fontSize={'inherit'} />}
@@ -55,7 +57,7 @@ const ArticleCard = ({ article, likeArticleHandler, onRemove }: ArticleCardProps
 					</button>
 					{onRemove && (
 						<button className={'remove'} onClick={() => onRemove(article._id)}>
-							Delete
+							{t('Delete')}
 						</button>
 					)}
 				</div>

@@ -10,9 +10,11 @@ import { ProductsInquiry } from '../../types/product';
 import { labelOf } from '../../utils';
 import { sweetLoginConfirmAlert, sweetMixinErrorAlert, sweetTopSuccessAlert } from '../../sweetAlert';
 import { skinTypeList } from '../../config';
+import { useTranslation } from 'next-i18next';
 
 // the homepage header: search by skin, AI skin analysis card and the welcome coupon
 const HeaderFilter = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [text, setText] = useState<string>('');
@@ -52,9 +54,9 @@ const HeaderFilter = () => {
 	return (
 		<Stack className={'hero'}>
 			<Stack className={'hero-search'}>
-				<span className={'eyebrow'}>SOFT K-BEAUTY · FOR EVERY SKIN</span>
-				<h1>Skin care that feels like a cloud</h1>
-				<p>Search by your skin, not just by name. Every product shows how it worked for people like you.</p>
+				<span className={'eyebrow'}>{t('SOFT K-BEAUTY · FOR EVERY SKIN')}</span>
+				<h1>{t('Skin care that feels like a cloud')}</h1>
+				<p>{t('Search by your skin, not just by name. Every product shows how it worked for people like you.')}</p>
 				<form
 					className={'search-bar'}
 					onSubmit={(e) => {
@@ -64,20 +66,20 @@ const HeaderFilter = () => {
 				>
 					<SearchRoundedIcon />
 					<label className={'sr-only'} htmlFor={'hero-search'}>
-						Search products
+						{t('Search products')}
 					</label>
 					<input
 						id={'hero-search'}
 						type={'search'}
 						value={text}
 						onChange={(e) => setText(e.target.value)}
-						placeholder={'Try “ceramide cream” or “sun stick”'}
+						placeholder={t('Try “ceramide cream” or “sun stick”')}
 					/>
 					<button type={'submit'} className={'primary-btn'}>
-						Search
+						{t('Search')}
 					</button>
 				</form>
-				<div className={'skin-chips'} aria-label={'Skin type'}>
+				<div className={'skin-chips'} aria-label={t('Skin type')}>
 					{skinTypeList.map((type) => (
 						<button
 							key={type}
@@ -86,7 +88,7 @@ const HeaderFilter = () => {
 							aria-pressed={skinType === type}
 							onClick={() => setSkinType(skinType === type ? null : type)}
 						>
-							{labelOf(type)}
+							{t(labelOf(type))}
 						</button>
 					))}
 				</div>
@@ -94,8 +96,8 @@ const HeaderFilter = () => {
 
 			<Stack className={'hero-side'}>
 				<Stack className={'hero-card ai'}>
-					<span className={'eyebrow'}>AI SKIN ANALYSIS</span>
-					<strong>Your skin, read in 30 seconds</strong>
+					<span className={'eyebrow'}>{t('AI SKIN ANALYSIS')}</span>
+					<strong>{t('Your skin, read in 30 seconds')}</strong>
 					<div className={'bars'} aria-hidden={'true'}>
 						{[
 							{ label: 'Moist', h: 64, peach: false },
@@ -106,22 +108,22 @@ const HeaderFilter = () => {
 						].map((bar) => (
 							<span key={bar.label} className={'bar-col'}>
 								<span className={`bar ${bar.peach ? 'peach' : ''}`} style={{ height: bar.h }}></span>
-								{bar.label}
+								{t(bar.label)}
 							</span>
 						))}
 					</div>
 					<button className={'dark-btn'} onClick={() => router.push('/ai/skin')}>
-						Try it free
+						{t('Try it free')}
 					</button>
 				</Stack>
 				<Stack className={'hero-card coupon'}>
 					<span className={'txt'}>
-						<span className={'eyebrow'}>NEW MEMBER</span>
-						<b>10% off first order</b>
-						<span>Code WELCOME10</span>
+						<span className={'eyebrow'}>{t('NEW MEMBER')}</span>
+						<b>{t('10% off first order')}</b>
+						<span>{t('Code WELCOME10')}</span>
 					</span>
 					<button className={'ghost-btn white'} onClick={claimHandler}>
-						Claim
+						{t('Claim')}
 					</button>
 				</Stack>
 			</Stack>

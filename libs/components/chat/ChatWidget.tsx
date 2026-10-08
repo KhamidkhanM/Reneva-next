@@ -10,11 +10,13 @@ import { T } from '../../types/common';
 import AiChatPanel from './AiChatPanel';
 import RoomList from './RoomList';
 import RoomConversation from './RoomConversation';
+import { useTranslation } from 'next-i18next';
 
 const myUnread = (room: ChatRoom, memberId: string) =>
 	room.customerId === memberId ? room.customerUnread : room.agentId === memberId ? room.agentUnread : 0;
 
 const ChatWidget = () => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const widget = useReactiveVar(chatWidgetVar);
 	const unread = useReactiveVar(unreadChatVar);
@@ -48,19 +50,19 @@ const ChatWidget = () => {
 
 	return (
 		<Stack className={'chat-widget'}>
-			<Stack className={`chat-frame ${widget.open ? 'open' : ''}`} role={'dialog'} aria-label={'Chat'}>
+			<Stack className={`chat-frame ${widget.open ? 'open' : ''}`} role={'dialog'} aria-label={t('Chat')}>
 				<Box component={'div'} className={'chat-head'}>
 					<div className={'tabs'}>
 						<button className={widget.tab === 'ai' ? 'on' : ''} onClick={() => tabHandler('ai')}>
 							<img src={'/img/logo/rena-ai.svg'} alt={''} />
-							Rena AI
+							{t('Rena AI')}
 						</button>
 						<button className={widget.tab === 'messages' ? 'on' : ''} onClick={() => tabHandler('messages')}>
-							Messages
+							{t('Messages')}
 							{unread > 0 && <span className={'count'}>{unread}</span>}
 						</button>
 					</div>
-					<IconButton aria-label={'Close chat'} onClick={toggleHandler} size={'small'}>
+					<IconButton aria-label={t('Close chat')} onClick={toggleHandler} size={'small'}>
 						<CloseRoundedIcon />
 					</IconButton>
 				</Box>
@@ -76,7 +78,7 @@ const ChatWidget = () => {
 				</Box>
 			</Stack>
 
-			<button className={`chat-button ${widget.open ? 'open' : ''}`} onClick={toggleHandler} aria-label={widget.open ? 'Close chat' : 'Open chat'}>
+			<button className={`chat-button ${widget.open ? 'open' : ''}`} onClick={toggleHandler} aria-label={widget.open ? t('Close chat') : t('Open chat')}>
 				<Badge badgeContent={unread} color={'secondary'} invisible={widget.open || unread === 0}>
 					{widget.open ? <CloseRoundedIcon /> : <img src={'/img/logo/rena-ai.svg'} alt={''} />}
 				</Badge>

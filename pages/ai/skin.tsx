@@ -18,6 +18,7 @@ import { updateStorage, updateUserInfo } from '../../libs/auth';
 import { labelOf } from '../../libs/utils';
 import { Messages } from '../../libs/config';
 import { sweetLoginConfirmAlert, sweetMixinErrorAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -34,6 +35,7 @@ const scoreRows: { key: 'moisture' | 'oil' | 'pores' | 'wrinkles' | 'tone'; labe
 ];
 
 const SkinAnalysisPage: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const fileRef = useRef<HTMLInputElement>(null);
@@ -117,42 +119,42 @@ const SkinAnalysisPage: NextPage = () => {
 				<Stack className={'skin-layout'}>
 					<section className={'box upload'}>
 						<div className={'photo'}>
-							{preview ? <img src={preview} alt={'Your selfie'} /> : <img src={'/img/logo/rena-ai.svg'} alt={''} className={'placeholder'} />}
+							{preview ? <img src={preview} alt={t('Your selfie')} /> : <img src={'/img/logo/rena-ai.svg'} alt={''} className={'placeholder'} />}
 							{working && (
 								<div className={'scanning'}>
 									<CircularProgress size={28} />
-									<span>Rena is reading your skin…</span>
+									<span>{t('Rena is reading your skin…')}</span>
 								</div>
 							)}
 						</div>
-						<h2>Take one selfie</h2>
+						<h2>{t('Take one selfie')}</h2>
 						<ul className={'tips'}>
-							<li>Face the camera in daylight, no filter</li>
-							<li>No makeup gives the most accurate result</li>
-							<li>Your photo stays private, only you can see it</li>
+							<li>{t('Face the camera in daylight, no filter')}</li>
+							<li>{t('No makeup gives the most accurate result')}</li>
+							<li>{t('Your photo stays private, only you can see it')}</li>
 						</ul>
 						<input ref={fileRef} type={'file'} accept={'image/png,image/jpeg'} capture={'user'} hidden onChange={fileHandler} />
 						<button className={'primary-btn'} onClick={pickHandler} disabled={working}>
-							<AddAPhotoOutlinedIcon fontSize={'small'} /> {preview ? 'Try another photo' : 'Upload a selfie'}
+							<AddAPhotoOutlinedIcon fontSize={'small'} /> {preview ? t('Try another photo') : t('Upload a selfie')}
 						</button>
 					</section>
 
 					<section className={'box result'}>
 						{!shown ? (
 							<div className={'empty'}>
-								<h2>Your result shows here</h2>
-								<p>You get a skin type, five scores and the concerns to care for first. Your skin profile updates so the shop and Rena pick for you.</p>
+								<h2>{t('Your result shows here')}</h2>
+								<p>{t('You get a skin type, five scores and the concerns to care for first. Your skin profile updates so the shop and Rena pick for you.')}</p>
 							</div>
 						) : shown.analysisStatus === AnalysisStatus.FAILED ? (
 							<div className={'empty'}>
-								<h2>We could not read this photo</h2>
-								<p>{shown.analysisSummary || 'Please try again with a clear photo of your face.'}</p>
+								<h2>{t('We could not read this photo')}</h2>
+								<p>{shown.analysisSummary || t('Please try again with a clear photo of your face.')}</p>
 							</div>
 						) : (
 							<>
-								<span className={'eyebrow'}>RESULT · {moment(shown.createdAt).format('YYYY.MM.DD')}</span>
+								<span className={'eyebrow'}>{t('RESULT ·')} {moment(shown.createdAt).format('YYYY.MM.DD')}</span>
 								<h2>
-									{labelOf(shown.analysisSkinType)} skin
+									{t(labelOf(shown.analysisSkinType))} {t('skin')}
 								</h2>
 								<p className={'summary'}>{shown.analysisSummary}</p>
 								<div className={'scores'}>
@@ -160,7 +162,7 @@ const SkinAnalysisPage: NextPage = () => {
 										const value = shown.analysisScores?.[row.key] ?? 0;
 										return (
 											<div key={row.key} className={'score'}>
-												<span>{row.label}</span>
+												<span>{t(row.label)}</span>
 												<div className={'track'} role={'meter'} aria-valuemin={0} aria-valuemax={100} aria-valuenow={value} aria-label={row.label}>
 													<div className={`fill ${value >= 60 ? 'high' : ''}`} style={{ width: `${value}%` }}></div>
 												</div>
@@ -169,19 +171,19 @@ const SkinAnalysisPage: NextPage = () => {
 										);
 									})}
 								</div>
-								<p className={'scale-note'}>Higher means that area needs more care.</p>
+								<p className={'scale-note'}>{t('Higher means that area needs more care.')}</p>
 								{shown.analysisConcerns.length > 0 && (
 									<div className={'concerns'}>
 										{shown.analysisConcerns.map((concern) => (
 											<span key={concern} className={'chip'}>
-												{labelOf(concern)}
+												{t(labelOf(concern))}
 											</span>
 										))}
 									</div>
 								)}
 								<div className={'btns'}>
 									<button className={'primary-btn'} onClick={() => router.push({ pathname: '/ai', query: { analysisId: shown._id } })}>
-										Ask Rena about my result
+										{t('Ask Rena about my result')}
 									</button>
 								</div>
 							</>
@@ -191,7 +193,7 @@ const SkinAnalysisPage: NextPage = () => {
 
 				{picks.length > 0 && (
 					<Stack className={'skin-picks'}>
-						<h2 className={'section-title'}>Picked for {labelOf(shown?.analysisSkinType).toLowerCase()} skin</h2>
+						<h2 className={'section-title'}>{t('Picked for')} {labelOf(shown?.analysisSkinType).toLowerCase()} {t('skin')}</h2>
 						<div className={'product-grid four'}>
 							{picks.map((product) => (
 								<ProductCard key={product._id} product={product} />
@@ -202,11 +204,11 @@ const SkinAnalysisPage: NextPage = () => {
 
 				{history.length > 1 && (
 					<Stack className={'skin-history'}>
-						<h2 className={'section-title'}>Your past results</h2>
+						<h2 className={'section-title'}>{t('Your past results')}</h2>
 						<div className={'history-row'}>
 							{history.map((ele) => (
 								<button key={ele._id} className={`past ${shown?._id === ele._id ? 'on' : ''}`} onClick={() => setResult(ele)}>
-									<b>{ele.analysisStatus === AnalysisStatus.DONE ? labelOf(ele.analysisSkinType) : 'Not read'}</b>
+									<b>{ele.analysisStatus === AnalysisStatus.DONE ? labelOf(ele.analysisSkinType) : t('Not read')}</b>
 									<span>{moment(ele.createdAt).format('YYYY.MM.DD')}</span>
 								</button>
 							))}

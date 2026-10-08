@@ -17,6 +17,7 @@ import { OrderStatus, PaymentMethod } from '../../libs/enums/order.enum';
 import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import { openSupportChat } from '../../libs/components/chat/openChat';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -32,6 +33,7 @@ const steps = [
 ];
 
 const OrderDetail: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const orderId = router.query.id as string;
 	const [reviewItem, setReviewItem] = useState<OrderItem | null>(null);
@@ -70,8 +72,8 @@ const OrderDetail: NextPage = () => {
 							<div className={'placed-banner'}>
 								<CheckCircleRoundedIcon />
 								<span>
-									<b>Thank you! Your order is placed.</b>
-									<span>The store will ship it soon. You can follow it here or in My Page.</span>
+									<b>{t('Thank you! Your order is placed.')}</b>
+									<span>{t('The store will ship it soon. You can follow it here or in My Page.')}</span>
 								</span>
 							</div>
 						)}
@@ -79,14 +81,14 @@ const OrderDetail: NextPage = () => {
 						<section className={'box'}>
 							<div className={'order-head'}>
 								<span>
-									<span className={'eyebrow'}>ORDER {order.orderNumber}</span>
+									<span className={'eyebrow'}>{t('ORDER')} {order.orderNumber}</span>
 									<h2>{moment(order.createdAt).format('YYYY.MM.DD HH:mm')}</h2>
 								</span>
-								<span className={`status-pill ${order.orderStatus}`}>{labelOf(order.orderStatus === OrderStatus.PAUSE ? 'WAITING_FOR_PAYMENT' : order.orderStatus)}</span>
+								<span className={`status-pill ${order.orderStatus}`}>{t(labelOf(order.orderStatus === OrderStatus.PAUSE ? 'WAITING_FOR_PAYMENT' : order.orderStatus))}</span>
 							</div>
 							{stopped ? (
 								<p className={'stopped'}>
-									This order was {order.orderStatus === OrderStatus.CANCEL ? 'canceled' : 'refunded'}
+									{t('This order was')} {order.orderStatus === OrderStatus.CANCEL ? t('canceled') : t('refunded')}
 									{order.canceledAt ? ` on ${moment(order.canceledAt).format('YYYY.MM.DD')}` : ''}.
 								</p>
 							) : (
@@ -94,7 +96,7 @@ const OrderDetail: NextPage = () => {
 									{steps.map((step, index) => (
 										<li key={step.status} className={index <= stepIndex ? 'done' : ''}>
 											<span className={'dot'}>{index + 1}</span>
-											{step.label}
+											{t(step.label)}
 										</li>
 									))}
 								</ol>
@@ -102,7 +104,7 @@ const OrderDetail: NextPage = () => {
 						</section>
 
 						<section className={'box'}>
-							<h2>Items</h2>
+							<h2>{t('Items')}</h2>
 							{order.orderItems?.map((item) => (
 								<div key={item._id} className={'order-line'}>
 									<Link href={{ pathname: '/product/detail', query: { id: item.productId } }}>
@@ -111,15 +113,15 @@ const OrderDetail: NextPage = () => {
 									<span className={'txt'}>
 										<b>{item.itemTitle}</b>
 										<span>
-											{item.itemOptionName} · {item.itemQuantity} pcs · {formatPrice(item.itemPrice)}
+											{item.itemOptionName} · {item.itemQuantity} {t('pcs ·')} {formatPrice(item.itemPrice)}
 										</span>
 									</span>
 									{canReview &&
 										(item.itemReviewed ? (
-											<span className={'tag-pill'}>Reviewed</span>
+											<span className={'tag-pill'}>{t('Reviewed')}</span>
 										) : (
 											<button className={'soft-btn small'} onClick={() => setReviewItem(item)}>
-												Write review
+												{t('Write review')}
 											</button>
 										))}
 								</div>
@@ -127,7 +129,7 @@ const OrderDetail: NextPage = () => {
 						</section>
 
 						<section className={'box'}>
-							<h2>Delivery</h2>
+							<h2>{t('Delivery')}</h2>
 							<p className={'address'}>
 								<b>{order.orderAddress.addressRecipient}</b> · {order.orderAddress.addressPhone}
 								<br />
@@ -135,7 +137,7 @@ const OrderDetail: NextPage = () => {
 								{order.orderMemo && (
 									<>
 										<br />
-										Note: {order.orderMemo}
+										{t('Note:')} {order.orderMemo}
 									</>
 								)}
 							</p>
@@ -143,41 +145,41 @@ const OrderDetail: NextPage = () => {
 					</Stack>
 
 					<Stack className={'cart-summary'}>
-						<h2>Payment</h2>
+						<h2>{t('Payment')}</h2>
 						<div className={'row'}>
-							<span>Products</span>
+							<span>{t('Products')}</span>
 							<b>{formatPrice(order.orderSubtotal)}</b>
 						</div>
 						<div className={'row'}>
-							<span>Coupon</span>
+							<span>{t('Coupon')}</span>
 							<b className={'minus'}>{order.orderDiscount ? `−${formatPrice(order.orderDiscount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
-							<span>Points</span>
+							<span>{t('Points')}</span>
 							<b className={'minus'}>{order.orderPointsUsed ? `−${formatPrice(order.orderPointsUsed)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
-							<span>Delivery</span>
-							<b>{order.orderDeliveryFee ? formatPrice(order.orderDeliveryFee) : 'Free'}</b>
+							<span>{t('Delivery')}</span>
+							<b>{order.orderDeliveryFee ? formatPrice(order.orderDeliveryFee) : t('Free (delivery)')}</b>
 						</div>
 						<div className={'row total'}>
-							<span>Total</span>
+							<span>{t('Total')}</span>
 							<b>{formatPrice(order.orderTotal)}</b>
 						</div>
 						{payment && (
 							<p className={'hint'}>
-								{labelOf(payment.paymentMethod)} · {labelOf(payment.paymentStatus)}
+								{t(labelOf(payment.paymentMethod))} · {t(labelOf(payment.paymentStatus))}
 							</p>
 						)}
 
 						{order.orderStatus === OrderStatus.PAUSE && (
 							<button className={'primary-btn'} onClick={() => run(() => payOrder({ variables: { input: { orderId, paymentMethod: PaymentMethod.CARD } } }), 'Paid')}>
-								Pay now
+								{t('Pay now')}
 							</button>
 						)}
 						{order.orderStatus === OrderStatus.DELIVERY && (
 							<button className={'primary-btn'} onClick={() => run(() => confirmOrder({ variables: { input: orderId } }), 'Thank you!')}>
-								I got my order
+								{t('I got my order')}
 							</button>
 						)}
 						{[OrderStatus.PAUSE, OrderStatus.PROCESS].includes(order.orderStatus) && (
@@ -188,11 +190,11 @@ const OrderDetail: NextPage = () => {
 										await run(() => cancelOrder({ variables: { input: orderId } }), 'Canceled');
 								}}
 							>
-								Cancel order
+								{t('Cancel order')}
 							</button>
 						)}
 						<button className={'soft-btn'} onClick={() => openSupportChat(orderId)}>
-							Get help with this order
+							{t('Get help with this order')}
 						</button>
 					</Stack>
 				</Stack>

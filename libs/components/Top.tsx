@@ -16,7 +16,7 @@ import { chatWidgetVar, unreadChatVar, userVar } from '../../apollo/store';
 import { GET_MY_CART, GET_MY_NOTIFICATIONS } from '../../apollo/user/query';
 import { READ_ALL_NOTIFICATIONS, READ_NOTIFICATION } from '../../apollo/user/mutation';
 import { Notification } from '../types/community';
-import { memberImage } from '../utils';
+import { labelOf, memberImage } from '../utils';
 import { openChatRoomById } from './chat/openChat';
 
 const Top = () => {
@@ -25,7 +25,7 @@ const Top = () => {
 	const unreadChats = useReactiveVar(unreadChatVar);
 	const { t } = useTranslation('common');
 	const router = useRouter();
-	const [lang, setLang] = useState<string | null>('en');
+	const [lang, setLang] = useState<string | null>(router.locale ?? 'uz');
 	const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
 	const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 	const [noteAnchor, setNoteAnchor] = useState<null | HTMLElement>(null);
@@ -46,14 +46,11 @@ const Top = () => {
 	const unreadNotes: number = noteData?.getMyNotifications?.unreadCount ?? 0;
 
 	/** LIFECYCLES **/
+	// the flag follows the language in the URL
 	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
-			localStorage.setItem('locale', 'en');
-			setLang('en');
-		} else {
-			setLang(localStorage.getItem('locale'));
-		}
-	}, [router]);
+		setLang(router.locale ?? 'uz');
+		localStorage.setItem('locale', router.locale ?? 'uz');
+	}, [router.locale]);
 
 	useEffect(() => {
 		const jwt = getJwtToken();
@@ -117,7 +114,7 @@ const Top = () => {
 			{user._id && (
 				<>
 					<IconButton
-						aria-label={`${t('Notifications')}, ${unreadNotes} unread`}
+						aria-label={`${t('Notifications')}, ${t('{{n}} unread', { n: unreadNotes })}`}
 						className={'round-btn'}
 						onClick={(e) => setNoteAnchor(e.currentTarget)}
 					>
@@ -133,9 +130,9 @@ const Top = () => {
 					>
 						<div className={'note-head'}>
 							<strong>{t('Notifications')}</strong>
-							{unreadNotes > 0 && <button onClick={readAllHandler}>Mark all read</button>}
+							{unreadNotes > 0 && <button onClick={readAllHandler}>{t('Mark all read')}</button>}
 						</div>
-						{notifications.length === 0 && <div className={'note-empty'}>No notifications yet</div>}
+						{notifications.length === 0 && <div className={'note-empty'}>{t('No notifications yet')}</div>}
 						{notifications.map((note) => (
 							<MenuItem
 								key={note._id}
@@ -151,7 +148,11 @@ const Top = () => {
 						))}
 					</Menu>
 
-					<IconButton aria-label={`${t('Cart')}, ${cartCount} items`} className={'round-btn'} onClick={() => router.push('/cart')}>
+					<IconButton
+						aria-label={`${t('Cart')}, ${cartCount} ${t('items')}`}
+						className={'round-btn'}
+						onClick={() => router.push('/cart')}
+					>
 						<Badge badgeContent={cartCount} color={'primary'}>
 							<ShoppingBagOutlinedIcon />
 						</Badge>
@@ -164,12 +165,13 @@ const Top = () => {
 				className={'btn-lang'}
 				onClick={(e) => setLangAnchor(e.currentTarget)}
 				endIcon={<KeyboardArrowDownRoundedIcon />}
-				aria-label={'Language'}
+				aria-label={t('Language')}
 			>
-				<img src={`/img/flag/lang${lang ?? 'en'}.png`} alt={''} className={'flag'} />
+				<img src={`/img/flag/lang${lang ?? 'uz'}.png`} alt={''} className={'flag'} />
 			</Button>
 			<Menu anchorEl={langAnchor} open={Boolean(langAnchor)} onClose={() => setLangAnchor(null)}>
 				{[
+					{ id: 'uz', label: 'Uzbek' },
 					{ id: 'en', label: 'English' },
 					{ id: 'kr', label: 'Korean' },
 					{ id: 'ru', label: 'Russian' },
@@ -183,7 +185,7 @@ const Top = () => {
 
 			{user._id ? (
 				<>
-					<button className={'login-user'} onClick={(e) => setUserAnchor(e.currentTarget)} aria-label={'Account menu'}>
+					<button className={'login-user'} onClick={(e) => setUserAnchor(e.currentTarget)} aria-label={t('Account menu')}>
 						<Badge color={'secondary'} variant={'dot'} invisible={!unreadChats} overlap={'circular'}>
 							<img src={memberImage(user.memberImage)} alt={''} />
 						</Badge>
@@ -192,11 +194,11 @@ const Top = () => {
 						<div className={'user-menu-head'}>
 							<b>{user.memberNick}</b>
 							<span>
-								{user.memberType === 'USER' ? `${user.memberLevel} member` : user.memberType} · {user.memberPoints}P
+								{user.memberType === 'USER' ? t('{{level}} member', { level: labelOf(user.memberLevel) }) : t(labelOf(user.memberType))} · {user.memberPoints}P
 							</span>
 						</div>
 						<MenuItem onClick={() => router.push('/mypage')}>{t('My Page')}</MenuItem>
-						<MenuItem onClick={() => router.push('/mypage?category=myOrders')}>My orders</MenuItem>
+						<MenuItem onClick={() => router.push('/mypage?category=myOrders')}>{t('My orders')}</MenuItem>
 						<MenuItem
 							onClick={() => {
 								setUserAnchor(null);
@@ -205,7 +207,7 @@ const Top = () => {
 						>
 							{t('Messages')} {unreadChats > 0 && `(${unreadChats})`}
 						</MenuItem>
-						{user.memberType === 'ADMIN' && <MenuItem onClick={() => router.push('/_admin')}>Admin panel</MenuItem>}
+						{user.memberType === 'ADMIN' && <MenuItem onClick={() => router.push('/_admin')}>{t('Admin panel')}</MenuItem>}
 						<MenuItem onClick={() => logOut()}>
 							<Logout fontSize={'small'} style={{ marginRight: '10px' }} />
 							{t('Logout')}
@@ -226,11 +228,11 @@ const Top = () => {
 				<div className={'mobile-row'}>
 					<Link href={'/'} className={'mobile-logo'}>
 						<img src={'/img/logo/reneva-mark.svg'} alt={''} />
-						Reneva
+						{t('Reneva')}
 					</Link>
 					{userBox}
 				</div>
-				<nav className={'mobile-links'} aria-label={'Main'}>
+				<nav className={'mobile-links'} aria-label={t('Main')}>
 					{links.map((link) => (
 						<Link key={link.label} href={link.href} className={isActive(link.path ?? link.href) ? 'on' : ''}>
 							{t(link.label)}
@@ -244,10 +246,10 @@ const Top = () => {
 	return (
 		<Stack className={`navbar ${scrolled ? 'scrolled' : ''}`}>
 			<Stack className={'container'}>
-				<nav className={'navbar-main'} aria-label={'Main'}>
+				<nav className={'navbar-main'} aria-label={t('Main')}>
 					<Link href={'/'} className={'logo-box'}>
 						<img src={'/img/logo/reneva-mark.svg'} alt={''} />
-						<span>Reneva</span>
+						<span>{t('Reneva')}</span>
 					</Link>
 
 					<Box component={'div'} className={'router-box'}>

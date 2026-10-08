@@ -14,10 +14,12 @@ import { T } from '../../libs/types/common';
 import { formatPrice, labelOf } from '../../libs/utils';
 import { orderTabs, statusLabel } from '../../libs/components/mypage/MyOrders';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
 const AdminOrders: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [inquiry, setInquiry] = useState<T>({ page: 1, limit: 10, sort: 'createdAt', direction: 'DESC', search: {} });
 	const [openId, setOpenId] = useState<string>('');
 
@@ -31,7 +33,7 @@ const AdminOrders: NextPage = () => {
 	const statusHandler = async (order: Order, orderStatus: string) => {
 		try {
 			if ([OrderStatus.CANCEL, OrderStatus.REFUND].includes(orderStatus as OrderStatus)) {
-				if (!(await sweetConfirmAlert(`Set order ${order.orderNumber} to ${labelOf(orderStatus)}?`))) return;
+				if (!(await sweetConfirmAlert(t('Set order {{number}} to {{status}}?', { number: order.orderNumber, status: t(statusLabel(orderStatus as OrderStatus)) })))) return;
 			}
 			await updateOrderByAdmin({ variables: { input: { _id: order._id, orderStatus } } });
 			await refetch();
@@ -44,8 +46,8 @@ const AdminOrders: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Orders</h2>
-				<p>Move paid orders to Shipping, then Delivered. Click a row to see its items.</p>
+				<h2>{t('Orders')}</h2>
+				<p>{t('Move paid orders to Shipping, then Delivered. Click a row to see its items.')}</p>
 			</div>
 			<Stack className={'chips'}>
 				{[...orderTabs, { status: OrderStatus.REFUND, label: 'Refunded' }].map((tab) => (
@@ -54,7 +56,7 @@ const AdminOrders: NextPage = () => {
 						className={`chip ${(inquiry.search.orderStatus ?? '') === tab.status ? 'on' : ''}`}
 						onClick={() => setInquiry({ ...inquiry, page: 1, search: tab.status ? { orderStatus: tab.status } : {} })}
 					>
-						{tab.label}
+						{t(tab.label)}
 					</button>
 				))}
 			</Stack>
@@ -62,12 +64,12 @@ const AdminOrders: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Order</th>
-							<th>Buyer</th>
-							<th>Date</th>
-							<th>Total</th>
-							<th>Payment</th>
-							<th>Status</th>
+							<th>{t('Order')}</th>
+							<th>{t('Buyer')}</th>
+							<th>{t('Date')}</th>
+							<th>{t('Total')}</th>
+							<th>{t('Payment')}</th>
+							<th>{t('Status')}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -76,7 +78,7 @@ const AdminOrders: NextPage = () => {
 								<tr className={'clickable'} onClick={() => setOpenId(openId === order._id ? '' : order._id)}>
 									<td>
 										<b>{order.orderNumber}</b>
-										<small>{order.orderItems?.length} items</small>
+										<small>{order.orderItems?.length} {t('items')}</small>
 									</td>
 									<td>{order.memberData?.memberNick}</td>
 									<td>{moment(order.createdAt).format('YY.MM.DD HH:mm')}</td>
@@ -84,14 +86,14 @@ const AdminOrders: NextPage = () => {
 									<td>{labelOf(order.payments?.[order.payments.length - 1]?.paymentMethod) || '—'}</td>
 									<td onClick={(e) => e.stopPropagation()}>
 										<select
-											aria-label={'Order status'}
+											aria-label={t('Order status')}
 											className={`status-select ${order.orderStatus}`}
 											value={order.orderStatus}
 											onChange={(e) => statusHandler(order, e.target.value)}
 										>
 											{Object.values(OrderStatus).map((ele) => (
 												<option key={ele} value={ele}>
-													{statusLabel(ele)}
+													{t(statusLabel(ele))}
 												</option>
 											))}
 										</select>
@@ -115,7 +117,7 @@ const AdminOrders: NextPage = () => {
 													<p>
 														({order.orderAddress?.addressZip}) {order.orderAddress?.addressLine1} {order.orderAddress?.addressLine2}
 													</p>
-													{order.orderMemo && <p>Memo: {order.orderMemo}</p>}
+													{order.orderMemo && <p>{t('Memo:')} {order.orderMemo}</p>}
 												</div>
 											</div>
 										</td>
@@ -125,7 +127,7 @@ const AdminOrders: NextPage = () => {
 						))}
 					</tbody>
 				</table>
-				{orders.length === 0 && <div className={'no-data'}>No orders found.</div>}
+				{orders.length === 0 && <div className={'no-data'}>{t('No orders found.')}</div>}
 			</div>
 			<AdminPager page={inquiry.page} limit={inquiry.limit} total={total} onChange={(page) => setInquiry({ ...inquiry, page })} />
 		</div>

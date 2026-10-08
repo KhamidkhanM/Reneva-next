@@ -9,6 +9,7 @@ import { ChatRoom } from '../../types/chat';
 import { ChatType } from '../../enums/chat.enum';
 import { memberImage } from '../../utils';
 import { openSupportChat } from './openChat';
+import { i18n, useTranslation } from 'next-i18next';
 
 interface RoomListProps {
 	rooms: ChatRoom[];
@@ -18,8 +19,10 @@ interface RoomListProps {
 
 export const roomTitle = (room: ChatRoom, memberId: string) => {
 	const iAmCustomer = room.customerId === memberId;
-	if (room.chatType === ChatType.SUPPORT) return iAmCustomer ? 'Reneva support' : `${room.customerData?.memberNick ?? 'Customer'} · support`;
-	return iAmCustomer ? `${room.agentData?.memberNick ?? 'Store'} · store` : room.customerData?.memberNick ?? 'Customer';
+	const tr = (text: string) => (i18n ? i18n.t(text) : text);
+	if (room.chatType === ChatType.SUPPORT)
+		return iAmCustomer ? tr('Reneva support') : `${room.customerData?.memberNick ?? tr('Customer')} · ${tr('support')}`;
+	return iAmCustomer ? `${room.agentData?.memberNick ?? tr('Store')} · ${tr('store')}` : room.customerData?.memberNick ?? tr('Customer');
 };
 
 export const roomAvatar = (room: ChatRoom, memberId: string) => {
@@ -29,16 +32,17 @@ export const roomAvatar = (room: ChatRoom, memberId: string) => {
 };
 
 const RoomList = ({ rooms, memberId, openRoom }: RoomListProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const router = useRouter();
 
 	if (!user._id) {
 		return (
 			<Stack className={'room-empty'}>
-				<strong>Your 1:1 chats</strong>
-				<p>Login to chat with stores about their products, or with Reneva support about orders and reports.</p>
+				<strong>{t('Your 1:1 chats')}</strong>
+				<p>{t('Login to chat with stores about their products, or with Reneva support about orders and reports.')}</p>
 				<button className={'primary-btn'} onClick={() => router.push('/account/join')}>
-					Login
+					{t('Login')}
 				</button>
 			</Stack>
 		);
@@ -49,14 +53,14 @@ const RoomList = ({ rooms, memberId, openRoom }: RoomListProps) => {
 			<button className={'support-card'} onClick={() => openSupportChat()}>
 				<SupportAgentOutlinedIcon />
 				<span className={'txt'}>
-					<b>Contact Reneva support</b>
-					<span>Reports, refunds, delivery or account requests</span>
+					<b>{t('Contact Reneva support')}</b>
+					<span>{t('Reports, refunds, delivery or account requests')}</span>
 				</span>
 			</button>
-			<p className={'hint'}>To ask a store about a product, press “Chat with store” on its product page.</p>
+			<p className={'hint'}>{t('To ask a store about a product, press “Chat with store” on its product page.')}</p>
 
 			{rooms.length === 0 ? (
-				<div className={'no-rooms'}>No conversations yet.</div>
+				<div className={'no-rooms'}>{t('No conversations yet.')}</div>
 			) : (
 				rooms.map((room) => {
 					const unread = room.customerId === memberId ? room.customerUnread : room.agentUnread;
@@ -70,8 +74,8 @@ const RoomList = ({ rooms, memberId, openRoom }: RoomListProps) => {
 									<b>{roomTitle(room, memberId)}</b>
 									<span className={'time'}>{room.lastMessageAt ? moment(room.lastMessageAt).fromNow() : ''}</span>
 								</span>
-								{room.productData && <span className={'about'}>About: {room.productData.productTitle}</span>}
-								<span className={'preview'}>{room.lastMessage || 'No messages yet'}</span>
+								{room.productData && <span className={'about'}>{t('About:')} {room.productData.productTitle}</span>}
+								<span className={'preview'}>{room.lastMessage || t('No messages yet')}</span>
 							</span>
 							{unread > 0 && <span className={'count'}>{unread}</span>}
 						</button>
