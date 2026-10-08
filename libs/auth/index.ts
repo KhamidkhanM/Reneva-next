@@ -3,7 +3,7 @@ import decodeJWT from 'jwt-decode';
 import { initializeApollo } from '../../apollo/client';
 import { emptyUser, userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
-import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { GOOGLE_LOGIN, LOGIN, SIGN_UP } from '../../apollo/user/mutation';
 
 export function getJwtToken(): any {
 	if (typeof window !== 'undefined') {
@@ -56,6 +56,30 @@ const apiErrorMessage = (err: any): string => {
 	if (serverMessage) return serverMessage;
 	if (err?.networkError) return `Cannot reach the Reneva API at ${REACT_APP_API_GRAPHQL_URL}. Is the backend running?`;
 	return err?.message ?? 'Something went wrong';
+};
+
+// works for both pages: a new Google account becomes a member with the chosen type
+export const googleLogIn = async (credential: string, type?: string): Promise<{ isNew: boolean }> => {
+	const apolloClient = await initializeApollo();
+	try {
+		const result = await apolloClient.mutate({
+			mutation: GOOGLE_LOGIN,
+			variables: { input: { credential, memberType: type } },
+			fetchPolicy: 'network-only',
+		});
+		const member = result?.data?.googleLogin;
+		if (member?.accessToken) {
+			updateStorage({ jwtToken: member.accessToken });
+			updateUserInfo(member.accessToken);
+		}
+		// a member made just now goes on to fill in their profile (phone, skin type)
+		return { isNew: !!member?.createdAt && Date.now() - new Date(member.createdAt).getTime() < 60 * 1000 };
+	} catch (err: any) {
+		console.warn('google login err', err);
+		deleteStorage();
+		userVar({ ...emptyUser });
+		throw new Error(apiErrorMessage(err));
+	}
 };
 
 export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {

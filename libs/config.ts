@@ -4,6 +4,7 @@ import { ProductTag } from './enums/product.enum';
 // values come from .env (see .env.example); the defaults match a backend running locally on port 3000
 export const REACT_APP_API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 export const REACT_APP_API_GRAPHQL_URL = process.env.REACT_APP_API_GRAPHQL_URL || `${REACT_APP_API_URL}/graphql`;
+export const REACT_APP_GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID || '';
 export const REACT_APP_API_WS = process.env.REACT_APP_API_WS || REACT_APP_API_URL.replace(/^http/, 'ws');
 
 export const skinTypeList = Object.values(SkinType);

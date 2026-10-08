@@ -801,5 +801,6 @@
   "Photo reviews earn 3,000P, text reviews 1,000P.": "Photo reviews earn 3,000P, text reviews 1,000P.",
   "You pay {{amount}}. Prices in other currencies are approximate.": "You pay {{amount}}. Prices in other currencies are approximate.",
   "Orders are paid in so'm. Prices in other currencies are approximate.": "Orders are paid in so'm. Prices in other currencies are approximate.",
-  "Free (delivery)": "Free"
+  "Free (delivery)": "Free",
+  "or": "or"
 }

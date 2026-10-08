@@ -3,7 +3,8 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { logIn, signUp } from '../../libs/auth';
+import { googleLogIn, logIn, signUp } from '../../libs/auth';
+import GoogleButton from '../../libs/components/common/GoogleButton';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { FREE_DELIVERY_FROM, Messages } from '../../libs/config';
 import { formatPrice } from '../../libs/utils';
@@ -49,6 +50,21 @@ const Join: NextPage = () => {
 			await sweetMixinErrorAlert(err.message);
 		}
 	}, [input]);
+
+	const doGoogle = useCallback(
+		async (credential: string) => {
+			try {
+				// on the sign-up tab the chosen "Shop / Sell" type is used if this Google account is new
+				const { isNew } = await googleLogIn(credential, loginView ? undefined : input.type);
+				if (!isNew) return await router.push(`${router.query.referrer ?? '/'}`);
+				const seller = !loginView && input.type === MemberType.SELLER;
+				await router.push(seller ? '/mypage?category=myBrands' : '/mypage?category=myProfile');
+			} catch (err: any) {
+				await sweetMixinErrorAlert(err.message);
+			}
+		},
+		[input.type, loginView, router.query.referrer],
+	);
 
 	const submitHandler = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -124,6 +140,10 @@ const Join: NextPage = () => {
 						<button type={'submit'} className={'primary-btn'}>
 							{loginView ? t('Log in') : t('Create account')}
 						</button>
+						<div className={'or-line'}>
+							<span>{t('or')}</span>
+						</div>
+						<GoogleButton text={loginView ? 'signin_with' : 'signup_with'} onCredential={doGoogle} />
 						<p className={'hint'}>
 							{loginView ? t('New here? ') : t('Already a member? ')}
 							<button type={'button'} className={'link'} onClick={() => setLoginView(!loginView)}>

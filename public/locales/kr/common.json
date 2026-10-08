@@ -801,5 +801,6 @@
   "Photo reviews earn 3,000P, text reviews 1,000P.": "포토 리뷰 3,000P, 텍스트 리뷰 1,000P 적립돼요.",
   "You pay {{amount}}. Prices in other currencies are approximate.": "결제 금액은 {{amount}}이에요. 다른 통화 가격은 참고용이에요.",
   "Orders are paid in so'm. Prices in other currencies are approximate.": "주문은 숨(UZS)으로 결제돼요. 다른 통화 가격은 참고용이에요.",
-  "Free (delivery)": "무료"
+  "Free (delivery)": "무료",
+  "or": "또는"
 }
