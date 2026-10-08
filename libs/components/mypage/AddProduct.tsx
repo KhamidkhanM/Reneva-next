@@ -5,7 +5,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { GET_BRANDS, GET_CATEGORIES, GET_PRODUCT } from '../../../apollo/user/query';
-import { CREATE_PRODUCT, IMAGES_UPLOADER, UPDATE_PRODUCT, UPDATE_PRODUCT_OPTION } from '../../../apollo/user/mutation';
+import { ADD_PRODUCT_OPTION, CREATE_PRODUCT, IMAGES_UPLOADER, UPDATE_PRODUCT, UPDATE_PRODUCT_OPTION } from '../../../apollo/user/mutation';
 import { Brand, Category, Product, ProductOption } from '../../types/product';
 import { SkinConcern, SkinType } from '../../enums/member.enum';
 import { ProductTag } from '../../enums/product.enum';
@@ -60,6 +60,7 @@ const AddProduct = () => {
 	const [createProduct, { loading: creating }] = useMutation(CREATE_PRODUCT);
 	const [updateProduct, { loading: updating }] = useMutation(UPDATE_PRODUCT);
 	const [updateProductOption] = useMutation(UPDATE_PRODUCT_OPTION);
+	const [addProductOption] = useMutation(ADD_PRODUCT_OPTION);
 	const brands: Brand[] = brandData?.getBrands?.list ?? [];
 	const categories: Category[] = categoryData?.getCategories ?? [];
 
@@ -165,6 +166,20 @@ const AddProduct = () => {
 						variables: {
 							input: {
 								_id: option._id,
+								optionName: option.optionName.trim(),
+								optionColor: option.optionColor || undefined,
+								optionExtraPrice: Number(option.optionExtraPrice || 0),
+								optionStock: Number(option.optionStock || 0),
+							},
+						},
+					});
+				}
+				// rows added while editing become new options
+				for (const option of named.filter((ele) => !ele._id)) {
+					await addProductOption({
+						variables: {
+							productId,
+							input: {
 								optionName: option.optionName.trim(),
 								optionColor: option.optionColor || undefined,
 								optionExtraPrice: Number(option.optionExtraPrice || 0),
@@ -362,11 +377,9 @@ const AddProduct = () => {
 						)}
 					</div>
 				))}
-				{!productId && (
-					<button type={'button'} className={'soft-btn'} onClick={() => setOptions([...options, emptyOption()])}>
-						+ Add option
-					</button>
-				)}
+				<button type={'button'} className={'soft-btn'} onClick={() => setOptions([...options, emptyOption()])}>
+					+ Add option
+				</button>
 			</div>
 
 			<div className={'actions'}>
