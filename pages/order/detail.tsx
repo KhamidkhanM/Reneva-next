@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import moment from 'moment';
+import { UNPAID_ORDER_MINUTES } from '../../libs/config';
 import { Stack } from '@mui/material';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -184,6 +185,13 @@ const OrderDetail: NextPage = () => {
 							</p>
 						)}
 
+						{order.orderStatus === OrderStatus.PAUSE && (
+							<p className={'pay-deadline'}>
+								{t('Please pay by {{time}}, or the order will be canceled.', {
+									time: moment(order.createdAt).add(UNPAID_ORDER_MINUTES, 'minutes').format('HH:mm'),
+								})}
+							</p>
+						)}
 						{order.orderStatus === OrderStatus.PAUSE &&
 							payment?.paymentMethod === PaymentMethod.CARD_TRANSFER &&
 							payment?.paymentStatus === PaymentStatus.READY && <TransferBox orderId={orderId} onFinished={() => refetch()} />}

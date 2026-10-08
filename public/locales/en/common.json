@@ -851,5 +851,6 @@
   "Could not copy, please write the number down": "Could not copy, please write the number down",
   "Card number": "Card number",
   "Card transfer is available when all items are from one store!": "Card transfer is available when all items are from one store!",
-  "This store does not accept card transfers yet!": "This store does not accept card transfers yet!"
+  "This store does not accept card transfers yet!": "This store does not accept card transfers yet!",
+  "Please pay by {{time}}, or the order will be canceled.": "Please pay by {{time}}, or the order will be canceled."
 }

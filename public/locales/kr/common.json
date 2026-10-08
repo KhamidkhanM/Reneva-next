@@ -851,5 +851,6 @@
   "Could not copy, please write the number down": "복사하지 못했습니다. 번호를 적어 두세요",
   "Card number": "카드 번호",
   "Card transfer is available when all items are from one store!": "모든 상품이 한 스토어 상품일 때만 카드 이체를 사용할 수 있습니다!",
-  "This store does not accept card transfers yet!": "이 스토어는 아직 카드 이체를 받지 않습니다!"
+  "This store does not accept card transfers yet!": "이 스토어는 아직 카드 이체를 받지 않습니다!",
+  "Please pay by {{time}}, or the order will be canceled.": "{{time}}까지 결제해 주세요. 그렇지 않으면 주문이 취소됩니다."
 }
