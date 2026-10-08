@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","collation":{"locale":"simple"}},{"v":{"$numberInt":"2"},"key":{"brandName":{"$numberInt":"1"}},"name":"brandName_1","background":true,"unique":true,"collation":{"locale":"simple"}}],"uuid":"d5b7f469011945abb82346c308368766","collectionName":"brands","type":"collection"}
