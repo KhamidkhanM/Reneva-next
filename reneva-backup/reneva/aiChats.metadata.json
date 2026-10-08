@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","collation":{"locale":"simple"}}],"uuid":"98b944349d8a427db1677cbd18b99cce","collectionName":"aiChats","type":"collection"}

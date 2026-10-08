@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","collation":{"locale":"simple"}}],"uuid":"e110cb6177f54bb29ccc1316b3c902a1","collectionName":"boardArticles","type":"collection"}
