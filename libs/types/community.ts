@@ -6,7 +6,7 @@ import { ReviewStatus } from '../enums/review.enum';
 import { SkinType } from '../enums/member.enum';
 import { MeLiked } from './common';
 import { Member } from './member';
-import { ProductOption } from './product';
+import { Product, ProductOption } from './product';
 
 export interface BoardArticle {
 	_id: string;
@@ -49,6 +49,7 @@ export interface Review {
 	createdAt: Date;
 	memberData?: Member;
 	optionData?: ProductOption;
+	productData?: Pick<Product, '_id' | 'productTitle'>;
 	meLiked?: MeLiked[];
 }
 

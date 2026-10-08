@@ -18,6 +18,7 @@ const menu = [
 	{ href: '/_admin/categories', label: 'Categories' },
 	{ href: '/_admin/orders', label: 'Orders' },
 	{ href: '/_admin/coupons', label: 'Coupons' },
+	{ href: '/_admin/community', label: 'Community' },
 	{ href: '/_admin/cs', label: 'Notices & FAQ' },
 ];
 
