@@ -265,6 +265,15 @@ export const CANCEL_ORDER = gql`
 	}
 `;
 
+export const SHIP_ORDER_BY_SELLER = gql`
+	mutation ShipOrderBySeller($input: String!) {
+		shipOrderBySeller(orderId: $input) {
+			_id
+			orderStatus
+		}
+	}
+`;
+
 export const CONFIRM_ORDER = gql`
 	mutation ConfirmOrder($input: String!) {
 		confirmOrder(orderId: $input) {

@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import moment from 'moment';
 import { Pagination, Stack } from '@mui/material';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_MY_ORDERS, GET_SELLER_ORDERS } from '../../../apollo/user/query';
+import { SHIP_ORDER_BY_SELLER } from '../../../apollo/user/mutation';
+import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { Order } from '../../types/order';
 import { OrderStatus } from '../../enums/order.enum';
 import { formatKRW, imageUrl, labelOf } from '../../utils';
@@ -40,13 +42,26 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 	const query = seller ? GET_SELLER_ORDERS : GET_MY_ORDERS;
 
 	/** APOLLO REQUESTS **/
-	const { data } = useQuery(query, {
+	const [shipOrderBySeller] = useMutation(SHIP_ORDER_BY_SELLER);
+	const { data, refetch } = useQuery(query, {
 		fetchPolicy: 'network-only',
 		variables: { input: { page, limit, sort: 'createdAt', direction: 'DESC', search: status ? { orderStatus: status } : {} } },
 	});
 	const result = seller ? data?.getSellerOrders : data?.getMyOrders;
 	const orders: Order[] = result?.list ?? [];
 	const total: number = result?.metaCounter?.[0]?.total ?? 0;
+
+	// the seller sends the parcel; the buyer then presses "I got my order"
+	const shipHandler = async (order: Order) => {
+		try {
+			if (!(await sweetConfirmAlert(`Did you send order ${order.orderNumber}?`))) return;
+			await shipOrderBySeller({ variables: { input: order._id } });
+			await refetch();
+			await sweetTopSmallSuccessAlert('Marked as shipped', 900);
+		} catch (err: any) {
+			sweetMixinErrorAlert(err.message).then();
+		}
+	};
 
 	return (
 		<div className={'my-section'}>
@@ -96,6 +111,11 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 						return seller ? (
 							<div key={order._id} className={'order-row'}>
 								{card}
+								{order.orderStatus === OrderStatus.PROCESS && (
+									<button className={'primary-btn small'} onClick={() => shipHandler(order)}>
+										Mark as shipped
+									</button>
+								)}
 							</div>
 						) : (
 							<Link key={order._id} href={{ pathname: '/order/detail', query: { id: order._id } }} className={'order-row'}>

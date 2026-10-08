@@ -107,21 +107,140 @@ const Top = () => {
 		{ href: '/cs', label: 'CS' },
 	];
 
+	// search, notifications, cart, language and account menu: shared by the phone bar and the desktop bar
+	const userBox = (
+		<Box component={'div'} className={'user-box'}>
+			<IconButton aria-label={t('Search')} className={'round-btn'} onClick={() => router.push('/product')}>
+				<SearchRoundedIcon />
+			</IconButton>
+
+			{user._id && (
+				<>
+					<IconButton
+						aria-label={`${t('Notifications')}, ${unreadNotes} unread`}
+						className={'round-btn'}
+						onClick={(e) => setNoteAnchor(e.currentTarget)}
+					>
+						<Badge badgeContent={unreadNotes} color={'secondary'}>
+							<NotificationsNoneRoundedIcon />
+						</Badge>
+					</IconButton>
+					<Menu
+						anchorEl={noteAnchor}
+						open={Boolean(noteAnchor)}
+						onClose={() => setNoteAnchor(null)}
+						PaperProps={{ className: 'notification-menu' }}
+					>
+						<div className={'note-head'}>
+							<strong>{t('Notifications')}</strong>
+							{unreadNotes > 0 && <button onClick={readAllHandler}>Mark all read</button>}
+						</div>
+						{notifications.length === 0 && <div className={'note-empty'}>No notifications yet</div>}
+						{notifications.map((note) => (
+							<MenuItem
+								key={note._id}
+								onClick={() => notificationHandler(note)}
+								className={note.notificationStatus === 'WAIT' ? 'unread' : ''}
+							>
+								<div className={'note-row'}>
+									<b>{note.notificationTitle}</b>
+									{note.notificationDesc && <span>{note.notificationDesc}</span>}
+									<small>{moment(note.createdAt).fromNow()}</small>
+								</div>
+							</MenuItem>
+						))}
+					</Menu>
+
+					<IconButton
+						aria-label={`${t('Cart')}, ${cartCount} items`}
+						className={'round-btn'}
+						onClick={() => router.push('/cart')}
+					>
+						<Badge badgeContent={cartCount} color={'primary'}>
+							<ShoppingBagOutlinedIcon />
+						</Badge>
+					</IconButton>
+				</>
+			)}
+
+			<Button
+				disableRipple
+				className={'btn-lang'}
+				onClick={(e) => setLangAnchor(e.currentTarget)}
+				endIcon={<KeyboardArrowDownRoundedIcon />}
+				aria-label={'Language'}
+			>
+				<img src={`/img/flag/lang${lang ?? 'en'}.png`} alt={''} className={'flag'} />
+			</Button>
+			<Menu anchorEl={langAnchor} open={Boolean(langAnchor)} onClose={() => setLangAnchor(null)}>
+				{[
+					{ id: 'en', label: 'English' },
+					{ id: 'kr', label: 'Korean' },
+					{ id: 'ru', label: 'Russian' },
+				].map((item) => (
+					<MenuItem key={item.id} onClick={() => langChoice(item.id)}>
+						<img className={'img-flag'} src={`/img/flag/lang${item.id}.png`} alt={''} />
+						{t(item.label)}
+					</MenuItem>
+				))}
+			</Menu>
+
+			{user._id ? (
+				<>
+					<button className={'login-user'} onClick={(e) => setUserAnchor(e.currentTarget)} aria-label={'Account menu'}>
+						<Badge color={'secondary'} variant={'dot'} invisible={!unreadChats} overlap={'circular'}>
+							<img src={memberImage(user.memberImage)} alt={''} />
+						</Badge>
+					</button>
+					<Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)} sx={{ mt: '8px' }}>
+						<div className={'user-menu-head'}>
+							<b>{user.memberNick}</b>
+							<span>
+								{user.memberType === 'USER' ? `${user.memberLevel} member` : user.memberType} · {user.memberPoints}P
+							</span>
+						</div>
+						<MenuItem onClick={() => router.push('/mypage')}>{t('My Page')}</MenuItem>
+						<MenuItem onClick={() => router.push('/mypage?category=myOrders')}>My orders</MenuItem>
+						<MenuItem
+							onClick={() => {
+								setUserAnchor(null);
+								chatWidgetVar({ open: true, tab: 'messages', roomId: null });
+							}}
+						>
+							{t('Messages')} {unreadChats > 0 && `(${unreadChats})`}
+						</MenuItem>
+						{user.memberType === 'ADMIN' && <MenuItem onClick={() => router.push('/_admin')}>Admin panel</MenuItem>}
+						<MenuItem onClick={() => logOut()}>
+							<Logout fontSize={'small'} style={{ marginRight: '10px' }} />
+							{t('Logout')}
+						</MenuItem>
+					</Menu>
+				</>
+			) : (
+				<Link href={'/account/join'} className={'join-box'}>
+					{t('Login')}
+				</Link>
+			)}
+		</Box>
+	);
+
 	if (device == 'mobile') {
 		return (
 			<Stack className={'top'}>
-				<Link href={'/'} className={'mobile-logo'}>
-					<img src={'/img/logo/reneva-mark.svg'} alt={''} />
-					Reneva
-				</Link>
-				<div className={'mobile-links'}>
+				<div className={'mobile-row'}>
+					<Link href={'/'} className={'mobile-logo'}>
+						<img src={'/img/logo/reneva-mark.svg'} alt={''} />
+						Reneva
+					</Link>
+					{userBox}
+				</div>
+				<nav className={'mobile-links'} aria-label={'Main'}>
 					{links.map((link) => (
 						<Link key={link.label} href={link.href} className={isActive(link.path ?? link.href) ? 'on' : ''}>
 							{t(link.label)}
 						</Link>
 					))}
-					<Link href={user._id ? '/mypage' : '/account/join'}>{user._id ? t('My Page') : t('Login')}</Link>
-				</div>
+				</nav>
 			</Stack>
 		);
 	}
@@ -144,115 +263,7 @@ const Top = () => {
 						))}
 					</Box>
 
-					<Box component={'div'} className={'user-box'}>
-						<IconButton aria-label={t('Search')} className={'round-btn'} onClick={() => router.push('/product')}>
-							<SearchRoundedIcon />
-						</IconButton>
-
-						{user._id && (
-							<>
-								<IconButton
-									aria-label={`${t('Notifications')}, ${unreadNotes} unread`}
-									className={'round-btn'}
-									onClick={(e) => setNoteAnchor(e.currentTarget)}
-								>
-									<Badge badgeContent={unreadNotes} color={'secondary'}>
-										<NotificationsNoneRoundedIcon />
-									</Badge>
-								</IconButton>
-								<Menu
-									anchorEl={noteAnchor}
-									open={Boolean(noteAnchor)}
-									onClose={() => setNoteAnchor(null)}
-									PaperProps={{ className: 'notification-menu' }}
-								>
-									<div className={'note-head'}>
-										<strong>{t('Notifications')}</strong>
-										{unreadNotes > 0 && <button onClick={readAllHandler}>Mark all read</button>}
-									</div>
-									{notifications.length === 0 && <div className={'note-empty'}>No notifications yet</div>}
-									{notifications.map((note) => (
-										<MenuItem
-											key={note._id}
-											onClick={() => notificationHandler(note)}
-											className={note.notificationStatus === 'WAIT' ? 'unread' : ''}
-										>
-											<div className={'note-row'}>
-												<b>{note.notificationTitle}</b>
-												{note.notificationDesc && <span>{note.notificationDesc}</span>}
-												<small>{moment(note.createdAt).fromNow()}</small>
-											</div>
-										</MenuItem>
-									))}
-								</Menu>
-
-								<IconButton aria-label={`${t('Cart')}, ${cartCount} items`} className={'round-btn'} onClick={() => router.push('/cart')}>
-									<Badge badgeContent={cartCount} color={'primary'}>
-										<ShoppingBagOutlinedIcon />
-									</Badge>
-								</IconButton>
-							</>
-						)}
-
-						<Button
-							disableRipple
-							className={'btn-lang'}
-							onClick={(e) => setLangAnchor(e.currentTarget)}
-							endIcon={<KeyboardArrowDownRoundedIcon />}
-							aria-label={'Language'}
-						>
-							<img src={`/img/flag/lang${lang ?? 'en'}.png`} alt={''} className={'flag'} />
-						</Button>
-						<Menu anchorEl={langAnchor} open={Boolean(langAnchor)} onClose={() => setLangAnchor(null)}>
-							{[
-								{ id: 'en', label: 'English' },
-								{ id: 'kr', label: 'Korean' },
-								{ id: 'ru', label: 'Russian' },
-							].map((item) => (
-								<MenuItem key={item.id} onClick={() => langChoice(item.id)}>
-									<img className={'img-flag'} src={`/img/flag/lang${item.id}.png`} alt={''} />
-									{t(item.label)}
-								</MenuItem>
-							))}
-						</Menu>
-
-						{user._id ? (
-							<>
-								<button className={'login-user'} onClick={(e) => setUserAnchor(e.currentTarget)} aria-label={'Account menu'}>
-									<Badge color={'secondary'} variant={'dot'} invisible={!unreadChats} overlap={'circular'}>
-										<img src={memberImage(user.memberImage)} alt={''} />
-									</Badge>
-								</button>
-								<Menu anchorEl={userAnchor} open={Boolean(userAnchor)} onClose={() => setUserAnchor(null)} sx={{ mt: '8px' }}>
-									<div className={'user-menu-head'}>
-										<b>{user.memberNick}</b>
-										<span>
-											{user.memberType === 'USER' ? `${user.memberLevel} member` : user.memberType} · {user.memberPoints}P
-										</span>
-									</div>
-									<MenuItem onClick={() => router.push('/mypage')}>{t('My Page')}</MenuItem>
-									<MenuItem onClick={() => router.push('/mypage?category=myOrders')}>My orders</MenuItem>
-									<MenuItem
-										onClick={() => {
-											setUserAnchor(null);
-											chatWidgetVar({ open: true, tab: 'messages', roomId: null });
-										}}
-									>
-										{t('Messages')} {unreadChats > 0 && `(${unreadChats})`}
-									</MenuItem>
-									{user.memberType === 'ADMIN' && <MenuItem onClick={() => router.push('/_admin')}>Admin panel</MenuItem>}
-									<MenuItem onClick={() => logOut()}>
-										<Logout fontSize={'small'} style={{ marginRight: '10px' }} />
-										{t('Logout')}
-									</MenuItem>
-								</Menu>
-							</>
-						) : (
-							<Link href={'/account/join'} className={'join-box'}>
-								{t('Login')}
-							</Link>
-						)}
-					</Box>
+					{userBox}
 				</nav>
 			</Stack>
 		</Stack>
