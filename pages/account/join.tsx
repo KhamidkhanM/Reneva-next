@@ -30,7 +30,7 @@ const Join: NextPage = () => {
 			await logIn(input.nick, input.password);
 			await router.push(`${router.query.referrer ?? '/'}`);
 		} catch (err: any) {
-			await sweetMixinErrorAlert('Wrong nickname or password');
+			await sweetMixinErrorAlert(err.message);
 		}
 	}, [input]);
 
@@ -43,7 +43,7 @@ const Join: NextPage = () => {
 			await signUp(input.nick, input.password, input.phone, input.type);
 			await router.push(input.type === MemberType.SELLER ? '/mypage?category=myBrands' : '/mypage?category=myProfile');
 		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message === 'Signup Err' ? 'Could not sign up. Try another nickname or phone.' : err.message);
+			await sweetMixinErrorAlert(err.message);
 		}
 	}, [input]);
 

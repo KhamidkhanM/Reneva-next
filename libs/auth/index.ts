@@ -24,8 +24,10 @@ export const logIn = async (nick: string, password: string): Promise<void> => {
 		}
 	} catch (err) {
 		console.warn('login err', err);
-		logOut();
-		throw new Error('Login Err');
+		// no reload here, it would wipe the error before the user sees it
+		deleteStorage();
+		userVar({ ...emptyUser });
+		throw err;
 	}
 };
 
@@ -43,8 +45,15 @@ const requestJwtToken = async ({ nick, password }: { nick: string; password: str
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		throw new Error('token error');
+		throw new Error(apiErrorMessage(err));
 	}
+};
+
+const apiErrorMessage = (err: any): string => {
+	const serverMessage = err?.graphQLErrors?.[0]?.message;
+	if (serverMessage) return serverMessage;
+	if (err?.networkError) return `Cannot reach the Reneva API at ${process.env.REACT_APP_API_GRAPHQL_URL}. Is the backend running?`;
+	return err?.message ?? 'Something went wrong';
 };
 
 export const signUp = async (nick: string, password: string, phone: string, type: string): Promise<void> => {
@@ -57,8 +66,10 @@ export const signUp = async (nick: string, password: string, phone: string, type
 		}
 	} catch (err) {
 		console.warn('signup err', err);
-		logOut();
-		throw new Error('Signup Err');
+		// no reload here, it would wipe the error before the user sees it
+		deleteStorage();
+		userVar({ ...emptyUser });
+		throw err;
 	}
 };
 
@@ -88,7 +99,7 @@ const requestSignUpJwtToken = async ({
 		return { jwtToken: accessToken };
 	} catch (err: any) {
 		console.log('request token err', err.graphQLErrors);
-		throw new Error('token error');
+		throw new Error(apiErrorMessage(err));
 	}
 };
 
