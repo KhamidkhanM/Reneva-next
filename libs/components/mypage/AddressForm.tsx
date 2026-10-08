@@ -24,9 +24,11 @@ const AddressForm = ({ onSaved, onCancel }: AddressFormProps) => {
 	const submitHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			if (!form.addressRecipient || !form.addressPhone || !form.addressZip || !form.addressLine1) throw new Error(Messages.error3);
+			if (!form.addressRecipient || !form.addressPhone || !form.addressLine1) throw new Error(Messages.error3);
 			const input: any = { ...form, addressDefault: makeDefault };
 			if (!input.addressLine2) delete input.addressLine2;
+			// optional: most people in Uzbekistan do not know their postal code
+			if (!input.addressZip) delete input.addressZip;
 			const result = await createAddress({ variables: { input } });
 			setForm({ ...empty });
 			onSaved(result.data.createAddress._id);
@@ -47,8 +49,8 @@ const AddressForm = ({ onSaved, onCancel }: AddressFormProps) => {
 			<div className={'fields'}>
 				{field('addressLabel', 'Name for this address', 'Home', false, false)}
 				{field('addressRecipient', 'Recipient', 'Full name')}
-				{field('addressPhone', 'Phone', '010-1234-5678')}
-				{field('addressZip', 'Postal code', '04524')}
+				{field('addressPhone', 'Phone', '+998 90 123 45 67')}
+				{field('addressZip', 'Postal code', '100000 (optional)', false, false)}
 				{field('addressLine1', 'Address', 'Street and building', true)}
 				{field('addressLine2', 'Detail', 'Apartment, floor (optional)', true, false)}
 			</div>

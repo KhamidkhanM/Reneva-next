@@ -852,5 +852,17 @@
   "Card number": "카드 번호",
   "Card transfer is available when all items are from one store!": "모든 상품이 한 스토어 상품일 때만 카드 이체를 사용할 수 있습니다!",
   "This store does not accept card transfers yet!": "이 스토어는 아직 카드 이체를 받지 않습니다!",
-  "Please pay by {{time}}, or the order will be canceled.": "{{time}}까지 결제해 주세요. 그렇지 않으면 주문이 취소됩니다."
+  "Please pay by {{time}}, or the order will be canceled.": "{{time}}까지 결제해 주세요. 그렇지 않으면 주문이 취소됩니다.",
+  "Cleansers": "클렌저",
+  "Toners": "토너",
+  "Serums & Essences": "세럼 & 에센스",
+  "Moisturizers": "모이스처라이저",
+  "Sunscreen": "선크림",
+  "Masks": "마스크",
+  "Eye care": "아이 케어",
+  "Lip care": "립 케어",
+  "Makeup": "메이크업",
+  "Body care": "바디 케어",
+  "Hair care": "헤어 케어",
+  "Buyer pays": "구매자 결제 금액"
 }

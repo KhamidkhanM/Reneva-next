@@ -48,7 +48,7 @@ const BestProducts = () => {
 								className={`chip ${categoryId === category._id ? 'on' : ''}`}
 								onClick={() => setCategoryId(category._id)}
 							>
-								{category.categoryName}
+								{t(category.categoryName)}
 							</button>
 						))}
 					</div>

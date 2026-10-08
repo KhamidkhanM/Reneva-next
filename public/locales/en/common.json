@@ -852,5 +852,17 @@
   "Card number": "Card number",
   "Card transfer is available when all items are from one store!": "Card transfer is available when all items are from one store!",
   "This store does not accept card transfers yet!": "This store does not accept card transfers yet!",
-  "Please pay by {{time}}, or the order will be canceled.": "Please pay by {{time}}, or the order will be canceled."
+  "Please pay by {{time}}, or the order will be canceled.": "Please pay by {{time}}, or the order will be canceled.",
+  "Cleansers": "Cleansers",
+  "Toners": "Toners",
+  "Serums & Essences": "Serums & Essences",
+  "Moisturizers": "Moisturizers",
+  "Sunscreen": "Sunscreen",
+  "Masks": "Masks",
+  "Eye care": "Eye care",
+  "Lip care": "Lip care",
+  "Makeup": "Makeup",
+  "Body care": "Body care",
+  "Hair care": "Hair care",
+  "Buyer pays": "Buyer pays"
 }
