@@ -246,6 +246,26 @@
 	.primary-btn {
 		min-height: 52px;
 	}
+	.or-line {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		color: $muted;
+		font-size: 13px;
+		&::before,
+		&::after {
+			content: '';
+			flex: 1;
+			height: 1px;
+			background: currentColor;
+			opacity: 0.3;
+		}
+	}
+	.google-btn {
+		display: flex;
+		justify-content: center;
+		min-height: 44px;
+	}
 	.hint {
 		margin: 0;
 		text-align: center;

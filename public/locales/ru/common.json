@@ -801,5 +801,6 @@
   "Photo reviews earn 3,000P, text reviews 1,000P.": "За отзыв с фото — 3 000P, за текстовый — 1 000P.",
   "You pay {{amount}}. Prices in other currencies are approximate.": "Вы платите {{amount}}. Цены в других валютах приблизительные.",
   "Orders are paid in so'm. Prices in other currencies are approximate.": "Заказы оплачиваются в сумах. Цены в других валютах приблизительные.",
-  "Free (delivery)": "Бесплатно"
+  "Free (delivery)": "Бесплатно",
+  "or": "или"
 }

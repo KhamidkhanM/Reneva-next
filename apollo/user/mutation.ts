@@ -36,6 +36,16 @@ export const LOGIN = gql`
 	}
 `;
 
+export const GOOGLE_LOGIN = gql`
+	${MEMBER_FIELDS}
+	mutation GoogleLogin($input: GoogleLoginInput!) {
+		googleLogin(input: $input) {
+			...MemberFields
+			accessToken
+		}
+	}
+`;
+
 export const UPDATE_MEMBER = gql`
 	${MEMBER_FIELDS}
 	mutation UpdateMember($input: MemberUpdate!) {
