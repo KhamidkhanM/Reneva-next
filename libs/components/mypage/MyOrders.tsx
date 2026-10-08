@@ -8,7 +8,7 @@ import { SHIP_ORDER_BY_SELLER } from '../../../apollo/user/mutation';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { Order } from '../../types/order';
 import { OrderStatus } from '../../enums/order.enum';
-import { formatKRW, imageUrl, labelOf } from '../../utils';
+import { formatPrice, imageUrl, labelOf } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
 import { useTranslation } from 'next-i18next';
 
@@ -105,7 +105,7 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 										{first?.itemTitle}
 										{more > 0 ? t(' and {{count}} more', { count: more }) : ''}
 									</b>
-									<span>{formatKRW(order.orderTotal)}</span>
+									<span>{formatPrice(order.orderTotal)}</span>
 								</span>
 								<span className={`status-pill ${order.orderStatus}`}>{t(statusLabel(order.orderStatus))}</span>
 							</>

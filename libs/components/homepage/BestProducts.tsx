@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { GET_CATEGORIES, GET_PRODUCTS } from '../../../apollo/user/query';
 import { Category, Product } from '../../types/product';
 import { T } from '../../types/common';
-import { formatKRW, imageUrl } from '../../utils';
+import { formatPrice, imageUrl } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
 import { useTranslation } from 'next-i18next';
 
@@ -69,7 +69,7 @@ const BestProducts = () => {
 								<b>{products[0].productTitle}</b>
 								{products[0].productReviewSummary && <p>“{products[0].productReviewSummary}”</p>}
 								<span className={'price-row'}>
-									<span className={'now'}>{formatKRW(products[0].productSalePrice)}</span>
+									<span className={'now'}>{formatPrice(products[0].productSalePrice)}</span>
 									<span className={'meta'}>
 										★ {products[0].productRating.toFixed(1)} · {products[0].productSold} {t('sold')}
 									</span>
@@ -85,7 +85,7 @@ const BestProducts = () => {
 										<span className={'brand'}>{product.brandData?.brandName}</span>
 										<span className={'title'}>{product.productTitle}</span>
 									</span>
-									<b>{formatKRW(product.productSalePrice)}</b>
+									<b>{formatPrice(product.productSalePrice)}</b>
 								</button>
 							))}
 						</div>

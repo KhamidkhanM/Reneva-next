@@ -10,7 +10,7 @@ import { GET_MY_CHAT_ROOMS } from '../../apollo/user/query';
 import { Order } from '../../libs/types/order';
 import { ChatRoom } from '../../libs/types/chat';
 import { ChatStatus } from '../../libs/enums/chat.enum';
-import { formatKRW } from '../../libs/utils';
+import { formatPrice } from '../../libs/utils';
 import { statusLabel } from '../../libs/components/mypage/MyOrders';
 import { roomTitle } from '../../libs/components/chat/RoomList';
 import { openChatRoomById } from '../../libs/components/chat/openChat';
@@ -72,7 +72,7 @@ const AdminHome: NextPage = () => {
 												<b>{order.orderNumber}</b>
 												<small>{order.memberData?.memberNick}</small>
 											</td>
-											<td>{formatKRW(order.orderTotal)}</td>
+											<td>{formatPrice(order.orderTotal)}</td>
 											<td>
 												<span className={`status-pill ${order.orderStatus}`}>{t(statusLabel(order.orderStatus))}</span>
 											</td>
