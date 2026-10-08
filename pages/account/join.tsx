@@ -7,6 +7,7 @@ import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { Messages } from '../../libs/config';
 import { MemberType } from '../../libs/enums/member.enum';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -15,6 +16,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const Join: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: MemberType.USER });
 	const [loginView, setLoginView] = useState<boolean>(true);
@@ -58,35 +60,35 @@ const Join: NextPage = () => {
 				<div className={'join-card'}>
 					<div className={'join-art'}>
 						<img src={'/img/logo/rena-ai.svg'} alt={''} />
-						<h2>{loginView ? 'Welcome back' : 'Join Reneva'}</h2>
+						<h2>{loginView ? t('Welcome back') : t('Join Reneva')}</h2>
 						<p>
 							{loginView
-								? 'Log in to see your cart, orders and Rena, your AI skin advisor.'
-								: 'Members get skin-matched picks, a WELCOME10 coupon and points on every order.'}
+								? t('Log in to see your cart, orders and Rena, your AI skin advisor.')
+								: t('Members get skin-matched picks, a WELCOME10 coupon and points on every order.')}
 						</p>
 						<ul>
-							<li>Free delivery from ₩30,000</li>
-							<li>1:1 chat with every store</li>
-							<li>AI skin check in 30 seconds</li>
+							<li>{t('Free delivery from ₩30,000')}</li>
+							<li>{t('1:1 chat with every store')}</li>
+							<li>{t('AI skin check in 30 seconds')}</li>
 						</ul>
 					</div>
 
 					<form className={'join-form'} onSubmit={submitHandler}>
 						<div className={'switch'} role={'tablist'}>
 							<button type={'button'} role={'tab'} aria-selected={loginView} className={loginView ? 'on' : ''} onClick={() => setLoginView(true)}>
-								Log in
+								{t('Log in')}
 							</button>
 							<button type={'button'} role={'tab'} aria-selected={!loginView} className={!loginView ? 'on' : ''} onClick={() => setLoginView(false)}>
-								Sign up
+								{t('Sign up')}
 							</button>
 						</div>
 
 						<label className={'field'}>
-							<span>Nickname</span>
+							<span>{t('Nickname')}</span>
 							<input value={input.nick} onChange={(e) => handleInput('nick', e.target.value)} autoComplete={'username'} required />
 						</label>
 						<label className={'field'}>
-							<span>Password</span>
+							<span>{t('Password')}</span>
 							<input
 								type={'password'}
 								value={input.password}
@@ -99,32 +101,32 @@ const Join: NextPage = () => {
 						{!loginView && (
 							<>
 								<label className={'field'}>
-									<span>Phone</span>
+									<span>{t('Phone')}</span>
 									<input type={'tel'} value={input.phone} onChange={(e) => handleInput('phone', e.target.value)} placeholder={'010-0000-0000'} required />
 								</label>
 								<fieldset className={'type-pick'}>
-									<legend>I want to</legend>
+									<legend>{t('I want to')}</legend>
 									<label className={input.type === MemberType.USER ? 'on' : ''}>
 										<input type={'radio'} name={'type'} checked={input.type === MemberType.USER} onChange={() => handleInput('type', MemberType.USER)} />
-										<b>Shop</b>
-										<span>Buy products, write reviews</span>
+										<b>{t('Shop')}</b>
+										<span>{t('Buy products, write reviews')}</span>
 									</label>
 									<label className={input.type === MemberType.SELLER ? 'on' : ''}>
 										<input type={'radio'} name={'type'} checked={input.type === MemberType.SELLER} onChange={() => handleInput('type', MemberType.SELLER)} />
-										<b>Sell</b>
-										<span>Open a store for my brand</span>
+										<b>{t('Sell')}</b>
+										<span>{t('Open a store for my brand')}</span>
 									</label>
 								</fieldset>
 							</>
 						)}
 
 						<button type={'submit'} className={'primary-btn'}>
-							{loginView ? 'Log in' : 'Create account'}
+							{loginView ? t('Log in') : t('Create account')}
 						</button>
 						<p className={'hint'}>
-							{loginView ? 'New here? ' : 'Already a member? '}
+							{loginView ? t('New here? ') : t('Already a member? ')}
 							<button type={'button'} className={'link'} onClick={() => setLoginView(!loginView)}>
-								{loginView ? 'Create an account' : 'Log in'}
+								{loginView ? t('Create an account') : t('Log in')}
 							</button>
 						</p>
 					</form>

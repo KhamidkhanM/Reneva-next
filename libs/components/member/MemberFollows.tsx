@@ -7,6 +7,7 @@ import { userVar } from '../../../apollo/store';
 import { GET_MEMBER_FOLLOWERS, GET_MEMBER_FOLLOWINGS } from '../../../apollo/user/query';
 import { Follower, Following, Member } from '../../types/member';
 import { isLiked, labelOf, memberImage } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 interface MemberFollowsProps {
 	kind: 'followers' | 'followings';
@@ -19,6 +20,7 @@ interface MemberFollowsProps {
 
 // followers and followings look the same, only the side of the relation differs
 const MemberFollows = (props: MemberFollowsProps) => {
+	const { t } = useTranslation('common');
 	const { kind, memberId, subscribeHandler, unsubscribeHandler, likeMemberHandler, redirectToMemberPageHandler } = props;
 	const user = useReactiveVar(userVar);
 	const [page, setPage] = useState<number>(1);
@@ -38,10 +40,10 @@ const MemberFollows = (props: MemberFollowsProps) => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>{followers ? 'Followers' : 'Followings'}</h2>
+				<h2>{followers ? t('Followers') : t('Followings')}</h2>
 			</div>
 			{list.length === 0 ? (
-				<div className={'no-data'}>{followers ? 'No followers yet.' : 'Not following anyone yet.'}</div>
+				<div className={'no-data'}>{followers ? t('No followers yet.') : t('Not following anyone yet.')}</div>
 			) : (
 				<div className={'follow-list'}>
 					{list.map((item) => {
@@ -55,14 +57,14 @@ const MemberFollows = (props: MemberFollowsProps) => {
 									<span>
 										<b>{member.memberNick}</b>
 										<span>
-											{labelOf(member.memberType)} · {member.memberFollowers} followers · {member.memberFollowings} followings
+											{t(labelOf(member.memberType))} · {member.memberFollowers} {t('followers ·')} {member.memberFollowings} {t('followings')}
 										</span>
 									</span>
 								</button>
 								<button
 									className={`like ${isLiked(item) ? 'on' : ''}`}
 									onClick={() => likeMemberHandler(member._id, refetch)}
-									aria-label={'Like member'}
+									aria-label={t('Like member')}
 									aria-pressed={isLiked(item)}
 								>
 									{isLiked(item) ? <FavoriteRoundedIcon fontSize={'small'} /> : <FavoriteBorderRoundedIcon fontSize={'small'} />}
@@ -72,7 +74,7 @@ const MemberFollows = (props: MemberFollowsProps) => {
 										className={following ? 'ghost-btn small' : 'primary-btn small'}
 										onClick={() => (following ? unsubscribeHandler(member._id, refetch) : subscribeHandler(member._id, refetch))}
 									>
-										{following ? 'Unfollow' : 'Follow'}
+										{following ? t('Unfollow') : t('Follow')}
 									</button>
 								)}
 							</div>

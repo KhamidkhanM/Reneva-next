@@ -14,6 +14,7 @@ import { BoardArticle, Comment, Review } from '../../libs/types/community';
 import { CommentGroup } from '../../libs/enums/comment.enum';
 import { labelOf, memberImage } from '../../libs/utils';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
@@ -43,6 +44,7 @@ const Author = ({ member, date }: { member?: { memberNick: string; memberImage?:
 );
 
 const AdminCommunity: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [tab, setTab] = useState<Tab>('reviews');
 	const [page, setPage] = useState<number>(1);
 	const limit = 10;
@@ -74,7 +76,7 @@ const AdminCommunity: NextPage = () => {
 	/** HANDLERS **/
 	const removeHandler = async (what: string, remove: () => Promise<any>, refetch: () => Promise<any>) => {
 		try {
-			if (!(await sweetConfirmAlert(`Delete this ${what}? This cannot be undone.`))) return;
+			if (!(await sweetConfirmAlert(t(`Delete this ${what}? This cannot be undone.`)))) return;
 			await remove();
 			await refetch();
 			await sweetTopSmallSuccessAlert('Deleted', 700);
@@ -91,13 +93,13 @@ const AdminCommunity: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Community</h2>
-				<p>Remove reviews, articles and comments that break the rules. Reports from members arrive in Support chats.</p>
+				<h2>{t('Community')}</h2>
+				<p>{t('Remove reviews, articles and comments that break the rules. Reports from members arrive in Support chats.')}</p>
 			</div>
 			<Stack className={'chips'}>
 				{tabs.map((ele) => (
 					<button key={ele.id} className={`chip ${tab === ele.id ? 'on' : ''}`} onClick={() => changeTab(ele.id)}>
-						{ele.label}
+						{t(ele.label)}
 					</button>
 				))}
 			</Stack>
@@ -106,9 +108,9 @@ const AdminCommunity: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Author</th>
-							<th>{tab === 'reviews' ? 'Review' : tab === 'articles' ? 'Article' : 'Comment'}</th>
-							<th>{tab === 'reviews' ? 'Product' : tab === 'articles' ? 'Board' : 'Where'}</th>
+							<th>{t('Author')}</th>
+							<th>{tab === 'reviews' ? t('Review') : tab === 'articles' ? t('Article') : t('Comment')}</th>
+							<th>{tab === 'reviews' ? t('Product') : tab === 'articles' ? t('Board') : t('Where')}</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -124,14 +126,14 @@ const AdminCommunity: NextPage = () => {
 										<small>{review.reviewContent}</small>
 									</td>
 									<td>
-										<Link href={{ pathname: '/product/detail', query: { id: review.productId } }}>{review.productData?.productTitle ?? 'Product'}</Link>
+										<Link href={{ pathname: '/product/detail', query: { id: review.productId } }}>{review.productData?.productTitle ?? t('Product')}</Link>
 									</td>
 									<td className={'row-btns'}>
 										<button
 											className={'ghost-btn small danger'}
 											onClick={() => removeHandler('review', () => removeReviewByAdmin({ variables: { input: review._id } }), reviewsQuery.refetch)}
 										>
-											Delete
+											{t('Delete')}
 										</button>
 									</td>
 								</tr>
@@ -148,7 +150,7 @@ const AdminCommunity: NextPage = () => {
 										</Link>
 										<small>{article.articleContent}</small>
 									</td>
-									<td>{labelOf(article.articleCategory)}</td>
+									<td>{t(labelOf(article.articleCategory))}</td>
 									<td className={'row-btns'}>
 										<button
 											className={'ghost-btn small danger'}
@@ -156,7 +158,7 @@ const AdminCommunity: NextPage = () => {
 												removeHandler('article', () => removeBoardArticleByAdmin({ variables: { input: article._id } }), articlesQuery.refetch)
 											}
 										>
-											Delete
+											{t('Delete')}
 										</button>
 									</td>
 								</tr>
@@ -172,7 +174,7 @@ const AdminCommunity: NextPage = () => {
 										<td className={'cell-text'}>
 											<small>{comment.commentContent}</small>
 										</td>
-										<td>{link ? <Link href={link}>{labelOf(comment.commentGroup)}</Link> : labelOf(comment.commentGroup)}</td>
+										<td>{link ? <Link href={link}>{t(labelOf(comment.commentGroup))}</Link> : labelOf(comment.commentGroup)}</td>
 										<td className={'row-btns'}>
 											<button
 												className={'ghost-btn small danger'}
@@ -180,7 +182,7 @@ const AdminCommunity: NextPage = () => {
 													removeHandler('comment', () => removeCommentByAdmin({ variables: { input: comment._id } }), commentsQuery.refetch)
 												}
 											>
-												Delete
+												{t('Delete')}
 											</button>
 										</td>
 									</tr>
@@ -189,7 +191,7 @@ const AdminCommunity: NextPage = () => {
 					</tbody>
 				</table>
 				{((tab === 'reviews' && reviews.length === 0) || (tab === 'articles' && articles.length === 0) || (tab === 'comments' && comments.length === 0)) && (
-					<div className={'no-data'}>Nothing here.</div>
+					<div className={'no-data'}>{t('Nothing here.')}</div>
 				)}
 			</div>
 			<AdminPager page={page} limit={limit} total={total} onChange={setPage} />

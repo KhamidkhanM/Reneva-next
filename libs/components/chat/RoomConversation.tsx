@@ -18,6 +18,7 @@ import { formatKRW, imageUrl } from '../../utils';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
 import { roomAvatar, roomTitle } from './RoomList';
 import ProductThumb from '../common/ProductThumb';
+import { useTranslation } from 'next-i18next';
 
 const supportTopics = ['Report a product or seller', 'Refund or return request', 'Delivery problem', 'Account or payment issue'];
 
@@ -28,6 +29,7 @@ interface RoomConversationProps {
 }
 
 const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -134,13 +136,13 @@ const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
 	return (
 		<Stack className={'room-chat'}>
 			<div className={'room-head'}>
-				<IconButton aria-label={'Back to all chats'} size={'small'} onClick={back}>
+				<IconButton aria-label={t('Back to all chats')} size={'small'} onClick={back}>
 					<ArrowBackRoundedIcon />
 				</IconButton>
 				{room && <img src={roomAvatar(room, user._id)} alt={''} />}
 				<div className={'who'}>
-					<strong>{room ? roomTitle(room, user._id) : 'Loading…'}</strong>
-					<span>{socketOpen ? 'Live' : 'Connecting…'}</span>
+					<strong>{room ? roomTitle(room, user._id) : t('Loading…')}</strong>
+					<span>{socketOpen ? t('Live') : t('Connecting…')}</span>
 				</div>
 			</div>
 
@@ -171,7 +173,7 @@ const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
 						<div key={message._id} className={`room-msg ${mine ? 'mine' : 'theirs'}`}>
 							<div className={'bubble'}>
 								{message.messageType === MessageType.IMAGE && message.messageImage ? (
-									<img src={imageUrl(message.messageImage)} alt={'Sent image'} />
+									<img src={imageUrl(message.messageImage)} alt={t('Sent image')} />
 								) : (
 									message.messageContent
 								)}
@@ -185,7 +187,7 @@ const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
 				})}
 				{messages.length === 0 && (
 					<div className={'system-msg'}>
-						{isSupport ? 'Tell us what happened and a Reneva admin will reply here.' : 'Ask the store anything about this product.'}
+						{isSupport ? t('Tell us what happened and a Reneva admin will reply here.') : t('Ask the store anything about this product.')}
 					</div>
 				)}
 			</div>
@@ -202,22 +204,22 @@ const RoomConversation = ({ roomId, back, onRead }: RoomConversationProps) => {
 
 			<div className={'ai-input'}>
 				<input ref={fileRef} type={'file'} accept={'image/png,image/jpeg'} hidden onChange={uploadImageHandler} />
-				<IconButton aria-label={'Send a photo'} onClick={() => fileRef.current?.click()} size={'small'}>
+				<IconButton aria-label={t('Send a photo')} onClick={() => fileRef.current?.click()} size={'small'}>
 					<ImageOutlinedIcon />
 				</IconButton>
 				<label className={'sr-only'} htmlFor={'room-input'}>
-					Message
+					{t('Message')}
 				</label>
 				<textarea
 					id={'room-input'}
 					rows={1}
 					value={text}
-					placeholder={'Write a message…'}
+					placeholder={t('Write a message…')}
 					onChange={(e) => setText(e.target.value)}
 					onKeyDown={keyHandler}
 					maxLength={2000}
 				/>
-				<button className={'send-btn'} aria-label={'Send'} onClick={sendTextHandler} disabled={sending || !text.trim()}>
+				<button className={'send-btn'} aria-label={t('Send')} onClick={sendTextHandler} disabled={sending || !text.trim()}>
 					<SendRoundedIcon />
 				</button>
 			</div>

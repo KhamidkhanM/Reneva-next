@@ -10,6 +10,7 @@ import { Order } from '../../types/order';
 import { OrderStatus } from '../../enums/order.enum';
 import { formatKRW, imageUrl, labelOf } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
+import { useTranslation } from 'next-i18next';
 
 export const orderTabs = [
 	{ status: '', label: 'All' },
@@ -36,6 +37,7 @@ interface MyOrdersProps {
 }
 
 const MyOrders = ({ seller = false }: MyOrdersProps) => {
+	const { t } = useTranslation('common');
 	const [status, setStatus] = useState<string>('');
 	const [page, setPage] = useState<number>(1);
 	const limit = 6;
@@ -54,7 +56,7 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 	// the seller sends the parcel; the buyer then presses "I got my order"
 	const shipHandler = async (order: Order) => {
 		try {
-			if (!(await sweetConfirmAlert(`Did you send order ${order.orderNumber}?`))) return;
+			if (!(await sweetConfirmAlert(t('Did you send order {{number}}?', { number: order.orderNumber })))) return;
 			await shipOrderBySeller({ variables: { input: order._id } });
 			await refetch();
 			await sweetTopSmallSuccessAlert('Marked as shipped', 900);
@@ -66,8 +68,8 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>{seller ? 'Store orders' : 'My orders'}</h2>
-				<p>{seller ? 'Orders that include your products. Buyers can chat with you from the product page.' : 'Track, pay, confirm and review your orders.'}</p>
+				<h2>{seller ? t('Store orders') : t('My orders')}</h2>
+				<p>{seller ? t('Orders that include your products. Buyers can chat with you from the product page.') : t('Track, pay, confirm and review your orders.')}</p>
 			</div>
 			<Stack className={'chips'}>
 				{orderTabs.map((tab) => (
@@ -79,13 +81,13 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 							setPage(1);
 						}}
 					>
-						{tab.label}
+						{t(tab.label)}
 					</button>
 				))}
 			</Stack>
 
 			{orders.length === 0 ? (
-				<div className={'no-data'}>No orders here yet.</div>
+				<div className={'no-data'}>{t('No orders here yet.')}</div>
 			) : (
 				<div className={'order-list'}>
 					{orders.map((order) => {
@@ -101,11 +103,11 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 									</span>
 									<b>
 										{first?.itemTitle}
-										{more > 0 ? ` and ${more} more` : ''}
+										{more > 0 ? t(' and {{count}} more', { count: more }) : ''}
 									</b>
 									<span>{formatKRW(order.orderTotal)}</span>
 								</span>
-								<span className={`status-pill ${order.orderStatus}`}>{statusLabel(order.orderStatus)}</span>
+								<span className={`status-pill ${order.orderStatus}`}>{t(statusLabel(order.orderStatus))}</span>
 							</>
 						);
 						return seller ? (
@@ -113,7 +115,7 @@ const MyOrders = ({ seller = false }: MyOrdersProps) => {
 								{card}
 								{order.orderStatus === OrderStatus.PROCESS && (
 									<button className={'primary-btn small'} onClick={() => shipHandler(order)}>
-										Mark as shipped
+										{t('Mark as shipped')}
 									</button>
 								)}
 							</div>

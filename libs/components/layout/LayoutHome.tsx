@@ -10,9 +10,11 @@ import { getJwtToken, updateUserInfo } from '../../auth';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import { useTranslation } from 'next-i18next';
 
 const withLayoutMain = (Component: any) => {
 	return (props: any) => {
+	const { t } = useTranslation('common');
 		const device = useDeviceDetect();
 
 		/** LIFECYCLES **/
@@ -24,7 +26,7 @@ const withLayoutMain = (Component: any) => {
 		return (
 			<>
 				<Head>
-					<title>Reneva · K-beauty for every skin</title>
+					<title>{t('Reneva · K-beauty for every skin')}</title>
 					<meta name={'title'} content={`Reneva`} />
 				</Head>
 				<Stack id={device === 'mobile' ? 'mobile-wrap' : 'pc-wrap'}>

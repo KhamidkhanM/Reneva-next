@@ -1,8 +1,8 @@
-import { Html, Head, Main, NextScript } from 'next/document';
+import { Html, Head, Main, NextScript, DocumentProps } from 'next/document';
 
-export default function Document() {
+export default function Document(props: DocumentProps) {
 	return (
-		<Html lang="en">
+		<Html lang={props.__NEXT_DATA__.locale ?? 'uz'}>
 			<Head>
 				<meta name="robots" content="index,follow" />
 				<link rel="icon" type="image/svg+xml" href="/img/logo/favicon.svg" />

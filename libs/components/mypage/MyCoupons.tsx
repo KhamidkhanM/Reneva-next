@@ -9,10 +9,12 @@ import { MemberCouponStatus } from '../../enums/coupon.enum';
 import { couponValue } from './CouponManager';
 import { formatKRW, labelOf } from '../../utils';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 const tabs = [MemberCouponStatus.AVAILABLE, MemberCouponStatus.USED, MemberCouponStatus.EXPIRED];
 
 const MyCoupons = () => {
+	const { t } = useTranslation('common');
 	const [status, setStatus] = useState<MemberCouponStatus>(MemberCouponStatus.AVAILABLE);
 	const [code, setCode] = useState<string>('');
 
@@ -41,27 +43,27 @@ const MyCoupons = () => {
 	return (
 		<div className={'my-section'}>
 			<div className={'section-head'}>
-				<h2>Coupons</h2>
-				<p>Use them at checkout. Try WELCOME10 if you are new.</p>
+				<h2>{t('Coupons')}</h2>
+				<p>{t('Use them at checkout. Try WELCOME10 if you are new.')}</p>
 			</div>
 			<form className={'box inline-form'} onSubmit={claimHandler}>
 				<label className={'field'}>
-					<span>Coupon code</span>
-					<input value={code} onChange={(e) => setCode(e.target.value)} placeholder={'e.g. WELCOME10'} />
+					<span>{t('Coupon code')}</span>
+					<input value={code} onChange={(e) => setCode(e.target.value)} placeholder={t('e.g. WELCOME10')} />
 				</label>
 				<button type={'submit'} className={'primary-btn'}>
-					Add coupon
+					{t('Add coupon')}
 				</button>
 			</form>
 			<Stack className={'chips'}>
 				{tabs.map((tab) => (
 					<button key={tab} className={`chip ${status === tab ? 'on' : ''}`} onClick={() => setStatus(tab)}>
-						{labelOf(tab)}
+						{t(labelOf(tab))}
 					</button>
 				))}
 			</Stack>
 			{coupons.length === 0 ? (
-				<div className={'no-data'}>No {labelOf(status).toLowerCase()} coupons.</div>
+				<div className={'no-data'}>{t('No')} {labelOf(status).toLowerCase()} {t('coupons.')}</div>
 			) : (
 				<div className={'coupon-grid'}>
 					{coupons.map((item) => {
@@ -73,10 +75,10 @@ const MyCoupons = () => {
 								<div className={'txt'}>
 									<b>{coupon.couponTitle}</b>
 									<span>
-										{coupon.couponMinOrder ? `Orders from ${formatKRW(coupon.couponMinOrder)}` : 'No minimum'}
-										{coupon.couponMaxDiscount ? ` · up to ${formatKRW(coupon.couponMaxDiscount)}` : ''}
+										{coupon.couponMinOrder ? t('Orders from {{amount}}', { amount: formatKRW(coupon.couponMinOrder) }) : t('No minimum')}
+										{coupon.couponMaxDiscount ? ` · ${t('up to {{amount}}', { amount: formatKRW(coupon.couponMaxDiscount) })}` : ''}
 									</span>
-									<span>Until {moment(coupon.endAt).format('YYYY.MM.DD')}</span>
+									<span>{t('Until')} {moment(coupon.endAt).format('YYYY.MM.DD')}</span>
 								</div>
 								<span className={'code'}>{coupon.couponCode}</span>
 							</div>

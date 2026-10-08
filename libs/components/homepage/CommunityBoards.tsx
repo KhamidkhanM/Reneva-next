@@ -8,10 +8,12 @@ import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { BoardArticle } from '../../types/community';
 import { T } from '../../types/common';
 import { labelOf } from '../../utils';
+import { useTranslation } from 'next-i18next';
 
 const tones = ['lilac', 'peach', 'light'];
 
 const CommunityBoards = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [articles, setArticles] = useState<BoardArticle[]>([]);
 
@@ -25,14 +27,14 @@ const CommunityBoards = () => {
 		<Stack className={'community-board'}>
 			<Stack className={'container column'}>
 				<Stack className={'info-box'}>
-					<h2 className={'section-title'}>Community</h2>
+					<h2 className={'section-title'}>{t('Community')}</h2>
 					<Link href={'/community?articleCategory=FREE'} className={'more-link'}>
-						Go to community →
+						{t('Go to community →')}
 					</Link>
 				</Stack>
 				{articles.length === 0 ? (
 					<Box component={'div'} className={'empty-list'}>
-						No posts yet. Be the first to share your routine!
+						{t('No posts yet. Be the first to share your routine!')}
 					</Box>
 				) : (
 					<div className={'article-list'}>
@@ -43,10 +45,10 @@ const CommunityBoards = () => {
 								onClick={() => router.push({ pathname: '/community/detail', query: { id: article._id, articleCategory: article.articleCategory } })}
 							>
 								<span className={'txt'}>
-									<span className={'cat'}>{labelOf(article.articleCategory)}</span>
+									<span className={'cat'}>{t(labelOf(article.articleCategory))}</span>
 									<b>{article.articleTitle}</b>
 									<span className={'meta'}>
-										{article.memberData?.memberNick} · {article.articleLikes} likes · {article.articleComments} comments ·{' '}
+										{article.memberData?.memberNick} · {article.articleLikes} {t('likes ·')} {article.articleComments} {t('comments ·')}{' '}
 										{moment(article.createdAt).fromNow()}
 									</span>
 								</span>

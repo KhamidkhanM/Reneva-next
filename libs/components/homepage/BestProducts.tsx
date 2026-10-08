@@ -7,9 +7,11 @@ import { Category, Product } from '../../types/product';
 import { T } from '../../types/common';
 import { formatKRW, imageUrl } from '../../utils';
 import ProductThumb from '../common/ProductThumb';
+import { useTranslation } from 'next-i18next';
 
 // ranking from the nightly batch (productRank), filterable by top category
 const BestProducts = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const [categoryId, setCategoryId] = useState<string>('');
 	const [products, setProducts] = useState<Product[]>([]);
@@ -33,12 +35,12 @@ const BestProducts = () => {
 			<Stack className={'container column'}>
 				<Stack className={'info-box'}>
 					<Box component={'div'} className={'left'}>
-						<h2 className={'section-title'}>Reneva ranking</h2>
-						<p>Updated every night from sales, reviews and likes</p>
+						<h2 className={'section-title'}>{t('Reneva ranking')}</h2>
+						<p>{t('Updated every night from sales, reviews and likes')}</p>
 					</Box>
 					<div className={'filters'}>
 						<button className={`chip ${!categoryId ? 'on' : ''}`} onClick={() => setCategoryId('')}>
-							All
+							{t('All')}
 						</button>
 						{topCategories.map((category) => (
 							<button
@@ -53,7 +55,7 @@ const BestProducts = () => {
 				</Stack>
 				{products.length === 0 ? (
 					<Box component={'div'} className={'empty-list'}>
-						No ranked products in this category yet
+						{t('No ranked products in this category yet')}
 					</Box>
 				) : (
 					<div className={'ranking'}>
@@ -69,7 +71,7 @@ const BestProducts = () => {
 								<span className={'price-row'}>
 									<span className={'now'}>{formatKRW(products[0].productSalePrice)}</span>
 									<span className={'meta'}>
-										★ {products[0].productRating.toFixed(1)} · {products[0].productSold} sold
+										★ {products[0].productRating.toFixed(1)} · {products[0].productSold} {t('sold')}
 									</span>
 								</span>
 							</div>

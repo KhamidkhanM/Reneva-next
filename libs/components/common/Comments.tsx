@@ -10,6 +10,7 @@ import { CommentGroup, CommentStatus } from '../../enums/comment.enum';
 import { memberImage } from '../../utils';
 import { Messages } from '../../config';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 interface CommentsProps {
 	commentGroup: CommentGroup;
@@ -21,6 +22,7 @@ interface CommentsProps {
 
 // used for product Q&A, community articles and member pages
 const Comments = ({ commentGroup, commentRefId, title = 'Comments', placeholder = 'Write a comment', onChange }: CommentsProps) => {
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [text, setText] = useState<string>('');
 	const [page, setPage] = useState<number>(1);
@@ -78,16 +80,16 @@ const Comments = ({ commentGroup, commentRefId, title = 'Comments', placeholder 
 					id={`comment-${commentRefId}`}
 					value={text}
 					maxLength={500}
-					placeholder={user._id ? placeholder : 'Login to write'}
+					placeholder={user._id ? placeholder : t('Login to write')}
 					disabled={!user._id}
 					onChange={(e) => setText(e.target.value)}
 				/>
 				<button type={'submit'} className={'primary-btn'} disabled={!user._id || !text.trim()}>
-					Post
+					{t('Post')}
 				</button>
 			</form>
 			{comments.length === 0 ? (
-				<div className={'empty-list'}>Nothing here yet.</div>
+				<div className={'empty-list'}>{t('Nothing here yet.')}</div>
 			) : (
 				comments.map((comment) => (
 					<div key={comment._id} className={'comment'}>
@@ -96,15 +98,15 @@ const Comments = ({ commentGroup, commentRefId, title = 'Comments', placeholder 
 							<div className={'row'}>
 								<b>
 									{comment.memberData?.memberNick}
-									{comment.memberData?.memberType === 'SELLER' && <span className={'tag-pill'}>Seller</span>}
-									{comment.memberData?.memberType === 'ADMIN' && <span className={'tag-pill'}>Reneva</span>}
+									{comment.memberData?.memberType === 'SELLER' && <span className={'tag-pill'}>{t('Seller')}</span>}
+									{comment.memberData?.memberType === 'ADMIN' && <span className={'tag-pill'}>{t('Reneva')}</span>}
 								</b>
 								<small>{moment(comment.createdAt).fromNow()}</small>
 							</div>
 							<p>{comment.commentContent}</p>
 							{comment.memberId === user._id && (
 								<button className={'link-btn'} onClick={() => deleteHandler(comment._id)}>
-									Delete
+									{t('Delete')}
 								</button>
 							)}
 						</div>

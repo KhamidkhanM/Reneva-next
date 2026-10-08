@@ -15,10 +15,12 @@ import { BrandStatus } from '../../libs/enums/brand.enum';
 import { T } from '../../libs/types/common';
 import { labelOf } from '../../libs/utils';
 import { sweetConfirmAlert, sweetErrorHandlingForAdmin, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
 const AdminBrands: NextPage = () => {
+	const { t } = useTranslation('common');
 	const [inquiry, setInquiry] = useState<T>({ page: 1, limit: 10, sort: 'createdAt', direction: 'DESC', search: {} });
 
 	/** APOLLO REQUESTS **/
@@ -52,12 +54,12 @@ const AdminBrands: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Brands</h2>
-				<p>A brand can be removed only when it is set to Delete and has no products.</p>
+				<h2>{t('Brands')}</h2>
+				<p>{t('A brand can be removed only when it is set to Delete and has no products.')}</p>
 			</div>
 			<Stack className={'chips'}>
 				<button className={`chip ${!inquiry.search.brandStatus ? 'on' : ''}`} onClick={() => setInquiry({ ...inquiry, page: 1, search: {} })}>
-					All
+					{t('All')}
 				</button>
 				{Object.values(BrandStatus).map((status) => (
 					<button
@@ -65,7 +67,7 @@ const AdminBrands: NextPage = () => {
 						className={`chip ${inquiry.search.brandStatus === status ? 'on' : ''}`}
 						onClick={() => setInquiry({ ...inquiry, page: 1, search: { brandStatus: status } })}
 					>
-						{labelOf(status)}
+						{t(labelOf(status))}
 					</button>
 				))}
 			</Stack>
@@ -73,11 +75,11 @@ const AdminBrands: NextPage = () => {
 				<table>
 					<thead>
 						<tr>
-							<th>Brand</th>
-							<th>Owner</th>
-							<th>Products</th>
-							<th>Followers</th>
-							<th>Status</th>
+							<th>{t('Brand')}</th>
+							<th>{t('Owner')}</th>
+							<th>{t('Products')}</th>
+							<th>{t('Followers')}</th>
+							<th>{t('Status')}</th>
 							<th></th>
 						</tr>
 					</thead>
@@ -98,14 +100,14 @@ const AdminBrands: NextPage = () => {
 								<td>{brand.brandLikes}</td>
 								<td>
 									<select
-										aria-label={'Brand status'}
+										aria-label={t('Brand status')}
 										className={`status-select ${brand.brandStatus}`}
 										value={brand.brandStatus}
 										onChange={(e) => statusHandler(brand, e.target.value)}
 									>
 										{Object.values(BrandStatus).map((ele) => (
 											<option key={ele} value={ele}>
-												{labelOf(ele)}
+												{t(labelOf(ele))}
 											</option>
 										))}
 									</select>
@@ -113,7 +115,7 @@ const AdminBrands: NextPage = () => {
 								<td className={'row-btns'}>
 									{brand.brandStatus === BrandStatus.DELETE && brand.brandProducts === 0 && (
 										<button className={'ghost-btn small danger'} onClick={() => removeHandler(brand)}>
-											Remove
+											{t('Remove')}
 										</button>
 									)}
 								</td>
@@ -121,7 +123,7 @@ const AdminBrands: NextPage = () => {
 						))}
 					</tbody>
 				</table>
-				{brands.length === 0 && <div className={'no-data'}>No brands found.</div>}
+				{brands.length === 0 && <div className={'no-data'}>{t('No brands found.')}</div>}
 			</div>
 			<AdminPager page={inquiry.page} limit={inquiry.limit} total={total} onChange={(page) => setInquiry({ ...inquiry, page })} />
 		</div>

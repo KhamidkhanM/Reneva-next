@@ -14,12 +14,14 @@ import { formatKRW } from '../../libs/utils';
 import { statusLabel } from '../../libs/components/mypage/MyOrders';
 import { roomTitle } from '../../libs/components/chat/RoomList';
 import { openChatRoomById } from '../../libs/components/chat/openChat';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = adminStaticProps;
 
 const one = { page: 1, limit: 1 };
 
 const AdminHome: NextPage = () => {
+	const { t } = useTranslation('common');
 	/** APOLLO REQUESTS **/
 	const { data: members } = useQuery(GET_ALL_MEMBERS_BY_ADMIN, { fetchPolicy: 'network-only', variables: { input: { ...one, search: {} } } });
 	const { data: products } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, { fetchPolicy: 'network-only', variables: { input: { ...one, search: {} } } });
@@ -44,22 +46,22 @@ const AdminHome: NextPage = () => {
 	return (
 		<div className={'admin-page'}>
 			<div className={'admin-head'}>
-				<h2>Dashboard</h2>
+				<h2>{t('Dashboard')}</h2>
 				<p>{moment().format('dddd, MMMM D')}</p>
 			</div>
 			<div className={'stat-grid'}>
 				{cards.map((card) => (
 					<Link key={card.label} href={card.href} className={`stat-card ${card.tone}`}>
-						<span>{card.label}</span>
+						<span>{t(card.label)}</span>
 						<b>{card.value}</b>
 					</Link>
 				))}
 			</div>
 			<div className={'admin-columns'}>
 				<section className={'box'}>
-					<h2>Recent orders</h2>
+					<h2>{t('Recent orders')}</h2>
 					{recentOrders.length === 0 ? (
-						<p className={'hint'}>No orders yet.</p>
+						<p className={'hint'}>{t('No orders yet.')}</p>
 					) : (
 						<div className={'table-box flat'}>
 							<table>
@@ -72,7 +74,7 @@ const AdminHome: NextPage = () => {
 											</td>
 											<td>{formatKRW(order.orderTotal)}</td>
 											<td>
-												<span className={`status-pill ${order.orderStatus}`}>{statusLabel(order.orderStatus)}</span>
+												<span className={`status-pill ${order.orderStatus}`}>{t(statusLabel(order.orderStatus))}</span>
 											</td>
 										</tr>
 									))}
@@ -82,15 +84,15 @@ const AdminHome: NextPage = () => {
 					)}
 				</section>
 				<section className={'box'}>
-					<h2>Open support chats</h2>
+					<h2>{t('Open support chats')}</h2>
 					{openRooms.length === 0 ? (
-						<p className={'hint'}>No open chats. Members reach you from CS, order pages and Rena.</p>
+						<p className={'hint'}>{t('No open chats. Members reach you from CS, order pages and Rena.')}</p>
 					) : (
 						<div className={'room-mini-list'}>
 							{openRooms.map((room) => (
 								<button key={room._id} onClick={() => openChatRoomById(room._id)}>
 									<b>{roomTitle(room, '')}</b>
-									<span>{room.lastMessage || 'No messages yet'}</span>
+									<span>{room.lastMessage || t('No messages yet')}</span>
 									{room.agentUnread > 0 && <em>{room.agentUnread}</em>}
 								</button>
 							))}

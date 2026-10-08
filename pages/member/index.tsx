@@ -21,6 +21,7 @@ import { isLiked, labelOf, likeHandler, memberImage } from '../../libs/utils';
 import { Messages } from '../../libs/config';
 import { openStoreChat } from '../../libs/components/chat/openChat';
 import { sweetErrorHandling, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { useTranslation } from 'next-i18next';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -29,6 +30,7 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const MemberPage: NextPage = () => {
+	const { t } = useTranslation('common');
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
 	const memberId = router.query.memberId as string;
@@ -83,8 +85,8 @@ const MemberPage: NextPage = () => {
 	const tabs = [
 		...(seller ? [{ id: 'products', label: 'Products' }] : []),
 		{ id: 'articles', label: 'Articles' },
-		{ id: 'followers', label: `Followers ${member.memberFollowers}` },
-		{ id: 'followings', label: `Followings ${member.memberFollowings}` },
+		{ id: 'followers', label: `${t('Followers')} ${member.memberFollowers}` },
+		{ id: 'followings', label: `${t('Followings')} ${member.memberFollowings}` },
 		{ id: 'guestbook', label: 'Guestbook' },
 	];
 	const active = seller && !router.query.category ? 'products' : category;
@@ -102,31 +104,31 @@ const MemberPage: NextPage = () => {
 				<div className={'member-hero'}>
 					<img src={memberImage(member.memberImage)} alt={''} />
 					<div className={'txt'}>
-						<span className={'eyebrow'}>{seller ? 'STORE' : `${member.memberLevel} MEMBER`}</span>
+						<span className={'eyebrow'}>{seller ? t('STORE') : `${member.memberLevel} MEMBER`}</span>
 						<h2>{member.memberNick}</h2>
 						{member.memberDesc && <p>{member.memberDesc}</p>}
 						<div className={'stats'}>
 							{seller && (
 								<span>
-									<b>{member.memberProducts}</b> products
+									<b>{member.memberProducts}</b> {t('products')}
 								</span>
 							)}
 							<span>
-								<b>{member.memberArticles}</b> articles
+								<b>{member.memberArticles}</b> {t('articles')}
 							</span>
 							<span>
-								<b>{member.memberFollowers}</b> followers
+								<b>{member.memberFollowers}</b> {t('followers')}
 							</span>
 							<span>
-								<b>{member.memberLikes}</b> likes
+								<b>{member.memberLikes}</b> {t('likes')}
 							</span>
 						</div>
 						{member.memberSkinType && (
 							<div className={'skin'}>
-								<span className={'tag-pill'}>{labelOf(member.memberSkinType)} skin</span>
+								<span className={'tag-pill'}>{t(labelOf(member.memberSkinType))} {t('skin')}</span>
 								{member.memberSkinConcerns?.map((concern) => (
 									<span key={concern} className={'tag-pill'}>
-										{labelOf(concern)}
+										{t(labelOf(concern))}
 									</span>
 								))}
 							</div>
@@ -135,14 +137,14 @@ const MemberPage: NextPage = () => {
 					{user._id !== member._id && (
 						<div className={'actions'}>
 							<button className={following ? 'soft-btn' : 'primary-btn'} onClick={() => followHandler(member._id)}>
-								{following ? 'Following' : 'Follow'}
+								{following ? t('Following') : t('Follow')}
 							</button>
 							<button className={'ghost-btn'} onClick={() => likeMemberHandler(member._id)} aria-pressed={isLiked(member)}>
-								{isLiked(member) ? '♥ Liked' : '♡ Like'}
+								{isLiked(member) ? t('♥ Liked') : t('♡ Like')}
 							</button>
 							{seller && products[0] && (
 								<button className={'ghost-btn'} onClick={() => openStoreChat(products[0]._id)}>
-									Chat with store
+									{t('Chat with store')}
 								</button>
 							)}
 						</div>
@@ -157,14 +159,14 @@ const MemberPage: NextPage = () => {
 							scroll={false}
 							className={`chip ${active === tab.id ? 'on' : ''}`}
 						>
-							{tab.label}
+							{t(tab.label)}
 						</Link>
 					))}
 				</Stack>
 
 				{active === 'products' &&
 					(products.length === 0 ? (
-						<div className={'no-data'}>No products yet.</div>
+						<div className={'no-data'}>{t('No products yet.')}</div>
 					) : (
 						<div className={'product-grid'}>
 							{products.map((product) => (
@@ -181,7 +183,7 @@ const MemberPage: NextPage = () => {
 				{active === 'followings' && <MemberFollows kind={'followings'} {...followProps} />}
 				{active === 'guestbook' && (
 					<div className={'box'}>
-						<Comments commentGroup={CommentGroup.MEMBER} commentRefId={memberId} title={'Guestbook'} placeholder={`Say hi to ${member.memberNick}`} />
+						<Comments commentGroup={CommentGroup.MEMBER} commentRefId={memberId} title={t('Guestbook')} placeholder={t('Say hi to {{name}}', { name: member.memberNick })} />
 					</div>
 				)}
 			</div>
