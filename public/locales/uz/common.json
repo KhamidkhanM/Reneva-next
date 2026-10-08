@@ -823,5 +823,18 @@
   "Save new password": "Yangi parolni saqlash",
   "Back to log in": "Kirishga qaytish",
   "or": "yoki",
-  "Google sign-in failed, please try again!": "Google orqali kirib bo'lmadi, qaytadan urinib ko'ring!"
+  "Google sign-in failed, please try again!": "Google orqali kirib bo'lmadi, qaytadan urinib ko'ring!",
+  "Payme": "Payme",
+  "Click": "Click",
+  "Cash": "Naqd pul",
+  "Cash on delivery": "Naqd pul (yetkazib berilganda)",
+  "Pay with Payme": "Payme orqali to'lash",
+  "Pay with Click": "Click orqali to'lash",
+  "Pay": "To'lash",
+  "TEST": "TEST",
+  "Test mode: Payme and Click open a practice page, no real money is charged.": "Sinov rejimi: Payme va Click mashq sahifasini ochadi, haqiqiy pul yechilmaydi.",
+  "Practice payment: no card is needed and no money is charged.": "Mashq to'lovi: karta kerak emas, pul yechilmaydi.",
+  "This payment is already finished.": "Bu to'lov allaqachon yakunlangan.",
+  "This payment was not found.": "To'lov topilmadi.",
+  "Real Payme and Click payments are not connected yet!": "Haqiqiy Payme va Click to'lovlari hali ulanmagan!"
 }

@@ -9,7 +9,7 @@ import AddressForm from '../../libs/components/mypage/AddressForm';
 import ProductThumb from '../../libs/components/common/ProductThumb';
 import { userVar } from '../../apollo/store';
 import { GET_MEMBER, GET_MY_ADDRESSES, GET_MY_CART, GET_MY_COUPONS } from '../../apollo/user/query';
-import { CREATE_ORDER, PAY_ORDER } from '../../apollo/user/mutation';
+import { CREATE_ORDER, START_PAYMENT } from '../../apollo/user/mutation';
 import { Address, Cart, MemberCoupon, MyCart } from '../../libs/types/order';
 import { CouponType, MemberCouponStatus } from '../../libs/enums/coupon.enum';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
@@ -25,10 +25,9 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const methods = [
-	{ id: PaymentMethod.CARD, label: 'Card' },
-	{ id: PaymentMethod.KAKAO_PAY, label: 'Kakao Pay' },
-	{ id: PaymentMethod.NAVER_PAY, label: 'Naver Pay' },
-	{ id: PaymentMethod.BANK, label: 'Bank transfer' },
+	{ id: PaymentMethod.PAYME, label: 'Payme', logo: '/img/payment/payme.svg' },
+	{ id: PaymentMethod.CLICK, label: 'Click', logo: '/img/payment/click.svg' },
+	{ id: PaymentMethod.CASH, label: 'Cash on delivery', logo: '' },
 ];
 
 // the same rules the server uses, so the shopper sees the price before paying
@@ -55,7 +54,7 @@ const Checkout: NextPage = () => {
 	const [memberCouponId, setMemberCouponId] = useState<string>('');
 	const [points, setPoints] = useState<number>(0);
 	const [memo, setMemo] = useState<string>('');
-	const [method, setMethod] = useState<PaymentMethod>(PaymentMethod.CARD);
+	const [method, setMethod] = useState<PaymentMethod>(PaymentMethod.PAYME);
 	const [placing, setPlacing] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
@@ -68,7 +67,7 @@ const Checkout: NextPage = () => {
 	});
 	const { data: memberData } = useQuery(GET_MEMBER, { fetchPolicy: 'network-only', skip: !user._id, variables: { input: user._id } });
 	const [createOrder] = useMutation(CREATE_ORDER, { refetchQueries: [{ query: GET_MY_CART }] });
-	const [payOrder] = useMutation(PAY_ORDER);
+	const [startPayment] = useMutation(START_PAYMENT);
 
 	const cart: MyCart | undefined = cartData?.getMyCart;
 	const items: Cart[] = (cart?.list ?? []).filter(
@@ -110,7 +109,13 @@ const Checkout: NextPage = () => {
 			const created = await createOrder({ variables: { input } });
 			const orderId = created.data.createOrder._id;
 			try {
-				await payOrder({ variables: { input: { orderId, paymentMethod: method } } });
+				const started = await startPayment({ variables: { input: { orderId, paymentMethod: method } } });
+				const paymentUrl = started.data.startPayment.paymentUrl;
+				// Payme / Click: go to their page (our fake one in test mode). A full address, so not router.push
+				if (paymentUrl) {
+					window.location.href = paymentUrl;
+					return;
+				}
 			} catch (err) {
 				// the order is kept as "waiting for payment", the shopper can pay from the order page
 			}
@@ -233,6 +238,8 @@ const Checkout: NextPage = () => {
 							<div className={'methods'}>
 								{methods.map((ele) => (
 									<button key={ele.id} type={'button'} className={`method ${method === ele.id ? 'on' : ''}`} onClick={() => setMethod(ele.id)} aria-pressed={method === ele.id}>
+										{/* hides itself until the logo file is added to public/img/payment */}
+										{ele.logo && <img src={ele.logo} alt={''} onError={(e) => (e.currentTarget.style.display = 'none')} />}
 										{t(ele.label)}
 									</button>
 								))}
@@ -240,7 +247,7 @@ const Checkout: NextPage = () => {
 							{isConvertedPrice() && (
 								<p className={'hint'}>{t("You pay {{amount}}. Prices in other currencies are approximate.", { amount: formatPrice(totals.total, 'uz') })}</p>
 							)}
-							<p className={'hint'}>{t('Test mode: payments are simulated and always succeed.')}</p>
+							<p className={'hint'}>{t('Test mode: Payme and Click open a practice page, no real money is charged.')}</p>
 						</section>
 					</Stack>
 

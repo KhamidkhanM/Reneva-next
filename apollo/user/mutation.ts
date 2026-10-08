@@ -266,10 +266,19 @@ export const CREATE_ORDER = gql`
 	}
 `;
 
-export const PAY_ORDER = gql`
+export const START_PAYMENT = gql`
+	mutation StartPayment($input: PaymentInput!) {
+		startPayment(input: $input) {
+			paymentId
+			paymentUrl
+		}
+	}
+`;
+
+export const CONFIRM_TEST_PAYMENT = gql`
 	${ORDER_FIELDS}
-	mutation PayOrder($input: PaymentInput!) {
-		payOrder(input: $input) {
+	mutation ConfirmTestPayment($paymentId: String!, $success: Boolean!) {
+		confirmTestPayment(paymentId: $paymentId, success: $success) {
 			...OrderFields
 		}
 	}

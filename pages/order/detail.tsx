@@ -11,7 +11,7 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ProductThumb from '../../libs/components/common/ProductThumb';
 import ReviewForm from '../../libs/components/mypage/ReviewForm';
 import { GET_ORDER } from '../../apollo/user/query';
-import { CANCEL_ORDER, CONFIRM_ORDER, PAY_ORDER } from '../../apollo/user/mutation';
+import { CANCEL_ORDER, CONFIRM_ORDER, START_PAYMENT } from '../../apollo/user/mutation';
 import { Order, OrderItem } from '../../libs/types/order';
 import { OrderStatus, PaymentMethod } from '../../libs/enums/order.enum';
 import { formatPrice, imageUrl, labelOf } from '../../libs/utils';
@@ -40,7 +40,7 @@ const OrderDetail: NextPage = () => {
 
 	/** APOLLO REQUESTS **/
 	const { data, refetch } = useQuery(GET_ORDER, { fetchPolicy: 'network-only', variables: { input: orderId }, skip: !orderId });
-	const [payOrder] = useMutation(PAY_ORDER);
+	const [startPayment] = useMutation(START_PAYMENT);
 	const [cancelOrder] = useMutation(CANCEL_ORDER);
 	const [confirmOrder] = useMutation(CONFIRM_ORDER);
 	const order: Order | undefined = data?.getOrder;
@@ -51,6 +51,17 @@ const OrderDetail: NextPage = () => {
 			await action();
 			await refetch();
 			await sweetTopSmallSuccessAlert(message, 1000);
+		} catch (err: any) {
+			sweetMixinErrorAlert(err.message).then();
+		}
+	};
+
+	const payWith = async (paymentMethod: PaymentMethod) => {
+		try {
+			const started = await startPayment({ variables: { input: { orderId, paymentMethod } } });
+			const paymentUrl = started.data.startPayment.paymentUrl;
+			if (paymentUrl) window.location.href = paymentUrl;
+			else await refetch();
 		} catch (err: any) {
 			sweetMixinErrorAlert(err.message).then();
 		}
@@ -173,9 +184,17 @@ const OrderDetail: NextPage = () => {
 						)}
 
 						{order.orderStatus === OrderStatus.PAUSE && (
-							<button className={'primary-btn'} onClick={() => run(() => payOrder({ variables: { input: { orderId, paymentMethod: PaymentMethod.CARD } } }), 'Paid')}>
-								{t('Pay now')}
-							</button>
+							<div className={'pay-again'}>
+								<button className={'primary-btn'} onClick={() => payWith(PaymentMethod.PAYME)}>
+									{t('Pay with Payme')}
+								</button>
+								<button className={'primary-btn'} onClick={() => payWith(PaymentMethod.CLICK)}>
+									{t('Pay with Click')}
+								</button>
+								<button className={'ghost-btn'} onClick={() => payWith(PaymentMethod.CASH)}>
+									{t('Cash on delivery')}
+								</button>
+							</div>
 						)}
 						{order.orderStatus === OrderStatus.DELIVERY && (
 							<button className={'primary-btn'} onClick={() => run(() => confirmOrder({ variables: { input: orderId } }), 'Thank you!')}>

@@ -8,6 +8,10 @@ export enum OrderStatus {
 }
 
 export enum PaymentMethod {
+	PAYME = 'PAYME',
+	CLICK = 'CLICK',
+	CASH = 'CASH',
+	// old Korean methods: kept so old orders still show their method
 	CARD = 'CARD',
 	KAKAO_PAY = 'KAKAO_PAY',
 	NAVER_PAY = 'NAVER_PAY',

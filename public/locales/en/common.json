@@ -823,5 +823,18 @@
   "Password changed, you are logged in": "Password changed, you are logged in",
   "Save new password": "Save new password",
   "Back to log in": "Back to log in",
-  "Google sign-in failed, please try again!": "Google sign-in failed, please try again!"
+  "Google sign-in failed, please try again!": "Google sign-in failed, please try again!",
+  "Payme": "Payme",
+  "Click": "Click",
+  "Cash": "Cash",
+  "Cash on delivery": "Cash on delivery",
+  "Pay with Payme": "Pay with Payme",
+  "Pay with Click": "Pay with Click",
+  "Pay": "Pay",
+  "TEST": "TEST",
+  "Test mode: Payme and Click open a practice page, no real money is charged.": "Test mode: Payme and Click open a practice page, no real money is charged.",
+  "Practice payment: no card is needed and no money is charged.": "Practice payment: no card is needed and no money is charged.",
+  "This payment is already finished.": "This payment is already finished.",
+  "This payment was not found.": "This payment was not found.",
+  "Real Payme and Click payments are not connected yet!": "Real Payme and Click payments are not connected yet!"
 }

@@ -823,5 +823,18 @@
   "Password changed, you are logged in": "Пароль изменён, вы вошли в аккаунт",
   "Save new password": "Сохранить новый пароль",
   "Back to log in": "Вернуться ко входу",
-  "Google sign-in failed, please try again!": "Не удалось войти через Google, попробуйте снова!"
+  "Google sign-in failed, please try again!": "Не удалось войти через Google, попробуйте снова!",
+  "Payme": "Payme",
+  "Click": "Click",
+  "Cash": "Наличные",
+  "Cash on delivery": "Наличными при получении",
+  "Pay with Payme": "Оплатить через Payme",
+  "Pay with Click": "Оплатить через Click",
+  "Pay": "Оплатить",
+  "TEST": "TEST",
+  "Test mode: Payme and Click open a practice page, no real money is charged.": "Тестовый режим: Payme и Click открывают учебную страницу, деньги не списываются.",
+  "Practice payment: no card is needed and no money is charged.": "Учебный платёж: карта не нужна, деньги не списываются.",
+  "This payment is already finished.": "Этот платёж уже завершён.",
+  "This payment was not found.": "Платёж не найден.",
+  "Real Payme and Click payments are not connected yet!": "Реальные платежи Payme и Click ещё не подключены!"
 }
