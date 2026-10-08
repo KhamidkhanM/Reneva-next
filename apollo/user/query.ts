@@ -656,3 +656,19 @@ export const GET_EXCHANGE_RATES = gql`
 		}
 	}
 `;
+
+export const GET_PHONE_VERIFICATION_ENABLED = gql`
+	query GetPhoneVerificationEnabled {
+		getPhoneVerificationEnabled
+	}
+`;
+
+export const CHECK_PHONE_VERIFICATION = gql`
+	query CheckPhoneVerification($token: String!) {
+		checkPhoneVerification(token: $token) {
+			status
+			phone
+			expired
+		}
+	}
+`;
