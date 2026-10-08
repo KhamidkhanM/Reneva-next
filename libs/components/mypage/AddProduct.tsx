@@ -197,6 +197,15 @@ const AddProduct = () => {
 		}
 	};
 
+	// wait for the product before showing the edit form, so nothing typed gets overwritten when it arrives
+	if (productId && !productData?.getProduct) {
+		return (
+			<div className={'my-section'}>
+				<div className={'no-data'}>Loading product…</div>
+			</div>
+		);
+	}
+
 	if (user._id && brandData && brands.length === 0) {
 		return (
 			<div className={'my-section'}>

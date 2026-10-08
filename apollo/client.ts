@@ -1,3 +1,4 @@
+import { REACT_APP_API_GRAPHQL_URL } from '../libs/config';
 import { useMemo } from 'react';
 import { ApolloClient, ApolloLink, InMemoryCache, from, NormalizedCacheObject } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
@@ -29,7 +30,7 @@ function createIsomorphicLink() {
 
 		// @ts-ignore
 		const link = new createUploadLink({
-			uri: process.env.REACT_APP_API_GRAPHQL_URL,
+			uri: REACT_APP_API_GRAPHQL_URL,
 			headers: { 'apollo-require-preflight': 'true' },
 		});
 

@@ -1,3 +1,4 @@
+import { REACT_APP_API_GRAPHQL_URL } from '../config';
 import decodeJWT from 'jwt-decode';
 import { initializeApollo } from '../../apollo/client';
 import { emptyUser, userVar } from '../../apollo/store';
@@ -51,8 +52,9 @@ const requestJwtToken = async ({ nick, password }: { nick: string; password: str
 
 const apiErrorMessage = (err: any): string => {
 	const serverMessage = err?.graphQLErrors?.[0]?.message;
+	if (serverMessage === 'secretOrPrivateKey must have a value') return 'The server has no SECRET_TOKEN. Add it to the backend .env and restart it.';
 	if (serverMessage) return serverMessage;
-	if (err?.networkError) return `Cannot reach the Reneva API at ${process.env.REACT_APP_API_GRAPHQL_URL}. Is the backend running?`;
+	if (err?.networkError) return `Cannot reach the Reneva API at ${REACT_APP_API_GRAPHQL_URL}. Is the backend running?`;
 	return err?.message ?? 'Something went wrong';
 };
 

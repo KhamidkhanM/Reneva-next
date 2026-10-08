@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_ISSUED_COUPONS } from '../../../apollo/user/query';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import { userVar } from '../../../apollo/store';
+import { GET_BRANDS, GET_ISSUED_COUPONS } from '../../../apollo/user/query';
 import { CREATE_COUPON, UPDATE_COUPON } from '../../../apollo/user/mutation';
 import { Coupon } from '../../types/order';
+import { Brand } from '../../types/product';
 import { CouponStatus, CouponType } from '../../enums/coupon.enum';
 import { formatKRW, labelOf } from '../../utils';
 import { Messages } from '../../config';
@@ -23,6 +25,7 @@ const empty = () => ({
 	couponValue: '10',
 	couponMinOrder: '0',
 	couponMaxDiscount: '',
+	brandId: '',
 	startAt: today(),
 	endAt: moment().add(30, 'days').format('YYYY-MM-DD'),
 });
@@ -33,11 +36,19 @@ interface CouponManagerProps {
 
 // sellers make coupons for their store; the admin sees and controls every coupon
 const CouponManager = ({ admin = false }: CouponManagerProps) => {
+	const user = useReactiveVar(userVar);
 	const [form, setForm] = useState(empty());
 	const [open, setOpen] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
 	const { data, refetch } = useQuery(GET_ISSUED_COUPONS, { fetchPolicy: 'network-only', variables: { input: { page: 1, limit: 50 } } });
+	// a seller's coupon always belongs to one of their brands; the admin may leave it empty for all brands
+	const { data: brandData } = useQuery(GET_BRANDS, {
+		fetchPolicy: 'network-only',
+		skip: admin || !user._id,
+		variables: { input: { page: 1, limit: 50, search: { memberId: user._id } } },
+	});
+	const myBrands: Brand[] = brandData?.getBrands?.list ?? [];
 	const [createCoupon, { loading }] = useMutation(CREATE_COUPON);
 	const [updateCoupon] = useMutation(UPDATE_COUPON);
 	const coupons: Coupon[] = (data?.getIssuedCoupons?.list ?? []).filter((ele: Coupon) => ele.couponStatus !== CouponStatus.DELETE);
@@ -49,6 +60,8 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 		e.preventDefault();
 		try {
 			if (!form.couponTitle || !form.couponCode) throw new Error(Messages.error3);
+			const brandId = form.brandId || (admin ? '' : myBrands[0]?._id);
+			if (!admin && !brandId) throw new Error('Create a brand first, then make a coupon for it.');
 			const input: any = {
 				couponTitle: form.couponTitle,
 				couponCode: form.couponCode.trim().toUpperCase(),
@@ -59,6 +72,7 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 				endAt: moment(form.endAt).endOf('day').toISOString(),
 			};
 			if (form.couponMaxDiscount) input.couponMaxDiscount = Number(form.couponMaxDiscount);
+			if (brandId) input.brandId = brandId;
 			await createCoupon({ variables: { input } });
 			setForm(empty());
 			setOpen(false);
@@ -103,6 +117,18 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 							<span>Code</span>
 							<input value={form.couponCode} onChange={change('couponCode')} placeholder={'SPRING15'} required />
 						</label>
+						{!admin && (
+							<label className={'field'}>
+								<span>Brand</span>
+								<select value={form.brandId || myBrands[0]?._id || ''} onChange={change('brandId')}>
+									{myBrands.map((brand) => (
+										<option key={brand._id} value={brand._id}>
+											{brand.brandName}
+										</option>
+									))}
+								</select>
+							</label>
+						)}
 						<label className={'field'}>
 							<span>Type</span>
 							<select value={form.couponType} onChange={change('couponType')}>
