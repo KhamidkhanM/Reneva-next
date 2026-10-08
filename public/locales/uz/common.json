@@ -851,5 +851,6 @@
   "Could not copy, please write the number down": "Nusxalab bo'lmadi, raqamni yozib oling",
   "Card number": "Karta raqami",
   "Card transfer is available when all items are from one store!": "Karta o'tkazmasi barcha mahsulotlar bitta do'kondan bo'lganda mavjud!",
-  "This store does not accept card transfers yet!": "Bu do'kon hali karta o'tkazmalarini qabul qilmaydi!"
+  "This store does not accept card transfers yet!": "Bu do'kon hali karta o'tkazmalarini qabul qilmaydi!",
+  "Please pay by {{time}}, or the order will be canceled.": "Iltimos, soat {{time}} gacha to'lang, aks holda buyurtma bekor qilinadi."
 }

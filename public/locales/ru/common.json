@@ -851,5 +851,6 @@
   "Could not copy, please write the number down": "Не удалось скопировать, запишите номер",
   "Card number": "Номер карты",
   "Card transfer is available when all items are from one store!": "Перевод на карту доступен, когда все товары из одного магазина!",
-  "This store does not accept card transfers yet!": "Этот магазин пока не принимает переводы на карту!"
+  "This store does not accept card transfers yet!": "Этот магазин пока не принимает переводы на карту!",
+  "Please pay by {{time}}, or the order will be canceled.": "Оплатите до {{time}}, иначе заказ будет отменён."
 }

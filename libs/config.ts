@@ -15,6 +15,9 @@ export const productTagList = Object.values(ProductTag);
 export const FREE_DELIVERY_FROM = 300000;
 export const DELIVERY_FEE = 20000;
 
+// same as UNPAID_ORDER_MINUTES in the backend .env
+export const UNPAID_ORDER_MINUTES = 120;
+
 export const Messages = {
 	error1: 'Something went wrong!',
 	error2: 'Please login first!',
