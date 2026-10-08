@@ -133,7 +133,7 @@ const ProductDetail: NextPage = () => {
 						<>
 							<span>/</span>
 							<Link href={`/product?input=${JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search: { categoryList: [product.categoryId] } })}`}>
-								{product.categoryData.categoryName}
+								{t(product.categoryData.categoryName)}
 							</Link>
 						</>
 					)}
@@ -316,7 +316,7 @@ const ProductDetail: NextPage = () => {
 								<dt>{t('Volume')}</dt>
 								<dd>{product.productVolume}</dd>
 								<dt>{t('Category')}</dt>
-								<dd>{product.categoryData?.categoryName ?? '-'}</dd>
+								<dd>{product.categoryData?.categoryName ? t(product.categoryData.categoryName) : '-'}</dd>
 								<dt>{t('Good for')}</dt>
 								<dd>{product.productSkinTypes.map((ele) => t(labelOf(ele))).join(', ') || t('All skin types')}</dd>
 								<dt>{t('Seller')}</dt>

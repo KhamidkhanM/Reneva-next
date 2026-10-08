@@ -19,8 +19,9 @@ const ProductThumb = ({ image, size = '100%', seed = 'reneva', radius = 18, clas
 	const [broken, setBroken] = useState<boolean>(false);
 	const n = hash(seed);
 	const tile = tiles[n % tiles.length];
-	const cap = caps[(n >> 3) % caps.length];
-	const kind = (n >> 5) % 3; // 0 jar, 1 tube, 2 bottle
+	const cap = caps[(n >>> 3) % caps.length];
+	// >>> keeps the number positive; >> could make it negative and pick a shape that does not exist
+	const kind = (n >>> 5) % 3; // 0 jar, 1 tube, 2 bottle
 
 	const box: React.CSSProperties = {
 		width: size,

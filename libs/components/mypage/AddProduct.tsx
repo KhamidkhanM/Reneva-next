@@ -9,7 +9,7 @@ import { ADD_PRODUCT_OPTION, CREATE_PRODUCT, IMAGES_UPLOADER, UPDATE_PRODUCT, UP
 import { Brand, Category, Product, ProductOption } from '../../types/product';
 import { SkinConcern, SkinType } from '../../enums/member.enum';
 import { ProductTag } from '../../enums/product.enum';
-import { imageUrl, labelOf } from '../../utils';
+import { formatPrice, imageUrl, labelOf } from '../../utils';
 import { Messages, productTagList, skinConcernList, skinTypeList } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 import { useTranslation } from 'next-i18next';
@@ -269,7 +269,7 @@ const AddProduct = () => {
 							<option value={''}>{t('Choose…')}</option>
 							{categories.map((category) => (
 								<option key={category._id} value={category._id}>
-									{category.categoryName}
+									{t(category.categoryName)}
 								</option>
 							))}
 						</select>
@@ -367,6 +367,9 @@ const AddProduct = () => {
 						<label className={'field'}>
 							<span>{t("Extra price (so'm)")}</span>
 							<input type={'number'} min={0} value={option.optionExtraPrice} onChange={(e) => changeOption(index, 'optionExtraPrice', e.target.value)} />
+							<small className={'hint'}>
+								{t('Buyer pays')}: {formatPrice(Number(form.productSalePrice || form.productPrice || 0) + Number(option.optionExtraPrice || 0), 'uz')}
+							</small>
 						</label>
 						<label className={'field'}>
 							<span>{t('Stock')}</span>

@@ -852,5 +852,17 @@
   "Card number": "Номер карты",
   "Card transfer is available when all items are from one store!": "Перевод на карту доступен, когда все товары из одного магазина!",
   "This store does not accept card transfers yet!": "Этот магазин пока не принимает переводы на карту!",
-  "Please pay by {{time}}, or the order will be canceled.": "Оплатите до {{time}}, иначе заказ будет отменён."
+  "Please pay by {{time}}, or the order will be canceled.": "Оплатите до {{time}}, иначе заказ будет отменён.",
+  "Cleansers": "Очищение",
+  "Toners": "Тоники",
+  "Serums & Essences": "Сыворотки и эссенции",
+  "Moisturizers": "Увлажняющие кремы",
+  "Sunscreen": "Солнцезащитные средства",
+  "Masks": "Маски",
+  "Eye care": "Уход за кожей вокруг глаз",
+  "Lip care": "Уход за губами",
+  "Makeup": "Макияж",
+  "Body care": "Уход за телом",
+  "Hair care": "Уход за волосами",
+  "Buyer pays": "Покупатель платит"
 }

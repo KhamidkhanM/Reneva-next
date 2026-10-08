@@ -154,7 +154,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 										onChange={() => pushFilter({ ...searchFilter.search, categoryList: toggleIn(searchFilter.search.categoryList, parent._id) })}
 									/>
 								}
-								label={parent.categoryName}
+								label={t(parent.categoryName)}
 							/>
 							{children.map((child) => (
 								<FormControlLabel
@@ -167,7 +167,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 											onChange={() => pushFilter({ ...searchFilter.search, categoryList: toggleIn(searchFilter.search.categoryList, child._id) })}
 										/>
 									}
-									label={child.categoryName}
+									label={t(child.categoryName)}
 								/>
 							))}
 						</div>

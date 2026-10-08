@@ -852,5 +852,17 @@
   "Card number": "Karta raqami",
   "Card transfer is available when all items are from one store!": "Karta o'tkazmasi barcha mahsulotlar bitta do'kondan bo'lganda mavjud!",
   "This store does not accept card transfers yet!": "Bu do'kon hali karta o'tkazmalarini qabul qilmaydi!",
-  "Please pay by {{time}}, or the order will be canceled.": "Iltimos, soat {{time}} gacha to'lang, aks holda buyurtma bekor qilinadi."
+  "Please pay by {{time}}, or the order will be canceled.": "Iltimos, soat {{time}} gacha to'lang, aks holda buyurtma bekor qilinadi.",
+  "Cleansers": "Tozalovchi vositalar",
+  "Toners": "Toniklar",
+  "Serums & Essences": "Zardoblar va essensiyalar",
+  "Moisturizers": "Namlantiruvchi kremlar",
+  "Sunscreen": "Quyoshdan himoya",
+  "Masks": "Niqoblar",
+  "Eye care": "Ko'z atrofi parvarishi",
+  "Lip care": "Lab parvarishi",
+  "Makeup": "Pardoz",
+  "Body care": "Tana parvarishi",
+  "Hair care": "Soch parvarishi",
+  "Buyer pays": "Xaridor to'laydi"
 }
