@@ -1,1 +1,0 @@
-{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","collation":{"locale":"simple"}},{"v":{"$numberInt":"2"},"key":{"orderItemId":{"$numberInt":"1"}},"name":"orderItemId_1","background":true,"unique":true,"collation":{"locale":"simple"}}],"uuid":"3d4c2c8340f94008a8132f61c7a071e9","collectionName":"reviews","type":"collection"}
