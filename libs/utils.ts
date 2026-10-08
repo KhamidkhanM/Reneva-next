@@ -1,13 +1,26 @@
 import numeral from 'numeral';
 import { REACT_APP_API_URL } from './config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from './sweetAlert';
+import { i18n } from 'next-i18next';
+import { ratesVar } from '../apollo/store';
 
 export const formatterStr = (value: number | undefined): string => {
 	return numeral(value).format('0,0') != '0' ? numeral(value).format('0,0') : '';
 };
 
-// ₩25,600
-export const formatKRW = (value: number | undefined): string => `₩${numeral(value ?? 0).format('0,0')}`;
+// prices are stored in so'm; Uzbek and Russian show so'm, English shows $ and Korean shows ₩ (converted)
+//   uz: 230 000 so'm   ru: 230 000 сум   en: $17.97   kr: ₩25,000
+export const formatPrice = (value: number | undefined, locale: string = i18n?.language ?? 'uz'): string => {
+	const sum = value ?? 0;
+	const rates = ratesVar();
+	if (locale === 'en') return `$${numeral(sum / rates.usd).format('0,0.00')}`;
+	if (locale === 'kr') return `₩${numeral(Math.round(sum / rates.krw / 10) * 10).format('0,0')}`;
+	const spaced = numeral(sum).format('0,0').replace(/,/g, ' ');
+	return locale === 'ru' ? `${spaced} сум` : `${spaced} so'm`;
+};
+
+// true when prices on screen are converted from so'm, so the shop says the charge is in so'm
+export const isConvertedPrice = (locale: string = i18n?.language ?? 'uz'): boolean => locale === 'en' || locale === 'kr';
 
 export const salePercent = (price: number, salePrice: number): number =>
 	price > 0 && salePrice < price ? Math.round(((price - salePrice) / price) * 100) : 0;

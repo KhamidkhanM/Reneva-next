@@ -11,7 +11,8 @@ export const skinConcernList = Object.values(SkinConcern);
 export const productTagList = Object.values(ProductTag);
 
 // matches the backend rules in reneva-api libs/config.ts
-export const FREE_DELIVERY_FROM = 30000;
+export const FREE_DELIVERY_FROM = 300000;
+export const DELIVERY_FEE = 20000;
 
 export const Messages = {
 	error1: 'Something went wrong!',

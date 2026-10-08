@@ -8,7 +8,7 @@ import { Brand, Category, ProductsInquiry } from '../../types/product';
 import { SkinConcern, SkinType } from '../../enums/member.enum';
 import { ProductTag } from '../../enums/product.enum';
 import { productTagList, skinConcernList, skinTypeList } from '../../config';
-import { formatKRW, labelOf } from '../../utils';
+import { formatPrice, labelOf } from '../../utils';
 
 interface FilterType {
 	searchFilter: ProductsInquiry;
@@ -16,7 +16,7 @@ interface FilterType {
 	initialInput: ProductsInquiry;
 }
 
-const PRICE_MAX = 100000;
+const PRICE_MAX = 1000000; // so'm
 
 const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => {
 	const router = useRouter();
@@ -70,7 +70,7 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 		const [start, end] = price;
 		pushFilter({
 			...searchFilter.search,
-			pricesRange: start === 0 && end === PRICE_MAX ? undefined : { start, end: end === PRICE_MAX ? 10000000 : end },
+			pricesRange: start === 0 && end === PRICE_MAX ? undefined : { start, end: end === PRICE_MAX ? 1000000000 : end },
 		});
 	};
 
@@ -200,13 +200,13 @@ const Filter = ({ searchFilter, setSearchFilter, initialInput }: FilterType) => 
 					onChangeCommitted={priceCommitHandler}
 					min={0}
 					max={PRICE_MAX}
-					step={1000}
+					step={10000}
 					getAriaLabel={(index) => (index === 0 ? 'Lowest price' : 'Highest price')}
-					getAriaValueText={(value) => formatKRW(value)}
+					getAriaValueText={(value) => formatPrice(value)}
 				/>
 				<div className={'price-text'}>
-					<span>{formatKRW(price[0])}</span>
-					<span>{price[1] === PRICE_MAX ? `${formatKRW(PRICE_MAX)}+` : formatKRW(price[1])}</span>
+					<span>{formatPrice(price[0])}</span>
+					<span>{price[1] === PRICE_MAX ? `${formatPrice(PRICE_MAX)}+` : formatPrice(price[1])}</span>
 				</div>
 			</fieldset>
 

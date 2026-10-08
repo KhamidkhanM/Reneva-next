@@ -11,7 +11,7 @@ import { GET_AI_MESSAGES, GET_MY_AI_CHATS } from '../../../apollo/user/query';
 import { CREATE_AI_CHAT, FEEDBACK_AI_MESSAGE, SEND_AI_MESSAGE } from '../../../apollo/user/mutation';
 import { AiChat, AiMessage } from '../../types/chat';
 import { AiChatStatus, AiChatType, AiMessageFeedback, AiMessageRole } from '../../enums/ai.enum';
-import { formatKRW, imageUrl } from '../../utils';
+import { formatPrice, imageUrl } from '../../utils';
 import { sweetMixinErrorAlert } from '../../sweetAlert';
 import { openChatRoomById } from './openChat';
 import ProductThumb from '../common/ProductThumb';
@@ -202,7 +202,7 @@ const AiChatPanel = ({ variant = 'widget', aiChatType = AiChatType.ADVISOR, anal
 												<span className={'txt'}>
 													<b>{product.productTitle}</b>
 													<span>
-														{formatKRW(product.productSalePrice)} · ★ {product.productRating?.toFixed(1)}
+														{formatPrice(product.productSalePrice)} · ★ {product.productRating?.toFixed(1)}
 													</span>
 												</span>
 											</button>

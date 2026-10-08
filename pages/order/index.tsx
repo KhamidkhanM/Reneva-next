@@ -14,7 +14,7 @@ import { Address, Cart, MemberCoupon, MyCart } from '../../libs/types/order';
 import { CouponType, MemberCouponStatus } from '../../libs/enums/coupon.enum';
 import { OptionStatus, ProductStatus } from '../../libs/enums/product.enum';
 import { PaymentMethod } from '../../libs/enums/order.enum';
-import { formatKRW, imageUrl, labelOf } from '../../libs/utils';
+import { formatPrice, imageUrl, isConvertedPrice, labelOf } from '../../libs/utils';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: any) => ({
@@ -38,7 +38,7 @@ const previewDiscount = (memberCoupon: MemberCoupon | undefined, items: Cart[], 
 		.filter((item) => !coupon.brandId || item.productData?.brandId === coupon.brandId)
 		.reduce((sum, item) => sum + ((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity, 0);
 	if (eligible === 0) return { discount: 0, freeDelivery: false, error: 'This coupon is for another brand' };
-	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: `Needs ${formatKRW(coupon.couponMinOrder)} of eligible items` };
+	if (eligible < coupon.couponMinOrder) return { discount: 0, freeDelivery: false, error: `Needs ${formatPrice(coupon.couponMinOrder)} of eligible items` };
 	if (coupon.couponType === CouponType.FREE_DELIVERY) return { discount: 0, freeDelivery: deliveryFee > 0, error: '' };
 	let discount = coupon.couponType === CouponType.PERCENT ? Math.floor((eligible * coupon.couponValue) / 100) : coupon.couponValue;
 	if (coupon.couponMaxDiscount) discount = Math.min(discount, coupon.couponMaxDiscount);
@@ -185,7 +185,7 @@ const Checkout: NextPage = () => {
 										</span>
 									</span>
 									<b>
-										{formatKRW(((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity)}
+										{formatPrice(((item.productData?.productSalePrice ?? 0) + (item.optionData?.optionExtraPrice ?? 0)) * item.cartQuantity)}
 									</b>
 								</div>
 							))}
@@ -235,6 +235,9 @@ const Checkout: NextPage = () => {
 									</button>
 								))}
 							</div>
+							{isConvertedPrice() && (
+								<p className={'hint'}>You pay {formatPrice(totals.total, 'uz')}. Prices in other currencies are approximate.</p>
+							)}
 							<p className={'hint'}>Test mode: payments are simulated and always succeed.</p>
 						</section>
 					</Stack>
@@ -243,29 +246,29 @@ const Checkout: NextPage = () => {
 						<h2>Order summary</h2>
 						<div className={'row'}>
 							<span>Products</span>
-							<b>{formatKRW(totals.subtotal)}</b>
+							<b>{formatPrice(totals.subtotal)}</b>
 						</div>
 						<div className={'row'}>
 							<span>Coupon</span>
-							<b className={'minus'}>{totals.discount ? `−${formatKRW(totals.discount)}` : '-'}</b>
+							<b className={'minus'}>{totals.discount ? `−${formatPrice(totals.discount)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>Points</span>
-							<b className={'minus'}>{totals.usedPoints ? `−${formatKRW(totals.usedPoints)}` : '-'}</b>
+							<b className={'minus'}>{totals.usedPoints ? `−${formatPrice(totals.usedPoints)}` : '-'}</b>
 						</div>
 						<div className={'row'}>
 							<span>Delivery</span>
-							<b>{totals.deliveryFee ? formatKRW(totals.deliveryFee) : 'Free'}</b>
+							<b>{totals.deliveryFee ? formatPrice(totals.deliveryFee) : 'Free'}</b>
 						</div>
 						<div className={'row total'}>
 							<span>Total</span>
-							<b>{formatKRW(totals.total)}</b>
+							<b>{formatPrice(totals.total)}</b>
 						</div>
 						<p className={'hint'}>
 							You earn {user.memberLevel ? labelOf(user.memberLevel) : 'Baby'} level points after you confirm delivery.
 						</p>
 						<button className={'primary-btn'} onClick={placeOrderHandler} disabled={placing || !addressId}>
-							{placing ? 'Placing order…' : `Pay ${formatKRW(totals.total)}`}
+							{placing ? 'Placing order…' : `Pay ${formatPrice(totals.total)}`}
 						</button>
 					</Stack>
 				</Stack>

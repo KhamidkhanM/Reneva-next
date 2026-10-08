@@ -7,14 +7,14 @@ import { CREATE_COUPON, UPDATE_COUPON } from '../../../apollo/user/mutation';
 import { Coupon } from '../../types/order';
 import { Brand } from '../../types/product';
 import { CouponStatus, CouponType } from '../../enums/coupon.enum';
-import { formatKRW, labelOf } from '../../utils';
+import { formatPrice, labelOf } from '../../utils';
 import { Messages } from '../../config';
 import { sweetConfirmAlert, sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 export const couponValue = (coupon: Pick<Coupon, 'couponType' | 'couponValue'>): string => {
 	if (coupon.couponType === CouponType.PERCENT) return `${coupon.couponValue}%`;
 	if (coupon.couponType === CouponType.FREE_DELIVERY) return 'Free ship';
-	return formatKRW(coupon.couponValue);
+	return formatPrice(coupon.couponValue);
 };
 
 const today = () => moment().format('YYYY-MM-DD');
@@ -141,17 +141,17 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 						</label>
 						{form.couponType !== CouponType.FREE_DELIVERY && (
 							<label className={'field'}>
-								<span>{form.couponType === CouponType.PERCENT ? 'Percent off' : 'Won off'}</span>
+								<span>{form.couponType === CouponType.PERCENT ? 'Percent off' : "So'm off"}</span>
 								<input type={'number'} min={1} value={form.couponValue} onChange={change('couponValue')} required />
 							</label>
 						)}
 						<label className={'field'}>
-							<span>Minimum order (₩)</span>
+							<span>Minimum order (so'm)</span>
 							<input type={'number'} min={0} value={form.couponMinOrder} onChange={change('couponMinOrder')} />
 						</label>
 						{form.couponType === CouponType.PERCENT && (
 							<label className={'field'}>
-								<span>Max discount (₩)</span>
+								<span>Max discount (so'm)</span>
 								<input type={'number'} min={0} value={form.couponMaxDiscount} onChange={change('couponMaxDiscount')} />
 							</label>
 						)}
@@ -195,7 +195,7 @@ const CouponManager = ({ admin = false }: CouponManagerProps) => {
 								<tr key={coupon._id}>
 									<td>
 										<b>{coupon.couponTitle}</b>
-										<small>{coupon.couponMinOrder ? `From ${formatKRW(coupon.couponMinOrder)}` : 'No minimum'}</small>
+										<small>{coupon.couponMinOrder ? `From ${formatPrice(coupon.couponMinOrder)}` : 'No minimum'}</small>
 									</td>
 									<td>
 										<code>{coupon.couponCode}</code>
